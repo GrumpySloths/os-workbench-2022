@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     printf("argv[%d] = %s\n", i, argv[i]);
   }
   printf("hello world");
+  printf("hello world");
   assert(!argv[argc]);
   return 0;
 }
