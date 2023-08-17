@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 void listSubfolders(const char *folderPath);
 int isStringNumeric(const char *str);
