@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
-
+#include <unistd.h>
+#include <sys/types.h>
 int main(int argc, char *argv[])
 {
   printf("argc=%d \n", argc);
@@ -12,5 +13,7 @@ int main(int argc, char *argv[])
   printf("hello world\n");
   // printf("hello world");
   assert(!argv[argc]);
+  pid_t pid = getpid();
+  printf("pid:%d", pid);
   return 0;
 }
