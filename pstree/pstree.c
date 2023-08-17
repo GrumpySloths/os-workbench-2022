@@ -5,6 +5,9 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
+
+void listSubfolders(const char *folderPath);
+
 int main(int argc, char *argv[])
 {
   printf("argc=%d \n", argc);
