@@ -7,7 +7,7 @@
 #include <string.h>
 
 void listSubfolders(const char *folderPath);
-
+int isStringNumeric(const char *str);
 int main(int argc, char *argv[])
 {
   printf("argc=%d \n", argc);
@@ -41,7 +41,7 @@ void listSubfolders(const char *folderPath)
   {
     if (entry->d_type == DT_DIR)
     { // Check if it's a directory
-      if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+      if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 && isStringNumeric(entry->d_name))
       {
         printf("%s\n", entry->d_name);
       }
@@ -49,4 +49,16 @@ void listSubfolders(const char *folderPath)
   }
 
   closedir(dir);
+}
+
+int isStringNumeric(const char *str)
+{
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    if (!isdigit(str[i]))
+    {
+      return 0; // 如果不是数字字符，返回0
+    }
+  }
+  return 1; // 如果所有字符都是数字字符，返回1
 }
