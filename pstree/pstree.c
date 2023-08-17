@@ -14,6 +14,6 @@ int main(int argc, char *argv[])
   // printf("hello world");
   assert(!argv[argc]);
   pid_t pid = getpid();
-  printf("pid:%d", pid);
+  printf("pid:%d \n", pid);
   return 0;
 }
