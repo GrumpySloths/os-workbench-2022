@@ -139,8 +139,8 @@ struct co *co_start(const char *name, func_t func, void *arg)
   if (!setjmp(start_buf))
   {
     stackEX(current->stack_ptr, stack_backup);
-    current->func(current->arg);
     printf("debug2\n");
+    current->func(current->arg);
     longjmp(wait_buf, 1);
   }
   else
