@@ -36,6 +36,7 @@ static void test_1()
 {
     printf("正在进行测试test1\n");
     struct co *thd1 = co_start("thread-1", work, "X");
+    printf("debug1\n");
     struct co *thd2 = co_start("thread-2", work, "Y");
 
     co_wait(thd1);
