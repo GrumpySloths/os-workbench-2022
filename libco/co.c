@@ -140,6 +140,7 @@ struct co *co_start(const char *name, func_t func, void *arg)
   {
     stackEX(current->stack_ptr, stack_backup);
     current->func(current->arg);
+    printf("debug2\n");
     longjmp(wait_buf, 1);
   }
   else
