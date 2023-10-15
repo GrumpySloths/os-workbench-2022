@@ -132,6 +132,7 @@ struct co *co_create(const char *name, func_t func, void *arg)
 
 struct co *co_start(const char *name, func_t func, void *arg)
 {
+  printf("co start \n");
   Log("%s START!", name);
   current = co_create(name, func, arg);
   if (!setjmp(start_buf))
