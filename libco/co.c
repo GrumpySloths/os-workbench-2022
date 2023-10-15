@@ -135,6 +135,7 @@ struct co *co_start(const char *name, func_t func, void *arg)
   printf("co start \n");
   Log("%s START!", name);
   current = co_create(name, func, arg);
+  printf("进行判断\n");
   if (!setjmp(start_buf))
   {
     stackEX(current->stack_ptr, stack_backup);
