@@ -141,6 +141,7 @@ struct co *co_start(const char *name, func_t func, void *arg)
     stackEX(current->stack_ptr, stack_backup);
     printf("debug2\n");
     current->func(current->arg);
+    printf("debug3\n");
     longjmp(wait_buf, 1);
   }
   else
