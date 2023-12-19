@@ -3,7 +3,7 @@
 // Operating system is a C program!
 int main(const char *args) {
   ioe_init();
-  printf("print test %s\n","hello world");
+  printf("print test %s %d\n","hello world",5);
   puts("mainargs = \"");
   puts(args); // make run mainargs=xxx
   puts("\"\n");
