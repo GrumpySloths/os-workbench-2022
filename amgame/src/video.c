@@ -32,3 +32,7 @@ void splash() {
     }
   }
 }
+
+void screen_update(){
+  
+}

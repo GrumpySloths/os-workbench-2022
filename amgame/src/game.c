@@ -1,9 +1,6 @@
 #include <game.h>
 
-typedef struct{
-    int x;
-    int y;
-} Square; //定义小方块对象
+
 // Operating system is a C program!
 int main(const char *args) {
     ioe_init();
