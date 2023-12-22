@@ -12,7 +12,8 @@ int main(const char *args) {
     printf("squre.x:%d\n", square.x);
     puts("Press any key to see its key code...\n");
     while (1) {
-        splash();
+        // splash();
+        screen_update(&square);
         print_key();
     }
     return 0;
