@@ -17,3 +17,28 @@ void print_key() {
       puts("\n");
   }
 }
+
+void read_key(Square*square){
+    AM_INPUT_KEYBRD_T event = io_read(AM_INPUT_KEYBRD);
+    if(event.keycode==AM_KEY_ESCAPE)
+      halt(1);
+    if (event.keycode != AM_KEY_NONE && event.keydown) {
+      switch(event.keycode){
+        case AM_KEY_W:
+            square->y--;
+            break;
+        case AM_KEY_S:
+            square->y++;
+            break;
+        case AM_KEY_A:
+            square->x--;
+            break;
+        case AM_KEY_D:
+            square->x++;
+            break;
+        default:
+            printf("key invalid,please input w/a/s/d\n");
+        }
+    }
+
+}
