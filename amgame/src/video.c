@@ -39,6 +39,5 @@ void screen_update(Square* square) {
 }
 //刷新整个屏幕
 void flush() { 
-  init();
   draw_tile(0, 0, w, h, 0x000000);
 }
