@@ -13,7 +13,7 @@ int main(const char *args) {
     puts("Press any key to see its key code...\n");
     while (1) {
         // splash();
-        flush();
+        // flush();
         read_key(&square);
         screen_update(&square);
         // print_key();
