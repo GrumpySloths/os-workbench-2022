@@ -34,6 +34,11 @@ void splash() {
 }
 
 void screen_update(Square* square) { 
-  // init();
+  init();
   draw_tile(square->x * SIDE, square->y * SIDE, SIDE, SIDE, 0xffffff);
+}
+//刷新整个屏幕
+void flush() { 
+  init();
+  draw_tile(0, 0, w, h, 0x000000);
 }
