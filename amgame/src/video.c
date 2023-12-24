@@ -41,5 +41,6 @@ void screen_update(Square* square) {
 void flush() {
     // printf("flush is called\n");
     init();
-    draw_tile(0, 0, w, h, 0xffffff);
+    printf("w=%d,h=%d\n", w, h);
+    draw_tile(0, 0, SIDE * 2, SIDE * 2, 0xffffff);
 }
