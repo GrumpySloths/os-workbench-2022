@@ -39,6 +39,6 @@ void read_key(Square*square){
         default:
             printf("key invalid,please input w/a/s/d\n");
         }
+        printf("key pressed:%s\n", key_names[event.keycode]);
     }
-
 }
