@@ -34,6 +34,6 @@ void splash() {
 }
 
 void screen_update(Square* square) { 
-  init();
+  // init();
   draw_tile(square->x * SIDE, square->y * SIDE, SIDE, SIDE, 0xffffff);
 }
