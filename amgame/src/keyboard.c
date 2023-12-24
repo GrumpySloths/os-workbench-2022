@@ -18,7 +18,7 @@ void print_key() {
   }
 }
 
-void read_key(Square*square){
+bool read_key(Square*square){
     AM_INPUT_KEYBRD_T event = io_read(AM_INPUT_KEYBRD);
     if(event.keycode==AM_KEY_ESCAPE)
       halt(1);
@@ -40,5 +40,7 @@ void read_key(Square*square){
             printf("key invalid,please input w/a/s/d\n");
         }
         printf("key pressed:%s\n", key_names[event.keycode]);
+        return true;
     }
+    return false;
 }

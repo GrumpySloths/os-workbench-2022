@@ -15,8 +15,8 @@ int main(const char *args) {
     // splash();
     while (1) {
         // splash();
-        flush();
-        read_key(&square);
+        // flush();
+        if(read_key(&square)) flush();
         screen_update(&square);
         // print_key();
     }
