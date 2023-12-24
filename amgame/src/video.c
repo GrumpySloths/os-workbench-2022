@@ -42,5 +42,5 @@ void flush() {
     // printf("flush is called\n");
     init();
     printf("w=%d,h=%d\n", w, h);
-    draw_tile(0, 0, SIDE * 2, SIDE * 2, 0xffffff);
+    draw_tile(0, 0, w/10, h/10, 0xffffff);
 }
