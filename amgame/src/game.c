@@ -11,9 +11,10 @@ int main(const char *args) {
     Square square=(Square){.x=10,.y=10};
     printf("squre.x:%d\n", square.x);
     puts("Press any key to see its key code...\n");
+    flush();
     while (1) {
         // splash();
-        flush();
+        // flush();
         read_key(&square);
         // screen_update(&square);
         // print_key();
