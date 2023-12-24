@@ -38,6 +38,7 @@ void screen_update(Square* square) {
   draw_tile(square->x * SIDE, square->y * SIDE, SIDE, SIDE, 0xffffff);
 }
 //刷新整个屏幕
-void flush() { 
-  draw_tile(0, 0, w, h, 0x000000);
+void flush() {
+    printf("flush is called\n");
+    draw_tile(0, 0, w, h, 0x000000);
 }
