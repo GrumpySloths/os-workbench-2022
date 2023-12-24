@@ -15,7 +15,6 @@ int main(const char *args) {
         // splash();
         flush();
         read_key(&square);
-        flush();
         screen_update(&square);
         // print_key();
     }
