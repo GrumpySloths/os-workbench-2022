@@ -42,5 +42,6 @@ bool read_key(Square*square){
         printf("key pressed:%s\n", key_names[event.keycode]);
         return true;
     }
+    square->x += square->vx;
     return false;
 }

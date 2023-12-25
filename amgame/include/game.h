@@ -7,7 +7,9 @@
 typedef struct{
     int x;
     int y;
-} Square; //定义小方块对象
+    int vx;//velocity of x direction
+    int vy;//velocity of y direction
+} Square;  // 定义小方块对象
 
 void splash();
 uint64_t uptime();//compute current time(ms)
