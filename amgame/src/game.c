@@ -23,7 +23,7 @@ int main(const char *args) {
         if (read_key(&square))
             flush();
         screen_update(&square);
-        while((uptime()-t0)<1000/FPS)
+        while((uptime()-t0)<1000/FPS*1000)
             ;
         printf("render time:%d\n", uptime() - t0);
         // print_key();
