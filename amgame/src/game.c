@@ -8,7 +8,9 @@ int main(const char *args) {
     puts(args);  // make run mainargs=xxx
     puts("\"\n");
 
-    Square square=(Square){.x=10,.y=10};
+    AM_TIMER_RTC_T rtc = io_read(AM_TIMER_RTC);
+    printf("%d:%d:%d\n", rtc.year, rtc.month, rtc.day);
+    Square square = (Square){.x = 10, .y = 10};
     printf("squre.x:%d\n", square.x);
     puts("Press any key to see its key code...\n");
     flush();
