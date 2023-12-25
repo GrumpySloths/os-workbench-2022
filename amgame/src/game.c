@@ -14,7 +14,8 @@ int main(const char *args) {
     Square square = (Square){.x = 10, .y = 10};
     printf("squre.x:%d\n", square.x);
     puts("Press any key to see its key code...\n");
-    printf("cur time:%d\n", t0.us);
+    AM_TIMER_UPTIME_T t1 = io_read(AM_TIMER_UPTIME);
+    printf("cur t0 time:%d t1 time:%d\n ", t0.us,t1.us);
     flush();
     // splash();
     while (1) {
