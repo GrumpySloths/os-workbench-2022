@@ -17,12 +17,14 @@ int main(const char *args) {
     flush();
     while (1) {
         t0 = uptime();
-        if (read_key(&square))
-            flush();
+        read_key(&square);
+        // if (read_key(&square))
+        //     flush();
         screen_update(&square);
         while((uptime()-t0)<1000/FPS)
             ;
         printf("render time:%d\n", uptime() - t0);
+        flush();
         // print_key();
     }
     return 0;
