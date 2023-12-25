@@ -43,5 +43,6 @@ bool read_key(Square*square){
         return true;
     }
     square->x += square->vx;
+    square->y += square->vy;
     return false;
 }
