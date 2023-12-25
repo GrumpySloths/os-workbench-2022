@@ -10,7 +10,7 @@ typedef struct{
 } Square; //定义小方块对象
 
 void splash();
-uint64_t uptime();//compute current time(us)
+uint64_t uptime();//compute current time(ms)
 void flush();  // 清空整个屏幕
 void screen_update(Square *);
 void print_key();

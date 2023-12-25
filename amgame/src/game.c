@@ -15,15 +15,12 @@ int main(const char *args) {
     printf("squre.x:%d\n", square.x);
     puts("Press any key to see its key code...\n");
     flush();
-    // splash();
     while (1) {
-        // splash();
-        // flush();
         t0 = uptime();
         if (read_key(&square))
             flush();
         screen_update(&square);
-        while((uptime()-t0)<1000/FPS*1000)
+        while((uptime()-t0)<1000/FPS)
             ;
         printf("render time:%d\n", uptime() - t0);
         // print_key();
