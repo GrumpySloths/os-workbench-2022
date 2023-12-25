@@ -3,6 +3,7 @@
 #include <klib.h>
 #include <klib-macros.h>
 
+#define FPS 60
 typedef struct{
     int x;
     int y;

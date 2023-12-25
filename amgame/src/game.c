@@ -10,9 +10,11 @@ int main(const char *args) {
 
     AM_TIMER_RTC_T rtc = io_read(AM_TIMER_RTC);
     printf("%d:%d:%d\n", rtc.year, rtc.month, rtc.day);
+    AM_TIMER_UPTIME_T t0 = io_read(AM_TIMER_UPTIME);
     Square square = (Square){.x = 10, .y = 10};
     printf("squre.x:%d\n", square.x);
     puts("Press any key to see its key code...\n");
+    printf("cur time:%d\n", t0.us);
     flush();
     // splash();
     while (1) {
