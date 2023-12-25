@@ -35,9 +35,9 @@ void splash() {
 
 void screen_update(Square* square) { 
   // init();
-  if(square->x*SIDE>w)
+  if(square->x*SIDE>w||square->x<0)
       square->vx *= -1;
-  if(square->y*SIDE>h)
+  if(square->y*SIDE>h||square->y<0)
       square->vy *= -1;
   draw_tile(square->x * SIDE, square->y * SIDE, SIDE, SIDE, 0xffffff);
 }
