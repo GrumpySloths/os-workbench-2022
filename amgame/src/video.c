@@ -49,3 +49,5 @@ void flush() {
     }
   }
 }
+//get system time
+uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us; }
