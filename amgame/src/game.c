@@ -19,11 +19,13 @@ int main(const char *args) {
     while (1) {
         // splash();
         // flush();
-        t0 = io_read(AM_TIMER_UPTIME).us;
+        t0 = uptime();
         if (read_key(&square))
             flush();
         screen_update(&square);
-        printf("render time:%d\n", uptime()-t0);
+        while((uptime()-t0)<1000/FPS)
+            ;
+        printf("render time:%d\n", uptime() - t0);
         // print_key();
     }
     return 0;
