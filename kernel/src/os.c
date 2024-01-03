@@ -1,4 +1,5 @@
 #include <common.h>
+#define MB (1<<20)
 // enum ops { OP_ALLOC = 1, OP_FREE };
 // struct malloc_op {
 //   enum ops type;
@@ -27,12 +28,9 @@ static void os_run() {
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     pmm->free(s1);
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
-    while(1)
+    pmm->alloc(130 * MB);
+    while (1)
         ;
-    // for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
-    //   putch(*s == '*' ? '0' + cpu_current() : *s);
-    // }
-    // while (1) ;
 }
 
 MODULE_DEF(os) = {
