@@ -23,12 +23,19 @@ static void os_init() { pmm->init(); }
 
 static void os_run() {
     s1_t* s1 = (s1_t*)pmm->alloc(sizeof(s1_t));
+    s1_t* s2 = (s1_t*)pmm->alloc(sizeof(s1_t));
+
     s1->x = 10;
     s1->y = 2;
+    s2->x = 20;
+    s2->y = 30;
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
+    printf("s2: x=%d,y=%d\n", s2->x, s2->y);
     pmm->free(s1);
-    pmm->free((void*)123);
+    pmm->free(s2);
+    // pmm->free((void*)123);
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
+    printf("s2: x=%d,y=%d\n", s2->x, s2->y);
     while (1)
         ;
 }
