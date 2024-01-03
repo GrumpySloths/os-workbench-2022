@@ -26,6 +26,7 @@ static void os_run() {
     s1->y = 2;
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     pmm->free(s1);
+    printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     while(1)
         ;
     // for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
