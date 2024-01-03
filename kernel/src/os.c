@@ -27,8 +27,8 @@ static void os_run() {
     s1->y = 2;
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     pmm->free(s1);
+    pmm->free((void*)123);
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
-    pmm->alloc(130 * MB);
     while (1)
         ;
 }
