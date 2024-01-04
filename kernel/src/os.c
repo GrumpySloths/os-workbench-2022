@@ -37,7 +37,7 @@ static void os_run() {
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     printf("s2: x=%d,y=%d\n", s2->x, s2->y);
     while (1)
-        ;
+      pmm->alloc(sizeof(s1_t));
 }
 
 MODULE_DEF(os) = {
