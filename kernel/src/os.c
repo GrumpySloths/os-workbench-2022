@@ -39,7 +39,7 @@ static void os_run() {
     int idx = 0;
     while (1) {
       void*pt=pmm->alloc(1*MB);
-      free(pt);
+      pmm->free(pt);
       printf("idx:%d\n", idx++);
       assert(sizeof(s1_t) * idx < 126 * MB);
     }
