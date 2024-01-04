@@ -39,7 +39,13 @@ static void os_run() {
     int idx = 0;
     Log("test");
     while (1) {
-        void* pt = pmm->alloc(1 * MB);
+        void* pt;
+        if (idx % 2) {
+            pt = pmm->alloc(1 * MB);
+        } else {
+            pt = pmm->alloc(2 * MB);
+        }
+
         pmm->free(pt);
         printf("idx:%d\n", idx++);
         assert(sizeof(s1_t) * idx < 126 * MB);
