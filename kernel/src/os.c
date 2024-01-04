@@ -37,11 +37,12 @@ static void os_run() {
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     printf("s2: x=%d,y=%d\n", s2->x, s2->y);
     int idx = 0;
+    Log("test");
     while (1) {
-      void*pt=pmm->alloc(1*MB);
-      pmm->free(pt);
-      printf("idx:%d\n", idx++);
-      assert(sizeof(s1_t) * idx < 126 * MB);
+        void* pt = pmm->alloc(1 * MB);
+        pmm->free(pt);
+        printf("idx:%d\n", idx++);
+        assert(sizeof(s1_t) * idx < 126 * MB);
     }
 }
 
