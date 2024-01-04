@@ -5,7 +5,6 @@ static void *kalloc(size_t size) {
 }
 
 static void kfree(void *ptr) {
-    printf("kfree start\n");
     free(ptr);
 }
 #ifndef TEST
