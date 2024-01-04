@@ -4,7 +4,10 @@ static void *kalloc(size_t size) {
     return malloc(size);
 }
 
-static void kfree(void *ptr) { free(ptr); }
+static void kfree(void *ptr) {
+    printf("kfree start\n");
+    free(ptr);
+}
 #ifndef TEST
 static void pmm_init() {
   uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
