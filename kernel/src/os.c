@@ -40,6 +40,7 @@ static void os_run() {
     while (1) {
       pmm->alloc(sizeof(s1_t));
       printf("idx:%d\n", idx++);
+      assert(sizeof(s1_t) * idx < 125 * MB);
     }
 }
 
