@@ -188,18 +188,18 @@ static void gpu_config(AM_GPU_CONFIG_T *cfg) {
 }
 
 static void gpu_fbdraw(AM_GPU_FBDRAW_T *draw) {
-  int x = draw->x, y = draw->y, w = draw->w, h = draw->h;
-  int W = display.w, H = display.h;
-  uint32_t *pixels = draw->pixels;
-  int len = (x + w >= W) ? W - x : w;
-  for (int j = 0; j < h; j ++, pixels += w) {
-    if (y + j < H) {
-      struct pixel *px = &fb[x + (j + y) * W];
-      for (int i = 0; i < len; i ++, px ++) {
-        uint32_t p = pixels[i];
-        *px = (struct pixel) { .r = R(p), .g = G(p), .b = B(p) };
-      }
-    }
+    int x = draw->x, y = draw->y, w = draw->w, h = draw->h;
+    int W = display.w, H = display.h;
+    uint32_t *pixels = draw->pixels;
+    int len = (x + w >= W) ? W - x : w;
+    for (int j = 0; j < h; j++, pixels += w) {
+        if (y + j < H) {
+            struct pixel *px = &fb[x + (j + y) * W];
+            for (int i = 0; i < len; i++, px++) {
+                uint32_t p = pixels[i];
+                *px = (struct pixel){.r = R(p), .g = G(p), .b = B(p)};
+            }
+        }
   }
 }
 
@@ -225,9 +225,9 @@ static void *vbuf_alloc(int size) {
 static struct pixel *render(struct gpu_canvas *cv, struct gpu_canvas *parent, struct pixel *px) {
   struct pixel *px_local;
   int W = parent->w, w, h;
-
+  printf("render function is called\n");
   switch (cv->type) {
-    case AM_GPU_TEXTURE: {
+  case AM_GPU_TEXTURE: {
       w = cv->texture.w; h = cv->texture.h;
       px_local = to_host(cv->texture.pixels);
       break;
@@ -242,7 +242,7 @@ static struct pixel *render(struct gpu_canvas *cv, struct gpu_canvas *parent, st
     }
     default:
       panic("invalid node");
-  }
+    }
 
   // draw local canvas (w * h) -> px (x1, y1) - (x1 + w1, y1 + h1)
   for (int i = 0; i < cv->w1; i++)

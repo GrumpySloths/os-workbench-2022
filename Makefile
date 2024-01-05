@@ -8,6 +8,9 @@ endif
 
 SRCS   := $(shell find . -maxdepth 1 -name "*.c")
 DEPS   := $(shell find . -maxdepth 1 -name "*.h") $(SRCS)
+
+# print_DEPS:
+# 	$(info $(DEPS))
 CFLAGS += -O1 -std=gnu11 -ggdb -Wall -Werror -Wno-unused-result -Wno-unused-value -Wno-unused-variable
 
 .PHONY: all git test clean commit-and-make

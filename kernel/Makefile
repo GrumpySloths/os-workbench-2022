@@ -10,3 +10,13 @@ endif
 include $(AM_HOME)/Makefile
 include ../Makefile.lab
 image: git
+# ifdef DEBUG
+# CFLAGS += -DDEBUG
+# endif
+
+
+test: git
+	@gcc $(shell find src/ -name "*.c")  \
+			$(shell find test/ -name "*.c") \
+			-Iframework -Itest -DTEST -lpthread \
+			-o build/test
