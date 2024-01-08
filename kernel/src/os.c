@@ -48,7 +48,7 @@ static void os_run() {
 
         pmm->free(pt);
         printf("idx:%d\n", idx++);
-        assert(sizeof(s1_t) * idx < 126 * MB);
+        assert(idx<=10000);
     }
 }
 
