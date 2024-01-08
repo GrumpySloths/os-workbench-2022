@@ -50,8 +50,8 @@ static void os_run() {
 
         pmm->free(pt);
         printf("idx:%d\n", idx++);
-        if(idx==10000){
-            printf("program run time:%d", (uptime() - t0));
+        if(idx>10000){
+            printf("program run time:%d ms", (uptime() - t0));
         }
         assert(idx<=10000);
     }
