@@ -1,6 +1,6 @@
 #include <game.h>
 
-
+//get system time(ms)
 // Operating system is a C program!
 int main(const char *args) {
     ioe_init();

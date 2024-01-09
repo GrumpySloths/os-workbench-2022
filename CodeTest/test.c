@@ -24,6 +24,9 @@ int main()
     printf("hptr x:%d,f:%f\n", hptr->x, hptr->f);
     free(hptr);
     printf("hptr x:%d,f:%f\n", hptr->x, hptr->f);
+    if((void*)hptr>=NULL){
+        printf("this is a debug\n");
+    }
 
     return 0;
 }

@@ -36,7 +36,7 @@
 
 #define panic(s) panic_on(1, s)
 
-#define DEBUG
+// #define DEBUG
 #ifdef DEBUG
 #define Log(format, ...) \
     printf("\33[0m[\33[1;35mLog\33[0m]\33[1;34m[%s,%d,%s] " format "\33[0m\n", \
