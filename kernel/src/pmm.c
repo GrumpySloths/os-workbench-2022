@@ -2,9 +2,9 @@
 #include<spinlock.h>
 static spinlock_t lk;
 static void *kalloc(size_t size) {
-    spin_lock(&lk);
+    // spin_lock(&lk);
     void*pt=malloc(size);
-    spin_unlock(&lk);
+    // spin_unlock(&lk);
     
     return pt;
 }
