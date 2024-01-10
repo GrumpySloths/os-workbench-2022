@@ -15,6 +15,8 @@
 //       struct malloc_op op = (struct malloc_op){.type = OP_FREE, .sz = rand()};
 //   }
 // }
+static int idx = 0;
+
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
 typedef struct{
     int x;
@@ -37,7 +39,6 @@ static void os_run() {
     // pmm->free((void*)123);
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     printf("s2: x=%d,y=%d\n", s2->x, s2->y);
-    int idx = 0;
     Log("test");
     uint64_t t0 = uptime();
     while (1) {
