@@ -15,7 +15,7 @@
 //       struct malloc_op op = (struct malloc_op){.type = OP_FREE, .sz = rand()};
 //   }
 // }
-static int idx = 0;
+// static int idx = 0;
 
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
 typedef struct{
@@ -41,6 +41,7 @@ static void os_run() {
     printf("s2: x=%d,y=%d\n", s2->x, s2->y);
     Log("test");
     uint64_t t0 = uptime();
+    int idx = 0;
     while (1) {
         void* pt;
         if (idx % 2) {
@@ -53,7 +54,7 @@ static void os_run() {
         printf("idx:%d\n", idx++);
         if(idx>10000){
             printf("program run time:%d ms \n", (uptime() - t0));
-            return;
+            halt(1);
         }
         // assert(idx<=10000);
     }
