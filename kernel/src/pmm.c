@@ -1,18 +1,24 @@
 #include <common.h>
-
+#include<spinlock.h>
+static spinlock_t lk;
 static void *kalloc(size_t size) {
-    return malloc(size);
+    spin_lock(&lk);
+    void*pt=malloc(size);
+    spin_unlock(&lk);
+    
+    return pt;
 }
 
 static void kfree(void *ptr) {
+    spin_lock(&lk);
     free(ptr);
+    spin_unlock(&lk);
 }
 #ifndef TEST
 static void pmm_init() {
   uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
-  
+  lk = SPIN_INIT();
   printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, heap.start, heap.end);
-
 }
 #else
 // 测试代码的 pmm_init ()
