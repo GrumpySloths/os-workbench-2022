@@ -54,12 +54,13 @@ static void os_run() {
         printf("idx:%d\n", idx++);
         if(count++>10000){
             printf("program run time:%d ms \n", (uptime() - t0));
+            halt(1);
             break;
         }
         // assert(idx<=10000);
     }
     while(1)
-        ;
+        ; //os-run代表着一个cpu，故该线程不能停止
 }
 
 MODULE_DEF(os) = {
