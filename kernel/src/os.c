@@ -54,10 +54,12 @@ static void os_run() {
         printf("idx:%d\n", idx++);
         if(count++>10000){
             printf("program run time:%d ms \n", (uptime() - t0));
-            return;
+            break;
         }
         // assert(idx<=10000);
     }
+    while(1)
+        ;
 }
 
 MODULE_DEF(os) = {
