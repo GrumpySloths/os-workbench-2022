@@ -59,8 +59,8 @@ static void os_run() {
         if(count++>10000){
 #ifndef TEST
             printf("program run time:%d ms \n", (uptime() - t0));
-#endif
             halt(1);
+#endif
             break;
         }
         // assert(idx<=10000);
