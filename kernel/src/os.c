@@ -16,8 +16,10 @@
 //   }
 // }
 static int idx = 0;
-
+#ifndef TEST
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
+#endif
+
 typedef struct{
     int x;
     int y;
@@ -40,7 +42,9 @@ static void os_run() {
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     printf("s2: x=%d,y=%d\n", s2->x, s2->y);
     Log("test");
+#ifndef TEST
     uint64_t t0 = uptime();
+#endif
     int count = 0;
     while (1) {
         void* pt;
@@ -53,7 +57,9 @@ static void os_run() {
         pmm->free(pt);
         printf("idx:%d\n", idx++);
         if(count++>10000){
+#ifndef TEST
             printf("program run time:%d ms \n", (uptime() - t0));
+#endif
             halt(1);
             break;
         }

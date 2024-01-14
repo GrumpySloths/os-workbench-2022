@@ -1,4 +1,5 @@
 #include <kernel.h>
-#include <klib.h>
 #include <klib-macros.h>
-#include <amdev.h>
+#include <klib.h>
+#define HEAP_SIZE (125<<20)
+// #include <amdev.h>
