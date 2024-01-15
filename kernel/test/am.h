@@ -9,6 +9,7 @@
 typedef struct {
   void *start, *end;
 } Area;
-extern   Area  heap;
+
+Area  heap;
 
 #endif
