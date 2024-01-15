@@ -24,7 +24,6 @@ static void pmm_init() {
 #else
 // 测试代码的 pmm_init ()
 static void pmm_init() {
-  extern   Area  heap;
   char *ptr  = malloc(HEAP_SIZE);
   heap.start = ptr;
   heap.end   = ptr + HEAP_SIZE;
