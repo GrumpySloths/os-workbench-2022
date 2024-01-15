@@ -1,7 +1,6 @@
 #include <common.h>
 #include<spinlock.h>
 static spinlock_t lk;
-extern Area heap;
 static void *kalloc(size_t size) {
     spin_lock(&lk);
     void*pt=malloc(size);
@@ -24,6 +23,7 @@ static void pmm_init() {
 #else
 // 测试代码的 pmm_init ()
 static void pmm_init() {
+  extern Area heap;
   char *ptr  = malloc(HEAP_SIZE);
   heap.start = ptr;
   heap.end   = ptr + HEAP_SIZE;
