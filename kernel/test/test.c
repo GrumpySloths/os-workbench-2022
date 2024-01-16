@@ -1,5 +1,5 @@
 #include<common.h>
-// #include<thread.h>
+#include<thread.h>
 #include<stdio.h>
 // static void entry(int tid) { malloc(128); }
 // static void entry(int tid) { pmm->alloc(128); }
