@@ -1,4 +1,4 @@
-// #include<common.h>
+#include<common.h>
 #include<thread.h>
 #include<stdio.h>
 static void entry(int tid) { malloc(128); }
