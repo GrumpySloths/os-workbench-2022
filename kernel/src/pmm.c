@@ -1,5 +1,6 @@
 #include <common.h>
 #include<spinlock.h>
+#include<debug.h>
 static spinlock_t lk;
 extern Area heap;
 

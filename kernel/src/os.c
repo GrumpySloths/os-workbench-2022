@@ -36,8 +36,8 @@ static void os_run() {
     s2->y = 30;
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     printf("s2: x=%d,y=%d\n", s2->x, s2->y);
-    // pmm->free(s1);
-    // pmm->free(s2);
+    pmm->free(s1);
+    pmm->free(s2);
     // pmm->free((void*)123);
     printf("s1: x=%d,y=%d\n", s1->x, s1->y);
     printf("s2: x=%d,y=%d\n", s2->x, s2->y);
@@ -54,7 +54,7 @@ static void os_run() {
             pt = pmm->alloc(2 * MB);
         }
 
-        // pmm->free(pt);
+        pmm->free(pt);
         printf("idx:%d\n", idx++);
         if(count++>10000){
 #ifndef TEST
