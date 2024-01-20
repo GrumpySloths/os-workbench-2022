@@ -1,5 +1,9 @@
 #include<common.h>
 #include<stdio.h>
+#ifdef TEST  
+#define malloc(s) mymalloc(s)
+#define free(pt) myfree(pt)
+#endif
 // static void entry(int tid) { malloc(128);
 //     printf("alloc success\n");
 // }
