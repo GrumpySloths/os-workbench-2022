@@ -7,7 +7,7 @@
 // }
 static void entry(int tid) {
      pmm->alloc(128);
-    print("alloc success\n");
+    printf("alloc success\n");
 }
 static void goodbye()      { printf("End.\n"); }
 int main() {
