@@ -2,9 +2,7 @@
 #include<stdio.h>
 #include<debug.h>
 #include<thread.h>
-// static void entry(int tid) { malloc(128);
-//     printf("alloc success\n");
-// }
+
 static void entry(int tid) {
      pmm->alloc(128);
     printf("alloc success\n");
