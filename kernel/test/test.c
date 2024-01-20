@@ -7,7 +7,7 @@
 // static void goodbye()      { printf("End.\n"); }
 int main() {
     printf("test\n");
-    mymalloc(128);
+    malloc(128);
     // pmm->init();
     // pmm->alloc(128);
     // for (int i = 0; i < 4; i++) create(entry);
