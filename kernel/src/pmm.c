@@ -33,6 +33,7 @@ static void pmm_init() {
   printf("Got %d MiB heap: [%p, %p)\n", HEAP_SIZE >> 20, heap.start, heap.end);
 }
 #endif
+
 MODULE_DEF(pmm) = {
   .init  = pmm_init,
   .alloc = kalloc,
