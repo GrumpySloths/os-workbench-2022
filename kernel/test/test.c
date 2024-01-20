@@ -1,6 +1,6 @@
 #include<common.h>
 #include<stdio.h>
-#include<debug.h>
+// #include<debug.h>
 #include<thread.h>
 #define MB (1<<20)
 
