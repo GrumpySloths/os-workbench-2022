@@ -5,7 +5,10 @@
 // static void entry(int tid) { malloc(128);
 //     printf("alloc success\n");
 // }
-static void entry(int tid) { pmm->alloc(128); }
+static void entry(int tid) {
+     pmm->alloc(128);
+    print("alloc success\n");
+}
 static void goodbye()      { printf("End.\n"); }
 int main() {
     printf("test\n");
