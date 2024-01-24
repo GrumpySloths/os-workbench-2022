@@ -30,7 +30,8 @@ static void goodbye() { printf("End.\n"); }
 int main() {
     printf("test\n");
     pmm->init();
-    for (int i = 0; i < 4; i++) create(entry);
-    join(goodbye);
+    // for (int i = 0; i < 4; i++) create(entry);
+    // join(goodbye);
+    pmm->free(0x00);
     printf("program terminal\n");
 }
