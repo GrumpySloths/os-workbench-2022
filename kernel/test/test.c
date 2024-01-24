@@ -32,9 +32,7 @@ int main() {
     pmm->init();
     // for (int i = 0; i < 4; i++) create(entry);
     // join(goodbye);
-    int a = 3;
-    int* pt = (int*)pmm->alloc(sizeof(int));
-    pt = a;
-    printf("pt=%d\n", *pt);
+    void* pt = pmm->alloc(32);
+    pmm->free(pt);
     printf("program terminal\n");
 }
