@@ -33,6 +33,6 @@ int main() {
     // for (int i = 0; i < 4; i++) create(entry);
     // join(goodbye);
     void* pt = pmm->alloc(32);
-    pmm->free(pt+25);
+    pmm->free(pt);
     printf("program terminal\n");
 }
