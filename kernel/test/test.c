@@ -32,6 +32,6 @@ int main() {
     pmm->init();
     // for (int i = 0; i < 4; i++) create(entry);
     // join(goodbye);
-    pmm->free(0x00);
+    pmm->free(0x100);
     printf("program terminal\n");
 }
