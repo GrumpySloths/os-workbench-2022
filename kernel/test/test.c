@@ -32,6 +32,6 @@ int main() {
     pmm->init();
     // for (int i = 0; i < 4; i++) create(entry);
     // join(goodbye);
-    pmm->free((void*)0x100);
+    int*pt=(int*)pmm->alloc(sizeof(int));
     printf("program terminal\n");
 }
