@@ -43,6 +43,7 @@ static void entry(int tid) {
 static void goodbye() { printf("End.\n"); }
 
 int main() {
+    assert(1 == 0);
     do_test_0();
     // printf("test\n");
     // pmm->init();
