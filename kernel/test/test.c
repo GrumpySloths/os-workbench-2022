@@ -9,6 +9,7 @@ static int idx = 0;
 static void entry_0(int tid){
     while(1){
         pmm->alloc(64);
+        print("idx:%d\n", idx++);
     }
 }
 //频繁地小内存释放测试，绝大多数的小于128b,
