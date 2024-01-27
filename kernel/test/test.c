@@ -6,6 +6,11 @@
 
 static int idx = 0;
 
+//频繁地小内存释放测试，绝大多数的小于128b,
+static void do_test_0(){
+
+}
+
 static void entry(int tid) {
     int count = 0;
     while (1) {
@@ -35,4 +40,5 @@ int main() {
     void* pt = pmm->alloc(32);
     pmm->free(pt);
     printf("program terminal\n");
+    printf("sizeof of int:%d\n", sizeof(int));
 }
