@@ -10,6 +10,7 @@ static void entry_0(int tid){
     while(1){
         pmm->alloc(64);
         printf("idx:%d\n", idx++);
+        assert(idx * 64 <= 1e6);
     }
 }
 //频繁地小内存释放测试，绝大多数的小于128b,
@@ -43,7 +44,6 @@ static void entry(int tid) {
 static void goodbye() { printf("End.\n"); }
 
 int main() {
-    assert(1 == 0);
     do_test_0();
     // printf("test\n");
     // pmm->init();
