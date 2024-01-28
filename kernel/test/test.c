@@ -2,7 +2,7 @@
 #include<stdio.h>
 // #include<debug.h>
 #include<thread.h>
-// #include<stdlib.h>
+#include<stdlib.h>
 #define MB (1<<20)
 
 static int idx = 0;
