@@ -58,8 +58,11 @@ static void entry(int tid) {
 }
 static void goodbye() { printf("End.\n"); }
 
-int main() {
-    // do_test_0();
+int main(int argc,char*argv[]) {
+    if(argc<2)
+        exit(1);
+
+    do_test_0();
     do_test_1();
     // printf("test\n");
     // pmm->init();
