@@ -21,6 +21,21 @@ static void do_test_0(){
     }
 }
 
+static void entry_1(int tid){
+    while(1){
+        pmm->alloc(1*MB);
+        printf("idx:%d\n", idx++);
+        assert(idx  <= 125);
+    }
+}
+//频繁地小内存释放测试，绝大多数的小于128b,
+static void do_test_1(){
+    pmm->init();
+    for (int i = 0; i < 4;i++){
+        create(entry_1);
+    }
+}
+
 static void entry(int tid) {
     int count = 0;
     while (1) {
@@ -44,7 +59,8 @@ static void entry(int tid) {
 static void goodbye() { printf("End.\n"); }
 
 int main() {
-    do_test_0();
+    // do_test_0();
+    do_test_1();
     // printf("test\n");
     // pmm->init();
     // for (int i = 0; i < 4; i++) create(entry);
