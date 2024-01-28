@@ -62,9 +62,15 @@ static void goodbye() { printf("End.\n"); }
 int main(int argc,char*argv[]) {
     if(argc<2)
         exit(1);
+    switch(atoi(argv[1])){
+        case 0:
+            do_test_0();
+        case 1:
+            do_test_1();
+        default:
+            printf("argv[1] not coresponding expected\n");
+        }
 
-    do_test_0();
-    do_test_1();
     // printf("test\n");
     // pmm->init();
     // for (int i = 0; i < 4; i++) create(entry);
