@@ -67,8 +67,10 @@ int main(int argc,char*argv[]) {
     switch(atoi(argv[1])){
         case 0:
             do_test_0();
+            break;
         case 1:
             do_test_1();
+            break;
         default:
             printf("argv[1] not coresponding expected\n");
         }
