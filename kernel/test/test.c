@@ -16,6 +16,7 @@ static void entry_0(int tid){
 }
 //频繁地小内存释放测试，绝大多数的小于128b,
 static void do_test_0(){
+    printf("do test0:small storage apply\n");
     pmm->init();
     for (int i = 0; i < 4;i++){
         create(entry_0);
@@ -31,6 +32,7 @@ static void entry_1(int tid){
 }
 //频繁地小内存释放测试，绝大多数的小于128b,
 static void do_test_1(){
+    printf("do test1:large storage apply\n");
     pmm->init();
     for (int i = 0; i < 4;i++){
         create(entry_1);
