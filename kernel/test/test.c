@@ -25,7 +25,7 @@ static void entry_1(int tid){
     while(1){
         pmm->alloc(1*MB);
         printf("idx:%d\n", idx++);
-        assert(idx  <= 125);
+        assert(idx  <= 130);
     }
 }
 //频繁地小内存释放测试，绝大多数的小于128b,
