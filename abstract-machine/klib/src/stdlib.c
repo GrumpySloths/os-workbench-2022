@@ -1,12 +1,18 @@
 #include <am.h>
 #include <klib.h>
 #include <klib-macros.h>
-
+#ifdef TEST
+  #include<stdio.h>
+  #include <sys/mman.h>
+  #include<assert.h>
+  #define putch(ch) putchar(ch)
+  extern   Area  heap;
+#endif
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
 // 分配区域信息
 typedef struct __header_t{
-    int size;
+    uint32_t size;
     int magic; //用于sanity check,检查内存非法访问或重复释放分配等出乎意料问题
     struct __header_t *next;
 } header_t;
@@ -50,16 +56,26 @@ static void print_list() {
  * 2. 利用slab思想加速malloc
  * 3. 加锁实现并发数据结构
 */
+#ifdef TEST
+void* mymalloc(size_t size){
+#else
 void *malloc(size_t size) {
+#endif
   // On native, malloc() will be called during initializaion of C runtime.
   // Therefore do not call panic() here, else it will yield a dead recursion:
   //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
 #if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
   //当free_list不存在时首先初始化free_list
   if(!head){
-      printf("first initialization\n");
+    #ifdef TEST
+      head = (header_t *)mmap(NULL, 125 * 1024 * 1024, PROT_READ | PROT_WRITE,
+                                MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+      uintptr_t pmsize = 125*1024*1024;
+    #else
       head = (header_t *)heap.start;
       uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
+    #endif
+      printf("first initialization\n");
       head->size = pmsize - sizeof(header_t);
       head->magic = 1234567;
       head->next = NULL;
@@ -68,6 +84,7 @@ void *malloc(size_t size) {
   header_t*p,*prevp;
   size_t real_size = sizeof(header_t) + size;
   Log("real_size:%d mb\n", real_size>>20);
+  // printf("real_size:%ld\n", real_size);
   print_list();
   // 对list遍历，存在符合大小的块就直接分配
   for (p =prevp= head; p != NULL;prevp=p,p=p->next){
@@ -83,12 +100,17 @@ void *malloc(size_t size) {
   }
   //未找到符合大小的块处理
   panic("there is not enough to allocate\n");
+  
   return NULL;
 #endif
   return NULL;
 }
 
+#ifdef TEST
+void myfree(void *ptr){
+#else
 void free(void *ptr) {
+#endif
     // printf("free debug\n");
     header_t *hptr = (header_t *)ptr - 1;
     assert(hptr->magic == 1234567);  // 内存完整性检测

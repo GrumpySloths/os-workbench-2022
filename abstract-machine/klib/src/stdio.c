@@ -2,10 +2,11 @@
 #include <klib.h>
 #include <klib-macros.h>
 #include <stdarg.h>
-
+#include <spinlock.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
-//打印正数
+static spinlock_t lk;
+// 打印正数
 void putnum_positive(int d){
     if (d) {
         putnum_positive(d / 10);
@@ -45,6 +46,7 @@ int printf(const char *fmt, ...) {
     va_start(ap, fmt);
     size_t count = strlen(fmt);
     size_t len = count;
+    spin_lock(&lk);
     while (count-- > 0) {
         if((pre=*fmt++)=='%'){
             switch(*fmt++){
@@ -75,6 +77,7 @@ int printf(const char *fmt, ...) {
             // printf("%c", pre);
         }
     }
+    spin_unlock(&lk);
     va_end(ap);
     return len;
 }

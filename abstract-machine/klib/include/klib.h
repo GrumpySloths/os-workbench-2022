@@ -26,8 +26,14 @@ int    strncmp   (const char *s1, const char *s2, size_t n);
 // stdlib.h
 void   srand     (unsigned int seed);
 int    rand      (void);
-void  *malloc    (size_t size);
+#ifdef TEST
+void *mymalloc(size_t size);
+void   myfree      (void *ptr);
+
+#else
+void *malloc(size_t size);
 void   free      (void *ptr);
+#endif
 int    abs       (int x);
 int    atoi      (const char *nptr);
 
@@ -47,7 +53,7 @@ int    vsnprintf (char *str, size_t size, const char *format, va_list ap);
       if (!(cond)) { \
         printf("Assertion fail at %s:%d\n", __FILE__, __LINE__); \
         halt(1); \
-      } \
+        }\
     } while (0)
 #endif
 

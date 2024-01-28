@@ -27,12 +27,20 @@
 #define static_assert(const_cond) \
   static char CONCAT(_static_assert_, __LINE__) [(const_cond) ? 1 : -1] __attribute__((unused))
 
+#ifndef TEST
 #define panic_on(cond, s) \
   ({ if (cond) { \
       putstr("AM Panic: "); putstr(s); \
       putstr(" @ " __FILE__ ":" TOSTRING(__LINE__) "  \n"); \
       halt(1); \
     } })
+#else
+#define panic_on(cond, s) \
+  ({ if (cond) { \
+      putstr("AM Panic: "); putstr(s); \
+      putstr(" @ " __FILE__ ":" TOSTRING(__LINE__) "  \n"); \
+    } })
+#endif
 
 #define panic(s) panic_on(1, s)
 
