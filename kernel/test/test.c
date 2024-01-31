@@ -11,8 +11,8 @@ static void entry_0(int tid){
     while(1){
         pmm->alloc(64);
         printf("idx:%d\n", idx++);
-        if(idx>=200)
-            break;
+        // if(idx>=200)
+        //     break;
         // assert(idx * 64 <= 20*MB);
     }
 }
