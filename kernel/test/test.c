@@ -27,11 +27,11 @@ static void do_test_0(){
 
 static void entry_1(int tid){
     while(1){
-        pmm->alloc(1*MB);
+        void* pt=pmm->alloc(1*MB);
         printf("idx:%d\n", idx++);
         // assert(idx  <= 130);
-        if(idx>=125)
-            break;
+        if(pt==NULL)
+            return;
     }
 }
 //频繁地小内存释放测试，绝大多数的小于128b,
