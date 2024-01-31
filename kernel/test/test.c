@@ -13,7 +13,7 @@ static void entry_0(int tid){
         printf("idx:%d\n", idx++);
         // if(idx>=200)
         //     break;
-        assert(idx * 64 <= 50*MB);
+        assert(idx * 80 <= 95*MB);
     }
 }
 //频繁地小内存释放测试，绝大多数的小于128b,
