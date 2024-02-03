@@ -52,8 +52,10 @@ static void entry_1(int tid){
                 return;
         } else {
             //随机释放内存
-            printf("内存释放测试");
+            printf("内存释放测试\n");
             void* pt = malloclist->pop();
+            if(pt==NULL)
+                continue;
             pmm->free(pt);
         }
         // void* pt=pmm->alloc(1*MB);

@@ -23,7 +23,8 @@ static void push(void*pt){
 static void* pop(){
    if(!length){
        printf("cur malloc list is empty,remove disabled\n");
-       exit(EXIT_SUCCESS);
+       return NULL;
+       //    exit(EXIT_SUCCESS);
    }
    int id = rand() % length;
    //id为0时的处理
