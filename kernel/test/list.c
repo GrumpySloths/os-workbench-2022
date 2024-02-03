@@ -5,6 +5,7 @@
 // static list_t* head = NULL;
 static void push(void*pt){
     if(head==NULL){
+        head = (list_t*)malloc(sizeof(list_t));
         head->pt = pt;
         head->next = NULL;
         length++;
