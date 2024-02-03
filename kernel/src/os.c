@@ -1,20 +1,6 @@
 #include <common.h>
 #define MB (1<<20)
-// enum ops { OP_ALLOC = 1, OP_FREE };
-// struct malloc_op {
-//   enum ops type;
-//   union { size_t sz; void *addr; };
-// };
-// //返回 0-1之间的随机数
-// static float randn() { return (float)rand() / 32768; }
-// static struct malloc_op random_op(){
-//   if(randn()<0.5){
-//       struct malloc_op op = (struct malloc_op){.type = OP_ALLOC, .sz = rand()};
-//       return op;
-//   }else{
-//       struct malloc_op op = (struct malloc_op){.type = OP_FREE, .sz = rand()};
-//   }
-// }
+
 static int idx = 0;
 #ifndef TEST
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
