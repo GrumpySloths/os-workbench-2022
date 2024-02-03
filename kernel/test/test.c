@@ -52,6 +52,7 @@ static void entry_1(int tid){
                 return;
         } else {
             //随机释放内存
+            printf("内存释放测试")
             void* pt = malloclist->pop();
             pmm->free(pt);
         }
