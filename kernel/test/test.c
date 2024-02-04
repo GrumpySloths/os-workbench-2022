@@ -5,7 +5,7 @@
 #include<thread.h>
 #include<stdlib.h>
 #define MB (1<<20)
-#define SMP 4
+#define SMP 1
 enum ops { OP_ALLOC = 1, OP_FREE };
 struct malloc_op {
   enum ops type;
