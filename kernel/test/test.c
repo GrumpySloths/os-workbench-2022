@@ -3,9 +3,12 @@
 #include<stdio.h>
 // #include<debug.h>
 #include<thread.h>
+#include<thread-sync.h>
 #include<stdlib.h>
 #define MB (1<<20)
 #define SMP 4
+
+mutex_t lk = MUTEX_INIT();
 enum ops { OP_ALLOC = 1, OP_FREE };
 struct malloc_op {
   enum ops type;
@@ -46,15 +49,19 @@ static void entry_1(int tid){
         if(randn()<0.5){
             //随机分配内存
             void* pt = pmm->alloc(1 * MB);
+            mutex_lock(&lk);
             malloclist->push(pt);
+            mutex_unlock(&lk);
             printf("idx:%d\n", idx++);
             if(pt==NULL)
                 return;
         } else {
             //随机释放内存
             printf("内存释放测试\n");
+            mutex_lock(&lk);
             void* pt = malloclist->pop();
-            if(pt==NULL)
+            mutex_unlock(&lk);
+            if (pt == NULL)
                 continue;
             pmm->free(pt);
             idx--;
@@ -73,6 +80,7 @@ static void do_test_1(){
     for (int i = 0; i < SMP;i++){
         create(entry_1);
     }
+    join();
 }
 
 static void entry(int tid) {
