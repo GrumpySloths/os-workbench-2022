@@ -52,12 +52,12 @@ static void entry_1(int tid){
             mutex_lock(&lk);
             malloclist->push(pt);
             mutex_unlock(&lk);
-            printf("idx:%d\n", idx++);
+            // printf("idx:%d\n", idx++);
             if(pt==NULL)
                 return;
         } else {
             //随机释放内存
-            printf("内存释放测试\n");
+            // printf("内存释放测试\n");
             mutex_lock(&lk);
             void* pt = malloclist->pop();
             mutex_unlock(&lk);
