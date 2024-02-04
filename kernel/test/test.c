@@ -80,7 +80,7 @@ static void do_test_1(){
     for (int i = 0; i < SMP;i++){
         create(entry_1);
     }
-    join();
+    // join();
 }
 
 static void entry(int tid) {
