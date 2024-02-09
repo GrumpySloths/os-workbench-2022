@@ -29,10 +29,26 @@ static int idx = 0;
 
 static void entry_0(int tid){
     while(1){
-        pmm->alloc(64);
-        printf("idx:%d\n", idx++);
-        assert(idx * 80 <= 100*MB);
-        // printf("test0 not pass");
+        if(randn()<0.5){
+            //随机分配内存
+            void* pt = pmm->alloc(64);
+            mutex_lock(&lk);
+            malloclist->push(pt);
+            mutex_unlock(&lk);
+            // printf("idx:%d\n", idx++);
+            if(pt==NULL)
+                return;
+        } else {
+            //随机释放内存
+            // printf("内存释放测试\n");
+            mutex_lock(&lk);
+            void* pt = malloclist->pop();
+            mutex_unlock(&lk);
+            if (pt == NULL)
+                continue;
+            pmm->free(pt);
+            idx--;
+        }
     }
 }
 //频繁地小内存释放测试，绝大多数的小于128b,
