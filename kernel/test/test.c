@@ -32,7 +32,7 @@ static void entry_0(int tid){
         pmm->alloc(64);
         printf("idx:%d\n", idx++);
         assert(idx * 80 <= 100*MB);
-        printf("test0 not pass");
+        // printf("test0 not pass");
     }
 }
 //频繁地小内存释放测试，绝大多数的小于128b,
