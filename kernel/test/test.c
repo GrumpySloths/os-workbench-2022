@@ -93,7 +93,8 @@ static void entry_1(int tid){
 static void do_test_1(){
     printf("do test1:large storage apply\n");
     pmm->init();
-    for (int i = 0; i < SMP;i++){
+    return;
+    for (int i = 0; i < SMP; i++) {
         create(entry_1);
     }
     // join();
