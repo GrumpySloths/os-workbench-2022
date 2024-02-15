@@ -1,6 +1,17 @@
 #include <sys/mman.h>
+#include<stdlib.h>
 #include <stdint.h>
 #include<stdio.h>
+static int power_count(size_t size) { 
+  int count = 0; 
+  if(size%2==0)
+      count--;
+  while (size) {
+      count++;
+      size /=2;
+  }
+  return count;
+}
 typedef struct __header_t{
     uint32_t size;
     int magic; //用于sanity check,检查内存非法访问或重复释放分配等出乎意料问题
@@ -13,8 +24,6 @@ int main(void) {
     // head->size = sizeof(header_t);
     // head->magic = 123456; // 这里可以根据实际需求设置一个合适的值
     // head->next = NULL;
-    printf("hello world\n");
-    printf("hello world\n");
-    printf("分配成功\n");
+    printf("%d\n", power_count(4));
     return 0;
 }

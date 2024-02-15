@@ -39,6 +39,7 @@
   ({ if (cond) { \
       putstr("AM Panic: "); putstr(s); \
       putstr(" @ " __FILE__ ":" TOSTRING(__LINE__) "  \n"); \
+      exit(EXIT_SUCCESS); \
     } })
 #endif
 

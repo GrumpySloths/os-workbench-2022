@@ -2,11 +2,13 @@
 #include <klib.h>
 #include <klib-macros.h>
 #ifdef TEST
+  #include<stdlib.h>
   #include<stdio.h>
   #include <sys/mman.h>
   #include<assert.h>
   #define putch(ch) putchar(ch)
   extern   Area  heap;
+  #define MB (1<<20)
 #endif
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
@@ -50,6 +52,16 @@ static void print_list() {
     }
     Log("--------------------------");
 }
+static int power_count(size_t size) { 
+  int count = 0; 
+  if(size%2==0)
+      count--;
+  while (size) {
+      count++;
+      size /=2;
+  }
+  return count;
+}
 /**
  * 待实现需求
  * 1. 内存对齐要求
@@ -65,42 +77,58 @@ void *malloc(size_t size) {
   // Therefore do not call panic() here, else it will yield a dead recursion:
   //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
 #if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
-  //当free_list不存在时首先初始化free_list
+  // printf("malloc custom call\n");
+  // 当free_list不存在时首先初始化free_list
   if(!head){
+    printf("first initialization\n");
     #ifdef TEST
-      head = (header_t *)mmap(NULL, 125 * 1024 * 1024, PROT_READ | PROT_WRITE,
+      head = (header_t *)mmap(NULL, size,  PROT_READ | PROT_WRITE,
                                 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-      uintptr_t pmsize = 125*1024*1024;
-    #else
+      uintptr_t pmsize = size;
+      heap.start = head;
+      heap.end = head + pmsize;
+      head->size = pmsize - sizeof(header_t);
+      head->magic = 1234567;
+      head->next = NULL;
+      return NULL;
+#else
       head = (header_t *)heap.start;
       uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
-    #endif
-      printf("first initialization\n");
+#endif
       head->size = pmsize - sizeof(header_t);
       head->magic = 1234567;
       head->next = NULL;
   }
   //考虑先利用first fit进行匹配
   header_t*p,*prevp;
-  size_t real_size = sizeof(header_t) + size;
-  Log("real_size:%d mb\n", real_size>>20);
+  // size_t real_size = sizeof(header_t) + size;
+  size_t size_align = 1 << power_count(size);
+  size_t real_size = size_align + sizeof(header_t);
+  Log("real_size:%d mb\n", real_size >> 20);
   // printf("real_size:%ld\n", real_size);
   print_list();
   // 对list遍历，存在符合大小的块就直接分配
   for (p =prevp= head; p != NULL;prevp=p,p=p->next){
     if(p->size>=real_size){
-        header_t *node =
-            (header_t *)((uintptr_t)p + sizeof(header_t) + p->size - real_size);
-        node->magic = 1234567;
-        node->size = size;
-        // 更新p 指向block的size
-        p->size -= real_size;
-        return (void *)(node + 1);
+      //内存对齐分配要求实现,可能有点问题当前实现
+      uintptr_t p_end = ROUNDDOWN((uintptr_t)p + sizeof(header_t) + p->size,size_align);
+      header_t *node = (header_t *)(p_end - real_size);
+      // header_t *node =
+      //     (header_t *)((uintptr_t)p + sizeof(header_t) + p->size -
+      //     real_size);
+      node->magic = 1234567;
+      // node->size = size;
+      node->size = size_align;
+      // 更新p 指向block的size
+      // p->size -= real_size;
+      p->size = (p_end - real_size - (uintptr_t)p);
+      printf("malloc,%p,%p,%p\n", (void*)(node+1),
+             (void*)((uintptr_t)node + real_size), (void*)size_align);
+      return (void *)(node + 1);
     }
   }
   //未找到符合大小的块处理
   panic("there is not enough to allocate\n");
-  
   return NULL;
 #endif
   return NULL;
@@ -115,6 +143,10 @@ void free(void *ptr) {
     header_t *hptr = (header_t *)ptr - 1;
     assert(hptr->magic == 1234567);  // 内存完整性检测
     panic_on(hptr < head, "the pointer to free out of heap");
+    size_t real_size = sizeof(header_t) + hptr->size;
+    printf("free,%p,%p,%p\n", (void *)(hptr + 1),
+           (void *)((uintptr_t)hptr + real_size),
+           (void*)(hptr->size));
     header_t *cur;
     // 这里维护一个有序的链表，按地址从低到高进行排列
     for (cur = head; !(hptr >cur && hptr < cur->next); cur = cur->next) {

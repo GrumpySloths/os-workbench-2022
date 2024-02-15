@@ -21,7 +21,10 @@ test: git
 			$(AM_HOME)/klib/src/stdlib.c\
 			-Iframework -Itest -I$(AM_HOME)/klib/include -DTEST  -g -lpthread \
 			-o build/test
-	@build/test
+
+testall:test
+	@build/test 1
+	@build/test 0
 
 test2: git
 	@gcc $(shell find src/ -name "*.c")  \
