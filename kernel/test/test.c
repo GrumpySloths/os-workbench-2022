@@ -68,7 +68,7 @@ static void entry_1(int tid){
             mutex_lock(&lk);
             malloclist->push(pt);
             mutex_unlock(&lk);
-            // printf("idx:%d\n", idx++);
+            printf("idx:%d\n", idx++);
             if(pt==NULL)
                 return;
         } else {
