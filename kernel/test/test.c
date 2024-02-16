@@ -80,7 +80,7 @@ static void entry_1(int tid){
             if (pt == NULL)
                 continue;
             pmm->free(pt);
-            // idx--;
+            idx--;
         }
         // void* pt=pmm->alloc(1*MB);
         // printf("idx:%d\n", idx++);
