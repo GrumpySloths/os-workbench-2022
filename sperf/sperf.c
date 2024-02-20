@@ -36,7 +36,8 @@ int main(int argc, char *argv[]) {
 
   } else {            /* Parent writes argv[1] to pipe */
       close(pipefd[0]);          /* Close unused read end */
-      execve("/bin/strace",     exec_argv, exec_envp);
+      dup2(pipefd[1], 1);
+      execve("/bin/strace", exec_argv, exec_envp);
       perror(argv[0]);
       exit(EXIT_FAILURE);
   }
