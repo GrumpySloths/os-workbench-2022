@@ -6,13 +6,47 @@
 #include <string.h>
 #include<regex.h>
 
+#define MAX_LINE 512
+
+int readline(int fd, char *buffer, int max_length) {
+    int bytes_read = 0;
+    int bytes_read_total = 0;
+    char ch;
+
+    while (bytes_read_total < max_length - 1) {
+        if (read(fd, &ch, 1) == 1) {
+            buffer[bytes_read_total++] = ch;
+            if (ch == '\n') {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+
+    buffer[bytes_read_total] = '\0';
+
+    return bytes_read_total;
+}
+
+
 int main(int argc, char *argv[]) {
   char *exec_argv[] = { "strace","-T","ls", NULL, };
   char *exec_envp[] = {  "PATH=/bin",NULL, };
   int pipefd[2];
   pid_t cpid;
+  char buffer[MAX_LINE];
   char buf;
 
+  regex_t regex;
+  regmatch_t matches[2];
+  char *pattern = "([^\\(]+)\\("; // 匹配"("前的内容
+  if (regcomp(&regex, pattern, REG_EXTENDED) != 0) {
+      fprintf(stderr, "Failed to compile regex\n");
+      return 1;
+  }
+
+  
   if (pipe(pipefd) == -1) {
       perror("pipe");
       exit(EXIT_FAILURE);
@@ -26,10 +60,16 @@ int main(int argc, char *argv[]) {
 
   if (cpid != 0) {      //parent read pipe
       close(pipefd[1]);          /* Close unused write end */
-
-      while (read(pipefd[0], &buf, 1) > 0)
-          write(STDOUT_FILENO, &buf, 1);
-
+      while (readline(pipefd[0],buffer,MAX_LINE) > 0){
+        if (regexec(&regex, buffer, 2, matches, 0) == 0) {
+            for (size_t i = matches[1].rm_so; i < matches[1].rm_eo; i++) {
+                putchar(buffer[i]);
+            }
+            putchar('\n');
+        } else {
+            printf("No match\n");
+    }
+      }
       write(STDOUT_FILENO, "\n", 1);
       close(pipefd[0]);
       _exit(EXIT_SUCCESS);
