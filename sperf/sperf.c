@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
             for (size_t i = matches1[1].rm_so; i < matches1[1].rm_eo; i++) {
                 putchar(buffer[i]);
             }
-            putchar('  ');
+            putchar(' ');
         } else {
             printf("No match for reg_1\n");
         }
