@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
       close(pipefd[0]);          /* Close unused read end */
       printf("pipedf[1]:%d\n", pipefd[1]);
       // dup2(pipefd[1], 1);
-      close(1);
+      close(2);
       execve("/bin/strace", exec_argv, exec_envp);
       perror(argv[0]);
       exit(EXIT_FAILURE);
