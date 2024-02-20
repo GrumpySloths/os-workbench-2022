@@ -38,14 +38,20 @@ int main(int argc, char *argv[]) {
   char buffer[MAX_LINE];
   char buf;
 
-  regex_t regex;
-  regmatch_t matches[2];
-  char *pattern = "([^\\(]+)\\("; // 匹配"("前的内容
-  if (regcomp(&regex, pattern, REG_EXTENDED) != 0) {
-      fprintf(stderr, "Failed to compile regex\n");
+  regex_t regex_1;
+  regex_t regex_2;
+  regmatch_t matches1[2];
+  regmatch_t matches2[2];
+  char *pattern_1 = "([^\\(]+)\\(";  // 匹配"("前的内容
+  char *pattern_2 = "<([^>]*)>"; // 匹配尖括号<>内的内容
+  if (regcomp(&regex_1, pattern_1, REG_EXTENDED) != 0) {
+      fprintf(stderr, "Failed to compile regex_1\n");
       return 1;
   }
-
+  if (regcomp(&regex_2, pattern_2, REG_EXTENDED) != 0) {
+      fprintf(stderr, "Failed to compile regex_2\n");
+      return 1;
+  }
   
   if (pipe(pipefd) == -1) {
       perror("pipe");
@@ -61,17 +67,29 @@ int main(int argc, char *argv[]) {
   if (cpid != 0) {      //parent read pipe
       close(pipefd[1]);          /* Close unused write end */
       while (readline(pipefd[0],buffer,MAX_LINE) > 0){
-        if (regexec(&regex, buffer, 2, matches, 0) == 0) {
-            for (size_t i = matches[1].rm_so; i < matches[1].rm_eo; i++) {
+        // "("前内容匹配
+        if (regexec(&regex_1, buffer, 2, matches1, 0) == 0) {
+            for (size_t i = matches1[1].rm_so; i < matches1[1].rm_eo; i++) {
+                putchar(buffer[i]);
+            }
+            putchar('  ');
+        } else {
+            printf("No match for reg_1\n");
+        }
+        //<>内内容匹配
+        if (regexec(&regex_2, buffer, 2, matches2, 0) == 0) {
+            for (size_t i = matches2[1].rm_so; i < matches2[1].rm_eo; i++) {
                 putchar(buffer[i]);
             }
             putchar('\n');
         } else {
-            printf("No match\n");
-    }
+            printf("No match for reg_2\n");
+        }
       }
       write(STDOUT_FILENO, "\n", 1);
       close(pipefd[0]);
+      regfree(&regex_1);
+      regfree(&regex_2);
       _exit(EXIT_SUCCESS);
 
   } else {            /* child write pipe */
