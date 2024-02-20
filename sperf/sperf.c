@@ -67,6 +67,8 @@ int main(int argc, char *argv[]) {
   if (cpid != 0) {      //parent read pipe
       close(pipefd[1]);          /* Close unused write end */
       while (readline(pipefd[0],buffer,MAX_LINE) > 0){
+        if(strcmp(buffer,"exit_group(0)")==0)
+            break;
         // "("前内容匹配
         if (regexec(&regex_1, buffer, 2, matches1, 0) == 0) {
             for (size_t i = matches1[1].rm_so; i < matches1[1].rm_eo; i++) {
