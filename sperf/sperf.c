@@ -36,6 +36,7 @@ int main(int argc, char *argv[]) {
 
   } else {            /* child write pipe */
       close(pipefd[0]);          /* Close unused read end */
+      printf("pipedf[1]:%d\n", pipefd[1]);
       dup2(pipefd[1], 1);
       execve("/bin/strace", exec_argv, exec_envp);
       perror(argv[0]);
