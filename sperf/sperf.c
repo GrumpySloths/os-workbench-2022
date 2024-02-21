@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
       while (readline(pipefd[0],buffer,MAX_LINE) > 0){
         if(strncmp(buffer,"exit_group",strlen("exit_group"))==0)
             break;
-        char *name;
+        char *name="";
         char time[15];
         // "("前内容匹配
         if (regexec(&regex_1, buffer, 2, matches1, 0) == 0) {
