@@ -6,7 +6,7 @@
 #include <string.h>
 #include<regex.h>
 #include<assert.h>
-
+#include<time.h>
 #define MAX_LINE 512
 #define MAX_NAME 100
 
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
     int pipefd[2];
     pid_t cpid;
     char buffer[MAX_LINE];
-    char buf;
+    time_t cur;
 
     regex_t regex_1;
     regex_t regex_2;
@@ -131,44 +131,49 @@ int main(int argc, char *argv[]) {
 
   if (cpid != 0) {      //parent read pipe
       close(pipefd[1]);          /* Close unused write end */
-      while (readline(pipefd[0],buffer,MAX_LINE) > 0){
-        if(strncmp(buffer,"exit_group",strlen("exit_group"))==0)
-            break;
-        char *name="";
-        char time[15];
-        // "("前内容匹配
-        if (regexec(&regex_1, buffer, 2, matches1, 0) == 0) {
-            size_t str_length = matches1[1].rm_eo - matches1[1].rm_so;
-            name = (char *)malloc(str_length + 1);
-            strncpy(name, buffer + matches1[1].rm_so, str_length);
-            name[str_length] = '\0';
-            printf("%s", name);
-            // for (size_t i = matches1[1].rm_so; i < matches1[1].rm_eo; i++) {
-            //     putchar(buffer[i]);
-            // }
-            putchar(' ');
-        } else {
-            printf("No match for reg_1\n");
-        }
-        //<>内内容匹配
-        if (regexec(&regex_2, buffer, 2, matches2, 0) == 0) {
-            size_t str_length = matches2[1].rm_eo - matches2[1].rm_so;
-            strncpy(time, buffer + matches2[1].rm_so, str_length);
-            time[str_length] = '\0';
-            float time_syscall = atof(time);
-            record->time_total += time_syscall;
-            printf("time:%f\n", time_syscall);
-            syscall_record(record, name, time_syscall);
-            // for (size_t i = matches2[1].rm_so; i < matches2[1].rm_eo; i++) {
-            //     putchar(buffer[i]);
-            // }
-            // putchar('\n');
-        } else {
-            printf("No match for reg_2\n");
-        }
+      cur = time(NULL);
+      while (readline(pipefd[0], buffer, MAX_LINE) > 0) {
+          if (strncmp(buffer, "exit_group", strlen("exit_group")) == 0)
+              break;
+          char *name = "";
+          char time_read[15];
+          // "("前内容匹配
+          if (regexec(&regex_1, buffer, 2, matches1, 0) == 0) {
+              size_t str_length = matches1[1].rm_eo - matches1[1].rm_so;
+              name = (char *)malloc(str_length + 1);
+              strncpy(name, buffer + matches1[1].rm_so, str_length);
+              name[str_length] = '\0';
+              // printf("%s", name);
+              // putchar(' ');
+          } else {
+              printf("No match for reg_1\n");
+          }
+          //<>内内容匹配
+          if (regexec(&regex_2, buffer, 2, matches2, 0) == 0) {
+              size_t str_length = matches2[1].rm_eo - matches2[1].rm_so;
+              strncpy(time_read, buffer + matches2[1].rm_so, str_length);
+              time_read[str_length] = '\0';
+              float time_syscall = atof(time_read);
+              record->time_total += time_syscall;
+              // printf("time:%f\n", time_syscall);
+              syscall_record(record, name, time_syscall);
+              // for (size_t i = matches2[1].rm_so; i < matches2[1].rm_eo; i++)
+              // {
+              //     putchar(buffer[i]);
+              // }
+              // putchar('\n');
+          } else {
+              printf("No match for reg_2\n");
+          }
+          if((time(NULL)-cur)>=1){
+                printf("\033[2;1H");
+                printf("\033[2J");
+              cur = time(NULL);
+              find_top5(record);
+          }
       }
-      write(STDOUT_FILENO, "\n", 1);
-      find_top5(record);
+    //   write(STDOUT_FILENO, "\n", 1);
+    //   find_top5(record);
 
       close(pipefd[0]);
       regfree(&regex_1);
