@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
           }
       }
     //   write(STDOUT_FILENO, "\n", 1);
-    //   find_top5(record);
+      find_top5(record);
 
       close(pipefd[0]);
       regfree(&regex_1);
