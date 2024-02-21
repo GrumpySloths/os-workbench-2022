@@ -17,6 +17,55 @@ typedef struct __record_t{
     int counter;
     float time_total;/*总的syscall调用时间*/
 } record_t;
+typedef struct __canvas_t { 
+    int row; /*画布行数*/
+    int col; /*画布列数*/
+    int cur_x;
+    int cur_y; /*光标位置*/
+    int color; /*当前画布背景色*/
+} canvas_t;
+
+void draw(canvas_t*canvas,int percent){
+    int cur_row = canvas->row - canvas->cur_x + 2;
+    int cur_col = canvas->col - canvas->cur_y + 1;
+    if(cur_row<=cur_col/2){
+        // printf("行优先模式填充\n");
+        /*行优先填充模式*/
+        printf("\033[%dm", canvas->color); //切换画布颜色
+        int col_draw =canvas->col* percent / ((float)cur_row / canvas->row * 100);
+        int tmp_x = canvas->cur_x, tmp_y = canvas->cur_y;
+        for (int i = 0; i < cur_row; i++) {
+            /*切换cur位置*/
+            printf("\033[%d;%dH",tmp_x,tmp_y);
+            for (int j = 0; j < col_draw;j++){
+                printf(" ");
+            }
+            tmp_x++;
+        }
+        printf("\033[m"); //将画布颜色重新切换为默认
+        // 更新canvas
+        canvas->color++;
+        canvas->cur_y += col_draw;
+    }else{
+        /*列优先填充模式*/
+        // printf("列优先模式填充\n");
+        printf("\033[%dm", canvas->color);  // 切换画布颜色
+        int row_draw = canvas->row*percent / ((float)cur_col / canvas->col * 100);
+        int tmp_x = canvas->cur_x, tmp_y = canvas->cur_y;
+        for (int i = 0; i < row_draw; i++) {
+            /*切换cur位置*/
+            printf("\033[%d;%dH",tmp_x,tmp_y);
+            for (int j = 0; j < cur_col;j++){
+                printf(" ");
+            }
+            tmp_x++;
+        }
+        printf("\033[m"); //将画布颜色重新切换为默认
+        // 更新canvas
+        canvas->color++;
+        canvas->cur_x += row_draw; 
+    }
+}
 
 int readline(int fd, char *buffer, int max_length) {
     int bytes_read = 0;
@@ -39,7 +88,7 @@ int readline(int fd, char *buffer, int max_length) {
     return bytes_read_total;
 }
 
-void find_top5(record_t *rec){
+void find_top5(record_t *rec,canvas_t*canvas){
     int i, j;
     float temp_time;
     char *temp_name;
@@ -62,9 +111,11 @@ void find_top5(record_t *rec){
     }
     
     // 输出耗时最多的top5系统调用及其相应的名称
-    printf("Top 5 System Calls by Execution Time:\n");
+    // printf("Top 5 System Calls by Execution Time:\n");
     for(i = 0; i < 5 && i < rec->counter; i++){
-        printf("%d. Name: %s, Time: %f percent:%.1f%%\n", i+1, rec->names[i], rec->times[i],rec->times[i]/rec->time_total*100);
+        // printf("%d. Name: %s, Time: %f percent:%.1f%%\n", i+1, rec->names[i], rec->times[i],rec->times[i]/rec->time_total*100);
+        int percent = rec->times[i] / rec->time_total * 100;
+        draw(canvas, percent);
     }
 }
 
@@ -83,6 +134,8 @@ int syscall_record(record_t*record,char *name, float time) {
 }
 int main(int argc, char *argv[]) {
     assert(argc >= 2);
+    canvas_t*canvas = &(struct __canvas_t){
+        .row = 26, .col = 50, .cur_x = 2, .cur_y = 1, .color = 41};
     record_t *record = (record_t *)malloc(sizeof(record_t));
     record->counter = 0;
     char *exec_argv[20] = {
@@ -169,11 +222,11 @@ int main(int argc, char *argv[]) {
                 printf("\033[2;1H");
                 printf("\033[2J");
               cur = time(NULL);
-              find_top5(record);
+              find_top5(record,canvas);
           }
       }
     //   write(STDOUT_FILENO, "\n", 1);
-      find_top5(record);
+      find_top5(record,canvas);
 
       close(pipefd[0]);
       regfree(&regex_1);
