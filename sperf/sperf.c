@@ -184,6 +184,7 @@ int main(int argc, char *argv[]) {
 
   if (cpid != 0) {      //parent read pipe
       close(pipefd[1]);          /* Close unused write end */
+      close(2); //close stderr
       cur = time(NULL);
       while (readline(pipefd[0], buffer, MAX_LINE) > 0) {
           if (strncmp(buffer, "exit_group", strlen("exit_group")) == 0)
@@ -199,7 +200,7 @@ int main(int argc, char *argv[]) {
               // printf("%s", name);
               // putchar(' ');
           } else {
-              printf("No match for reg_1\n");
+              fprintf(stderr,"No match for reg_1\n");
           }
           //<>内内容匹配
           if (regexec(&regex_2, buffer, 2, matches2, 0) == 0) {
@@ -216,7 +217,7 @@ int main(int argc, char *argv[]) {
               // }
               // putchar('\n');
           } else {
-              printf("No match for reg_2\n");
+              fprintf(stderr,"No match for reg_2\n");
           }
           if((time(NULL)-cur)>=1){
                 printf("\033[2;1H");
