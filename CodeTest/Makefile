@@ -6,7 +6,7 @@ export AM_HOME := $(PWD)/../abstract-machine
 # 	@gcc test.c $(AM_HOME)/klib/src/stdlib.c\
 # 				-I$(AM_HOME)/klib/include -I../kernel/test\
 # 				-o test
-test: src/test.c src/malloc.h
+test: src/test.c 
 	@$(CC) $(CFLAGS)  $< -o build/$@
 	@build/$@
 

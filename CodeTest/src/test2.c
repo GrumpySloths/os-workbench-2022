@@ -1,29 +1,30 @@
-#include <sys/mman.h>
-#include<stdlib.h>
-#include <stdint.h>
-#include<stdio.h>
-static int power_count(size_t size) { 
-  int count = 0; 
-  if(size%2==0)
-      count--;
-  while (size) {
-      count++;
-      size /=2;
-  }
-  return count;
+#include <stdio.h>
+
+void drawRectangle(int percentage) {
+    int i;
+    int num_chars = percentage / 2; // 每2%对应一个字符
+
+    // 绘制绿色部分
+    printf("\033[0;42m"); // 设置背景颜色为绿色
+    for (i = 0; i < num_chars; i++) {
+        printf(" ");
+    }
+
+    // 绘制红色部分
+    printf("\033[0;41m"); // 设置背景颜色为红色
+    for (i = num_chars; i < 50; i++) {
+        printf(" ");
+    }
+
+    // 恢复默认颜色
+    printf("\033[0m\n");
 }
-typedef struct __header_t{
-    uint32_t size;
-    int magic; //用于sanity check,检查内存非法访问或重复释放分配等出乎意料问题
-    struct __header_t *next;
-} header_t;
-// free list node
-// static header_t*head=NULL;
-int main(void) { 
-    // head = (header_t*)mmap(NULL, 4096*1024, PROT_READ | PROT_WRITE, MAP_PRIVATE| MAP_ANONYMOUS , -1, 0);
-    // head->size = sizeof(header_t);
-    // head->magic = 123456; // 这里可以根据实际需求设置一个合适的值
-    // head->next = NULL;
-    printf("%d\n", power_count(4));
+
+int main() {
+    int syscall_percentage = 30; // 假设系统调用占总时间的百分比为30%
+    int a = 3.2;
+    printf("a=%d\n", a);
+    drawRectangle(syscall_percentage);
+
     return 0;
 }

@@ -85,8 +85,8 @@ void *malloc(size_t size) {
       head = (header_t *)mmap(NULL, size,  PROT_READ | PROT_WRITE,
                                 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
       uintptr_t pmsize = size;
-      heap.start = head;
-      heap.end = head + pmsize;
+      heap.start = (void*)head;
+      heap.end = (void*)head + pmsize;
       head->size = pmsize - sizeof(header_t);
       head->magic = 1234567;
       head->next = NULL;
@@ -121,7 +121,8 @@ void *malloc(size_t size) {
       node->size = size_align;
       // 更新p 指向block的size
       // p->size -= real_size;
-      p->size = (p_end - real_size - (uintptr_t)p);
+      // p->size = (p_end - real_size - (uintptr_t)p);
+      p->size = ((uintptr_t)node-sizeof(header_t)- (uintptr_t)p);
       printf("malloc,%p,%p,%p\n", (void*)(node+1),
              (void*)((uintptr_t)node + real_size), (void*)size_align);
       return (void *)(node + 1);
