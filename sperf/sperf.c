@@ -248,7 +248,7 @@ int main(int argc, char *argv[]) {
           } else {
               fprintf(stderr,"No match for reg_2\n");
           }
-          if((time(NULL)-cur)>=2){
+          if((time(NULL)-cur)>=1){
                 printf("\033[2,1H");
                 printf("\033[2J");
                 fflush(stdout);
