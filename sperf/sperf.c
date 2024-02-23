@@ -25,6 +25,14 @@ typedef struct __canvas_t {
     int color; /*当前画布背景色*/
 } canvas_t;
 
+void canvas_init(canvas_t*canvas){
+    canvas->col = 50;
+    canvas->color = 41;
+    canvas->cur_x = 2;
+    canvas->cur_y = 1;
+    canvas->row = 26;
+}
+
 void draw(canvas_t*canvas,int percent,char*name){
     int len_name = strlen(name);
     int ptr_name = 0; //名字
@@ -112,7 +120,8 @@ void find_top5(record_t *rec,canvas_t*canvas){
     int i, j;
     float temp_time;
     char *temp_name;
-    
+    canvas_init(canvas);
+
     // 对times进行降序排序，并同时调整names数组的顺序
     for(i = 0; i < rec->counter; i++){
         for(j = i+1; j < rec->counter; j++){
@@ -133,7 +142,7 @@ void find_top5(record_t *rec,canvas_t*canvas){
     // 输出耗时最多的top5系统调用及其相应的名称
     // printf("Top 5 System Calls by Execution Time:\n");
     for(i = 0; i < 5 && i < rec->counter; i++){
-        printf("%d. Name: %s, Time: %f percent:%.1f%%\n", i+1, rec->names[i], rec->times[i],rec->times[i]/rec->time_total*100);
+        // printf("%d. Name: %s, Time: %f percent:%.1f%%\n", i+1, rec->names[i], rec->times[i],rec->times[i]/rec->time_total*100);
         int percent = rec->times[i] / rec->time_total * 100;
         draw(canvas, percent,rec->names[i]);
     }
