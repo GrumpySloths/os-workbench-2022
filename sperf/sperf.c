@@ -242,8 +242,9 @@ int main(int argc, char *argv[]) {
           if((time(NULL)-cur)>=1){
                 printf("\033[2;1H");
                 printf("\033[2J");
-              cur = time(NULL);
-              find_top5(record,canvas);
+                fflush(stdout);
+                cur = time(NULL);
+                find_top5(record, canvas);
           }
       }
     //   write(STDOUT_FILENO, "\n", 1);
