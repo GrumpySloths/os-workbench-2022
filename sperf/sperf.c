@@ -133,7 +133,7 @@ void find_top5(record_t *rec,canvas_t*canvas){
     // 输出耗时最多的top5系统调用及其相应的名称
     // printf("Top 5 System Calls by Execution Time:\n");
     for(i = 0; i < 5 && i < rec->counter; i++){
-        // printf("%d. Name: %s, Time: %f percent:%.1f%%\n", i+1, rec->names[i], rec->times[i],rec->times[i]/rec->time_total*100);
+        printf("%d. Name: %s, Time: %f percent:%.1f%%\n", i+1, rec->names[i], rec->times[i],rec->times[i]/rec->time_total*100);
         int percent = rec->times[i] / rec->time_total * 100;
         draw(canvas, percent,rec->names[i]);
     }
