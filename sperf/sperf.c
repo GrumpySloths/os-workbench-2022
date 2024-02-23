@@ -25,7 +25,13 @@ typedef struct __canvas_t {
     int color; /*当前画布背景色*/
 } canvas_t;
 
-void draw(canvas_t*canvas,int percent){
+void draw(canvas_t*canvas,int percent,char*name){
+    int len_name = strlen(name);
+    int ptr_name = 0; //名字
+    char pct_str[8];
+    sprintf(pct_str, "(%d%%)", percent);
+    int len_pct = strlen(pct_str);
+    int ptr_pct = 0;//percent
     int cur_row = canvas->row - canvas->cur_x + 2;
     int cur_col = canvas->col - canvas->cur_y + 1;
     if(cur_row<=cur_col/2){
@@ -38,6 +44,13 @@ void draw(canvas_t*canvas,int percent){
             /*切换cur位置*/
             printf("\033[%d;%dH",tmp_x,tmp_y);
             for (int j = 0; j < col_draw;j++){
+                if(i==cur_row/2&&j>=(col_draw-len_name)/2&&ptr_name<len_name){
+                    printf("%c", name[ptr_name]);
+                    ptr_name++;
+                }else if(i==(cur_row/2+1)&&j>=(col_draw-len_pct)/2&&ptr_pct<len_pct){
+                    printf("%c", pct_str[ptr_pct]);
+                    ptr_pct++;
+                }else
                 printf(" ");
             }
             tmp_x++;
@@ -56,6 +69,13 @@ void draw(canvas_t*canvas,int percent){
             /*切换cur位置*/
             printf("\033[%d;%dH",tmp_x,tmp_y);
             for (int j = 0; j < cur_col;j++){
+                if(i==row_draw/2&&j>=(cur_col-len_name)/2&&ptr_name<len_name){
+                    printf("%c", name[ptr_name]);
+                    ptr_name++;
+                }else if(i==(row_draw/2+1)&&j>=(cur_col-len_pct)/2&&ptr_pct<len_pct){
+                    printf("%c", pct_str[ptr_pct]);
+                    ptr_pct++;
+                }else
                 printf(" ");
             }
             tmp_x++;
@@ -115,7 +135,7 @@ void find_top5(record_t *rec,canvas_t*canvas){
     for(i = 0; i < 5 && i < rec->counter; i++){
         // printf("%d. Name: %s, Time: %f percent:%.1f%%\n", i+1, rec->names[i], rec->times[i],rec->times[i]/rec->time_total*100);
         int percent = rec->times[i] / rec->time_total * 100;
-        draw(canvas, percent);
+        draw(canvas, percent,rec->names[i]);
     }
 }
 
