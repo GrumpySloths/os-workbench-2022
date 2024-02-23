@@ -241,7 +241,7 @@ int main(int argc, char *argv[]) {
           }
           if((time(NULL)-cur)>=1){
                 printf("\033[2;1H");
-                printf("\033[3J");
+                printf("\033[2J");
                 fflush(stdout);
                 cur = time(NULL);
                 find_top5(record, canvas);
