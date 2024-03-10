@@ -1,28 +1,29 @@
 #include <common.h>
-#include<spinlock.h>
 #ifdef TEST
 #include<debug.h>
 #endif
-static spinlock_t lk;
 extern Area heap;
+int lk = 0;
+void lock()   { while (atomic_xchg(&lk, 1)); }
+void unlock() { atomic_xchg(&lk, 0); }
 
 static void *kalloc(size_t size) {
-    spin_lock(&lk);
+    lock(&lk);
     void*pt=malloc(size);
-    spin_unlock(&lk);
+    unlock(&lk);
     
     return pt;
 }
 
 static void kfree(void *ptr) {
-    spin_lock(&lk);
+    lock(&lk);
     free(ptr);
-    spin_unlock(&lk);
+    unlock(&lk);
 }
 #ifndef TEST
 static void pmm_init() {
   uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
-  lk = SPIN_INIT();
+  lk = 0;
   printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, heap.start, heap.end);
 }
 #else
