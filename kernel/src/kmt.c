@@ -20,7 +20,9 @@ void kmt_spin_init(spinlock_t *lk, const char *name) {
 
 void kmt_spin_lock(spinlock_t *lk) { 
     while (atomic_xchg(&lk->locked, 1));
+#ifndef TEST
     lk->cpu = cpu_current();
+#endif
 }
 
 void kmt_spin_unlock(spinlock_t *lk) { 
@@ -45,7 +47,9 @@ void kmt_sem_wait(sem_t *sem) {
         else {
             // enqueue(&sem->waits, sem->name);
             kmt_spin_unlock(&sem->lk);
+#ifndef TEST
             yield();  //执行yield()函数，切换到其他线程
+#endif
         }
     }
 }
