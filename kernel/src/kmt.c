@@ -18,6 +18,7 @@ void kmt_spin_unlock(spinlock_t *lk) {
 void kmt_sem_init(sem_t *sem, const char *name, int value) { 
     sem->val = value;
     sem->name = name;
+    kmt_spin_init(&sem->lk, name);
     initQueue(&sem->waits);
 }
 

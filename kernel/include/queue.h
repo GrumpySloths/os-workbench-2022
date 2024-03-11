@@ -1,6 +1,9 @@
+#ifndef QUEUE_H__
+#define QUEUE_H__
+#ifdef TEST
 #include <stdio.h>
 #include <stdlib.h>
-
+#endif
 #define MAX_SIZE 100
 
 typedef struct {
@@ -82,3 +85,4 @@ int findElement(Queue* queue, char* name) {
     return -1;
 }
 
+#endif

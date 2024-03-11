@@ -8,13 +8,13 @@ struct spinlock {
     // TODO
     int locked;
     int cpu;
-    char* name;
+    const char* name;
 };
 
 struct semaphore {
     // TODO
-    char* name;
+    const char* name;
     int val;
     Queue waits;
-    int lk;//semaphore's spin lock
+    struct spinlock lk;//semaphore's spin lock
 };
