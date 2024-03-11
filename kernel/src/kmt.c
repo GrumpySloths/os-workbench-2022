@@ -3,7 +3,9 @@
 void kmt_spin_init(spinlock_t *lk, const char *name) { 
     lk->locked = 0;
     lk->name = name;
+#ifndef TEST
     lk->cpu = cpu_current();
+#endif
 }
 
 void kmt_spin_lock(spinlock_t *lk) { 
