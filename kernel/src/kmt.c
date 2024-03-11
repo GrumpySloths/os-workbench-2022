@@ -1,5 +1,15 @@
 #include <os.h>
 
+#ifdef TEST
+static inline int atomic_xchg(volatile int *addr, int newval) {
+  int result;
+  asm volatile ("lock xchg %0, %1":
+    "+m"(*addr), "=a"(result) : "1"(newval) : "memory");
+  return result;
+}
+#endif
+
+
 void kmt_spin_init(spinlock_t *lk, const char *name) { 
     lk->locked = 0;
     lk->name = name;
