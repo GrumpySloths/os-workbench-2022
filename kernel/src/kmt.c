@@ -89,7 +89,6 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
 }
 
 void kmt_init(){
-    Log("kmt_init start");
     extern int tasks_id;
     // 初始化tasks数组
     for(int i=0;i<100;i++){
@@ -100,7 +99,6 @@ void kmt_init(){
         currents[i]=NULL;
     }
     tasks_id=0;
-    Log("kmt_init finished");
 }
 
 MODULE_DEF(kmt) = {

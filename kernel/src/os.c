@@ -24,14 +24,14 @@ typedef struct{
 } s1_t;
 static void os_init() { 
     pmm->init();
-    Log("os_init start");
     kmt->init();
     create_threads();
 }
 
 static void os_run() {
     iset(true); //打开中断
-    while(1)
+    yield();
+    while (1)
         ; //os-run代表着一个cpu，故该线程不能停止
 }
 
