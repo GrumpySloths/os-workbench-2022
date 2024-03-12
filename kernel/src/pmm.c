@@ -3,7 +3,7 @@
 #include<debug.h>
 #endif
 extern Area heap;
-int lk = 0;
+static int lk = 0;
 void lock()   { while (atomic_xchg(&lk, 1)); }
 void unlock() { atomic_xchg(&lk, 0); }
 
