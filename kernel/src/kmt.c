@@ -99,6 +99,7 @@ void kmt_init(){
         currents[i]=NULL;
     }
     tasks_id=0;
+    Log("kmt_init finished");
 }
 
 MODULE_DEF(kmt) = {
