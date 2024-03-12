@@ -24,6 +24,7 @@ typedef struct{
 } s1_t;
 static void os_init() { 
     pmm->init();
+    Log("os_init start");
     kmt->init();
     create_threads();
 }
