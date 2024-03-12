@@ -13,6 +13,10 @@
   mod_##mod##_t __##mod##_obj
 
 typedef Context *(*handler_t)(Event, Context *);
+typedef struct task task_t;
+typedef struct spinlock spinlock_t;
+typedef struct semaphore sem_t;
+
 MODULE(os) {
   void (*init)();
   void (*run)();
@@ -27,9 +31,7 @@ MODULE(pmm) {
 };
 #endif
 
-typedef struct task task_t;
-typedef struct spinlock spinlock_t;
-typedef struct semaphore sem_t;
+
 MODULE(kmt) {
   void (*init)();
   int  (*create)(task_t *task, const char *name, void (*entry)(void *arg), void *arg);

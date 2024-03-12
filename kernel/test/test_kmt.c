@@ -22,7 +22,7 @@ void consumer() {
 
 int main(int argc, char *argv[]) {
   assert(argc == 2);
-  kmt->sem_init(&fill,"fill" 0);
+  kmt->sem_init(&fill,"fill", 0);
   kmt->sem_init(&empty,"empty", atoi(argv[1]));
   for (int i = 0; i < 8; i++) {
     create(producer);

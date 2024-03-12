@@ -2,6 +2,12 @@
 
 struct task {
     // TODO
+    const char* name;
+    int id;
+    Context* context;
+    void  (*entry)(void *);
+    uint8_t* stack;
+    struct task* next;
 };
 
 struct spinlock {
