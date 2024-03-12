@@ -41,7 +41,6 @@ static void pmm_init() {
   lk = 0;
   Log("cpu_count:%d",cpu_count());
   printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, heap.start, heap.end);
-  Log("pmm_init end");
 }
 #else
 // 测试代码的 pmm_init ()

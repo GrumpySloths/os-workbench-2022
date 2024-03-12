@@ -105,6 +105,7 @@ void kmt_init(){
 
 MODULE_DEF(kmt) = {
  // TODO
+    .init=kmt_init,
     .spin_init = kmt_spin_init,
     .spin_lock = kmt_spin_lock,
     .spin_unlock = kmt_spin_unlock,
