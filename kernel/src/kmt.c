@@ -81,6 +81,8 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     panic_on(tasks_id>=100,"too many tasks");
     task->stack = pmm->alloc(STACK_SIZE);
     printf("task->stack=%p\n",task->stack);
+    //打印heap地址
+    printf("heap.start=%p,heap.end=%p\n",heap.start,heap.end);
     panic_on(!IN_RANGE((void*)task->stack, heap), "stack out of heap range");
     panic_on(task->stack == NULL, "alloc stack failed");
     Area stack=(Area){task->stack,task->stack+STACK_SIZE};
