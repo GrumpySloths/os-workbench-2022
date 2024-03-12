@@ -80,7 +80,8 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     tasks_id++;
     panic_on(tasks_id>=100,"too many tasks");
     task->stack = pmm->alloc(STACK_SIZE);
-    panic_on(task->stack==NULL,"alloc stack failed");
+    panic_on(!IN_RANGE((void*)task->stack, heap), "stack out of heap range");
+    panic_on(task->stack == NULL, "alloc stack failed");
     Area stack=(Area){task->stack,task->stack+STACK_SIZE};
     task->context=kcontext(stack,entry,arg);
     panic_on(task->context==NULL,"kcontext failed");
