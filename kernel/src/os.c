@@ -26,7 +26,10 @@ static void os_init() {
     pmm->init();
     kmt->init();
     create_threads();
-}
+    for (int i = 0; i < tasks_id;i++){
+      tasks[i]->next=tasks[(i+1)%tasks_id];
+    } 
+  }
 
 static void os_run() {
     printf("os_run start\n");
@@ -43,7 +46,8 @@ static Context* os_trap(Event ev,Context*ctx){
   else          current_task->context = ctx;
   do {
     current_task = current_task->next;
-  } while (current_task->id  % cpu_count() != cpu_current());
+    panic_on(!current_task, "no task");
+  } while (current_task->id % cpu_count() != cpu_current());
   return current_task->context;
 }
 MODULE_DEF(os) = {
