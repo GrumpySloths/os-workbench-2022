@@ -7,42 +7,38 @@
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
 #endif
 
-// sem_t empty, fill;
 
 static inline task_t *task_alloc() {
   return pmm->alloc(sizeof(task_t));
 }
+#ifdef TEST1
+sem_t empty, fill;
 
-// static void producer(void* arg) {
-//     while (1){
-//         kmt->sem_wait(&empty);
-//         printf("(");
-//         kmt->sem_signal(&fill);
-//     } 
-// }
-// static void consumer(void *arg) {
-//     while (1){
-//         kmt->sem_wait(&fill);
-//         printf(")");
-//         kmt->sem_signal(&empty);
-//     } 
-// }
-// static void create_threads() {
-//   kmt->create(pmm->alloc(sizeof(task_t)),
-//               "test-thread-1", producer, "xxx");
-//   kmt->create(pmm->alloc(sizeof(task_t)),
-//               "test-thread-2", consumer, "yyy");
-// }
+static void producer(void* arg) {
+    while (1){
+        kmt->sem_wait(&empty);
+        printf("(");
+        kmt->sem_signal(&fill);
+    } 
+}
+static void consumer(void *arg) {
+    while (1){
+        kmt->sem_wait(&fill);
+        printf(")");
+        kmt->sem_signal(&empty);
+    } 
+}
 
-// static void concurrency_test1(){
-//     kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
-//     kmt->sem_init(&fill,  "fill",  0);
-//     for (int i = 0; i < 4; i++) // 4 个生产者
-//       kmt->create(task_alloc(), "producer", producer, NULL);
-//     for (int i = 0; i < 5; i++) // 5 个消费者
-//       kmt->create(task_alloc(), "consumer", consumer, NULL);
-// }
+static void concurrency_test1(){
+    kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
+    kmt->sem_init(&fill,  "fill",  0);
+    for (int i = 0; i < 4; i++) // 4 个生产者
+      kmt->create(task_alloc(), "producer", producer, NULL);
+    for (int i = 0; i < 5; i++) // 5 个消费者
+      kmt->create(task_alloc(), "consumer", consumer, NULL);
+}
 
+#else
 static void tty_reader(void *arg) {
   device_t *tty = dev->lookup(arg);
   char cmd[128], resp[128], ps[16];
@@ -56,16 +52,20 @@ static void tty_reader(void *arg) {
   }
 }
 
+#endif
+
 
 static void os_init() { 
     pmm->init();
     kmt->init();
+#ifdef TEST1
+    concurrency_test1();
+#else
     dev->init();
-    // create_threads();
 
     kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
     kmt->create(task_alloc(), "tty_reader", tty_reader, "tty2");
-
+#endif
     //构建轮询链表
     for (int i = 0; i < tasks_id;i++){
       tasks[i]->next=tasks[(i+1)%tasks_id];
