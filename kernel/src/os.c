@@ -29,7 +29,8 @@ static void os_init() {
 }
 
 static void os_run() {
-    iset(true); //打开中断
+    printf("os_run start\n");
+    iset(true);  // 打开中断
     yield();
     while (1)
         ; //os-run代表着一个cpu，故该线程不能停止
