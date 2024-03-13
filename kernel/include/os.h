@@ -6,7 +6,7 @@ struct task {
     int id;
     Context* context;
     void  (*entry)(void *);
-    uint8_t *stack;
+    void*stack;
     struct task* next;
 };
 
