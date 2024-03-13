@@ -81,7 +81,7 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     task->id = tasks_id;
     tasks_id++;
     panic_on(tasks_id>=100,"too many tasks");
-    task->stack = pmm->alloc(STACK_SIZE);
+    task->stack = (uint8_t*)pmm->alloc(STACK_SIZE);
 
     kmt_spin_lock(&printf_lock);
     printf("task->stack=%p\n",task->stack);
