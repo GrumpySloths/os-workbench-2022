@@ -1,51 +1,69 @@
 #include <os.h>
+#include <devices.h>
+
 #define MB (1<<20)
 
 #ifndef TEST
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
 #endif
-sem_t empty, fill;
+
+// sem_t empty, fill;
 
 static inline task_t *task_alloc() {
   return pmm->alloc(sizeof(task_t));
 }
 
-static void producer(void* arg) {
-    while (1){
-        kmt->sem_wait(&empty);
-        printf("(");
-        kmt->sem_signal(&fill);
-    } 
-}
-static void consumer(void *arg) {
-    while (1){
-        kmt->sem_wait(&fill);
-        printf(")");
-        kmt->sem_signal(&empty);
-    } 
-}
-static void create_threads() {
-  kmt->create(pmm->alloc(sizeof(task_t)),
-              "test-thread-1", producer, "xxx");
-  kmt->create(pmm->alloc(sizeof(task_t)),
-              "test-thread-2", consumer, "yyy");
+// static void producer(void* arg) {
+//     while (1){
+//         kmt->sem_wait(&empty);
+//         printf("(");
+//         kmt->sem_signal(&fill);
+//     } 
+// }
+// static void consumer(void *arg) {
+//     while (1){
+//         kmt->sem_wait(&fill);
+//         printf(")");
+//         kmt->sem_signal(&empty);
+//     } 
+// }
+// static void create_threads() {
+//   kmt->create(pmm->alloc(sizeof(task_t)),
+//               "test-thread-1", producer, "xxx");
+//   kmt->create(pmm->alloc(sizeof(task_t)),
+//               "test-thread-2", consumer, "yyy");
+// }
+
+// static void concurrency_test1(){
+//     kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
+//     kmt->sem_init(&fill,  "fill",  0);
+//     for (int i = 0; i < 4; i++) // 4 个生产者
+//       kmt->create(task_alloc(), "producer", producer, NULL);
+//     for (int i = 0; i < 5; i++) // 5 个消费者
+//       kmt->create(task_alloc(), "consumer", consumer, NULL);
+// }
+
+static void tty_reader(void *arg) {
+  device_t *tty = dev->lookup(arg);
+  char cmd[128], resp[128], ps[16];
+  snprintf(ps, 16, "(%s) $ ", arg);
+  while (1) {
+    tty->ops->write(tty, 0, ps, strlen(ps));
+    int nread = tty->ops->read(tty, 0, cmd, sizeof(cmd) - 1);
+    cmd[nread] = '\0';
+    sprintf(resp, "tty reader task: got %d character(s).\n", strlen(cmd));
+    tty->ops->write(tty, 0, resp, strlen(resp));
+  }
 }
 
-typedef struct{
-    int x;
-    int y;
-} s1_t;
+
 static void os_init() { 
     pmm->init();
     kmt->init();
-    create_threads();
+    // create_threads();
 
-    kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
-    kmt->sem_init(&fill,  "fill",  0);
-    for (int i = 0; i < 4; i++) // 4 个生产者
-      kmt->create(task_alloc(), "producer", producer, NULL);
-    for (int i = 0; i < 5; i++) // 5 个消费者
-      kmt->create(task_alloc(), "consumer", consumer, NULL);
+    kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
+    kmt->create(task_alloc(), "tty_reader", tty_reader, "tty2");
 
     //构建轮询链表
     for (int i = 0; i < tasks_id;i++){
