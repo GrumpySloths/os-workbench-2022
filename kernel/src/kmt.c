@@ -71,18 +71,19 @@ void kmt_sem_signal(sem_t *sem) {
 static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), void *arg){
     extern int tasks_id;
     extern task_t* tasks[100];
-    
+
     // 将task加入到tasks数组中
     tasks[tasks_id] = task;
-
+    void *ptr = NULL;
+    // int test_kmt = 0;
     // 为task传递参数并分配相应的栈空间
     task->name = name;
     task->entry = entry;
     task->id = tasks_id;
     tasks_id++;
     panic_on(tasks_id>=100,"too many tasks");
-    task->stack = (uint8_t*)pmm->alloc(STACK_SIZE);
-
+    ptr = pmm->alloc(STACK_SIZE);
+    task->stack = ptr;
     kmt_spin_lock(&printf_lock);
     printf("task->stack=%p\n",task->stack);
     //打印heap地址
