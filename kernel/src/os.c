@@ -60,6 +60,7 @@ static void tty_reader(void *arg) {
 static void os_init() { 
     pmm->init();
     kmt->init();
+    dev->init();
     // create_threads();
 
     kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
