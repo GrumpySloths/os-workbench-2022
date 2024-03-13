@@ -75,7 +75,8 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     // 将task加入到tasks数组中
     tasks[tasks_id] = task;
     void *ptr = NULL;
-    // int test_kmt = 0;
+    int test_kmt = 0;
+    test_kmt++;
     // 为task传递参数并分配相应的栈空间
     task->name = name;
     task->entry = entry;
