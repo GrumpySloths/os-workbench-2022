@@ -104,8 +104,8 @@ void *malloc(size_t size) {
   // size_t real_size = sizeof(header_t) + size;
   size_t size_align = 1 << power_count(size);
   size_t real_size = size_align + sizeof(header_t);
-  Log("real_size:%d mb\n", real_size >> 20);
-  // printf("real_size:%ld\n", real_size);
+  // Log("real_size:%d mb\n", real_size >> 20);
+  printf("real_size:%d\n", real_size);
   print_list();
   // 对list遍历，存在符合大小的块就直接分配
   for (p =prevp= head; p != NULL;prevp=p,p=p->next){
@@ -145,9 +145,9 @@ void free(void *ptr) {
     assert(hptr->magic == 1234567);  // 内存完整性检测
     panic_on(hptr < head, "the pointer to free out of heap");
     size_t real_size = sizeof(header_t) + hptr->size;
-    printf("free,%p,%p,%p\n", (void *)(hptr + 1),
+    printf("free,%p,%p,%d\n", (void *)(hptr + 1),
            (void *)((uintptr_t)hptr + real_size),
-           (void*)(hptr->size));
+           (hptr->size));
     header_t *cur;
     // 这里维护一个有序的链表，按地址从低到高进行排列
     for (cur = head; !(hptr >cur && hptr < cur->next); cur = cur->next) {

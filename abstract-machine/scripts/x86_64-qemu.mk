@@ -11,3 +11,5 @@ AM_SRCS := x86/qemu/start64.S \
 
 run: build-arg
 	@qemu-system-x86_64 $(QEMU_FLAGS)
+
+
