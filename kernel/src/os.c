@@ -4,12 +4,20 @@
 #ifndef TEST
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
 #endif
-
-static void producer(void*arg){
-    while (1) printf("(");
+sem_t empty, fill;
+static void producer(void* arg) {
+    while (1){
+        kmt->sem_wait(&empty);
+        printf("(");
+        kmt->sem_signal(&fill);
+    } 
 }
 static void consumer(void *arg) {
-    while (1) printf(")");
+    while (1){
+        kmt->sem_wait(&fill);
+        printf(")");
+        kmt->sem_signal(&empty);
+    } 
 }
 static void create_threads() {
   kmt->create(pmm->alloc(sizeof(task_t)),
@@ -29,6 +37,8 @@ static void os_init() {
     for (int i = 0; i < tasks_id;i++){
       tasks[i]->next=tasks[(i+1)%tasks_id];
     } 
+    kmt->sem_init(&empty, "empty", 1);
+    kmt->sem_init(&fill, "fill", 0);
   }
 
 static void os_run() {
