@@ -5,6 +5,11 @@
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
 #endif
 sem_t empty, fill;
+
+static inline task_t *task_alloc() {
+  return pmm->alloc(sizeof(task_t));
+}
+
 static void producer(void* arg) {
     while (1){
         kmt->sem_wait(&empty);
@@ -34,11 +39,22 @@ static void os_init() {
     pmm->init();
     kmt->init();
     create_threads();
+
+    kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
+    kmt->sem_init(&fill,  "fill",  0);
+    for (int i = 0; i < 4; i++) // 4 个生产者
+      kmt->create(task_alloc(), "producer", producer, NULL);
+    for (int i = 0; i < 5; i++) // 5 个消费者
+      kmt->create(task_alloc(), "consumer", consumer, NULL);
+
+    //构建轮询链表
     for (int i = 0; i < tasks_id;i++){
       tasks[i]->next=tasks[(i+1)%tasks_id];
     } 
-    kmt->sem_init(&empty, "empty", 1);
-    kmt->sem_init(&fill, "fill", 0);
+
+
+    // kmt->sem_init(&empty, "empty", 1);
+    // kmt->sem_init(&fill, "fill", 0);
   }
 
 static void os_run() {
