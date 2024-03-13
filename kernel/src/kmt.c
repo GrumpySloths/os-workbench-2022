@@ -74,7 +74,7 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
 
     // 将task加入到tasks数组中
     tasks[tasks_id] = task;
-    void *ptr = NULL;
+    // void *ptr = NULL;
     int test_kmt = 0;
     test_kmt++;
     // 为task传递参数并分配相应的栈空间
@@ -83,8 +83,8 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     task->id = tasks_id;
     tasks_id++;
     panic_on(tasks_id>=100,"too many tasks");
-    ptr = pmm->alloc(STACK_SIZE);
-    task->stack = ptr;
+    // ptr = pmm->alloc(STACK_SIZE);
+    task->stack = (void*)0x300000;
     kmt_spin_lock(&printf_lock);
     printf("task->stack=%p\n",task->stack);
     //打印heap地址
