@@ -1,13 +1,17 @@
 #include <common.h>
 
-struct task {
+union task {
     // TODO
-    const char* name;
-    int id;
-    Context* context;
-    void  (*entry)(void *);
-    void*stack;
-    struct task* next;
+    struct {
+        const char* name;
+        int id;
+        void  (*entry)(void *);
+        void* arg;
+        union task* next;
+        Context* context;
+    };
+    uint8_t stack[STACK_SIZE];
+
 };
 
 struct spinlock {

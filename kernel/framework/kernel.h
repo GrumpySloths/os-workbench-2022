@@ -13,7 +13,7 @@
   mod_##mod##_t __##mod##_obj
 
 typedef Context *(*handler_t)(Event, Context *);
-typedef struct task task_t;
+typedef union task task_t;
 typedef struct spinlock spinlock_t;
 typedef struct semaphore sem_t;
 
