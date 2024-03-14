@@ -97,7 +97,7 @@ static void os_init() {
     dev->init();
 
     kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
-    kmt->create(task_alloc(), "tty_reader", tty_reader, "tty2");
+    // kmt->create(task_alloc(), "tty_reader", tty_reader, "tty2");
 #endif
     //构建轮询链表
     for (int i = 0; i < tasks_id;i++){
