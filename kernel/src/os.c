@@ -54,10 +54,14 @@ static void tty_reader(void *arg) {
 
 #endif
 
-
+//注册 timer 中断函数
+static Context* irq_timer(Event ev,Context*context){
+  
+}
 static void os_init() { 
     pmm->init();
     kmt->init();
+    handlers_id = 0;
 #ifdef TEST1
     concurrency_test1();
 #else
@@ -72,7 +76,7 @@ static void os_init() {
     } 
 
 
-    // kmt->sem_init(&empty, "empty", 1);
+    // kmt->sem_init(&empty, "empty", 1);dev_input_task
     // kmt->sem_init(&fill, "fill", 0);
   }
 
@@ -95,8 +99,19 @@ static Context* os_trap(Event ev,Context*ctx){
   } while (current_task->id % cpu_count() != cpu_current());
   return current_task->context;
 }
+
+static void os_on_irq(int seq,int event,handler_t handler){
+    extern handlerRegister_t* handlers[100];
+    // 为h分配空间
+    handlerRegister_t* h = pmm->alloc(sizeof(handlerRegister_t));
+    h->seq = seq;
+    h->handler = handler;
+    h->event = event;
+
+    handlers[handlers_id++] = h;
+}
+
 MODULE_DEF(os) = {
-  .init = os_init,
-  .run  = os_run,
-  .trap = os_trap,
-};
+    .init = os_init, .run = os_run, .trap = os_trap, .on_irq = os_on_irq,
+}
+;

@@ -18,3 +18,13 @@ task_t *tasks[100];
 
 task_t *currents[MAX_CPU];
 #define current_task currents[cpu_current()]
+
+//构建一个数据结构 保存 int seq,int event ,handler_t handler
+typedef struct  __handlerRegister_t{
+    int seq;
+    int event;
+    handler_t handler;
+} handlerRegister_t;
+handlerRegister_t *handlers[100];
+
+int handlers_id;

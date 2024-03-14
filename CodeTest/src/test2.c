@@ -1,108 +1,101 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdarg.h>
+#include<stdint.h>
+#include<stdio.h>
 #include<string.h>
-#define MAX_SIZE 100
 
-typedef struct {
-    char* data[MAX_SIZE];
-    int front;
-    int rear;
-} Queue;
 
-void initQueue(Queue* queue) {
-    queue->front = -1;
-    queue->rear = -1;
-}
-
-int isQueueEmpty(Queue* queue) {
-    return (queue->front == -1 && queue->rear == -1);
-}
-
-int isQueueFull(Queue* queue) {
-    return (queue->rear + 1) % MAX_SIZE == queue->front;
-}
-
-void enqueue(Queue* queue, char* element) {
-    if (isQueueFull(queue)) {
-        printf("Queue is full. Cannot enqueue element.\n");
-        return;
+int my_vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
+    //vsnprintf实现
+    char c, *s;
+    int d;
+    uintptr_t pt;
+    char pre;  // 代表前一个字符
+    size_t count = strlen(fmt);
+    size_t len = count;
+    size_t i = 0; 
+    //对count和n进行比较
+    if(count>n){
+        count=n;
     }
-
-    if (isQueueEmpty(queue)) {
-        queue->front = 0;
-        queue->rear = 0;
-    } else {
-        queue->rear = (queue->rear + 1) % MAX_SIZE;
-    }
-
-    queue->data[queue->rear] = element;
-}
-
-void dequeue(Queue* queue) {
-    if (isQueueEmpty(queue)) {
-        printf("Queue is empty. Cannot dequeue element.\n");
-        return;
-    }
-
-    if (queue->front == queue->rear) {
-        queue->front = -1;
-        queue->rear = -1;
-    } else {
-        queue->front = (queue->front + 1) % MAX_SIZE;
-    }
-}
-
-char* front(Queue* queue) {
-    if (isQueueEmpty(queue)) {
-        printf("Queue is empty. Cannot get front element.\n");
-        return NULL;
-    }
-
-    return queue->data[queue->front];
-}
-//实现队列查询功能，给定一个char*name,返回队列中第一个匹配的元素的下标，如果没有匹配的元素，返回-1
-int findElement(Queue* queue, char* name) {
-    if (isQueueEmpty(queue)) {
-        printf("Queue is empty. Cannot find element.\n");
-        return -1;
-    }
-
-    int index = queue->front;
-    while (index != queue->rear) {
-        if (strcmp(queue->data[index], name) == 0) {
-            return index;
+    while (count-- > 0) {
+        if((pre=*fmt++)=='%'){
+            switch(*fmt++){
+                case 's': /* string */
+                    s = va_arg(ap, char *);
+                    while(*s){
+                        out[i++]=*s++;
+                    }
+                    break;
+                case 'd':              /* int */
+                    d = va_arg(ap, int32_t);
+                    char buf[100];
+                    int j = 0;
+                    if(d<0){
+                        out[i++]='-';
+                        d=-d;
+                    }
+                    if(d==0){
+                        buf[j++]='0';
+                    }
+                    while(d){
+                        buf[j++]=d%10+'0';
+                        d/=10;
+                    }
+                    while(j--){
+                        out[i++]=buf[j];
+                    }
+                    break;
+                case 'c':              /* char */
+                    /* need a cast here since va_arg only
+                        takes fully promoted types */
+                    c = (char) va_arg(ap, int);
+                    out[i++]=c;
+                    break;
+                case 'p':
+                    pt = va_arg(ap, uintptr_t);
+                    char buf2[100];
+                    int k = 0;
+                    out[i++]='0';
+                    out[i++]='x';
+                    if(pt==0){
+                        out[i++]='0';
+                    }
+                    while(pt){
+                        if(pt%16>=10)
+                            buf2[k++]=pt%16-10+'a';
+                        else
+                            buf2[k++]=pt%16+'0';
+                        pt/=16;
+                    }
+                    while(k--){
+                        out[i++]=buf2[k];
+                    }
+                    break;
+                default:
+                    printf("current behavior is not defined,program exited\n");
+                }
+        }else{
+            out[i++]=pre;
         }
-        index = (index + 1) % MAX_SIZE;
     }
 
-    if (strcmp(queue->data[index], name) == 0) {
-        return index;
-    }
-
-    return -1;
+    out[i]='\0';
+    
+    return len; 
 }
 
+int my_snprintf(char *out, size_t n, const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    int ret = my_vsnprintf(out, n, fmt, ap);
+    va_end(ap);
+    return ret;
 
-
-int main() {
-    Queue queue;
-    initQueue(&queue);
-
-    enqueue(&queue, "Hello");
-    enqueue(&queue, "World");
-    enqueue(&queue, "Copilot");
-    if(findElement(&queue,"World")!=-1){
-        printf("find it\n");
-    }
-    //查看"test"是否在queue中，不在的话打印"not find"
-    if(findElement(&queue,"test")==-1){
-        printf("not find\n");
-    }
-    printf("Front element: %s\n", front(&queue));
-
-    dequeue(&queue);
-
-    printf("Front element after dequeue: %s\n", front(&queue));
-
-    return 0;
 }
+
+void test_vsn_printf() {
+    char buf[100];
+    my_snprintf(buf, 10, "hello world %d %s %c %p", 123, "abc", 'd', (uintptr_t)0x12345678);
+    printf("%s\n", buf);
+}
+int main(void) { test_vsn_printf(); return 0;}

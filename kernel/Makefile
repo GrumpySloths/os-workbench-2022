@@ -11,7 +11,7 @@ include $(AM_HOME)/Makefile
 include ../Makefile.lab
 image: git
 # ifdef DEBUG
-# CFLAGS += -DDEBUG
+CFLAGS += -DTEST1
 # endif
 
 
