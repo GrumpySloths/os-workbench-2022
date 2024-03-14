@@ -55,13 +55,41 @@ static void tty_reader(void *arg) {
 #endif
 
 //注册 timer 中断函数
-static Context* irq_timer(Event ev,Context*context){
-  
+static Context* irq_timer(Event ev,Context*ctx){
+  extern task_t*tasks[100];
+  if (!current_task)
+      current_task = tasks[0];
+  else          current_task->context = ctx;
+  do {
+    current_task = current_task->next;
+    panic_on(!current_task, "no task");
+  } while (current_task->id % cpu_count() != cpu_current());
+  return current_task->context;
 }
+
+//注册 yield中断函数
+static Context* irq_yield(Event ev,Context*ctx){
+  extern task_t*tasks[100];
+  if (!current_task)
+      current_task = tasks[0];
+  else          current_task->context = ctx;
+  do {
+    current_task = current_task->next;
+    panic_on(!current_task, "no task");
+  } while (current_task->id % cpu_count() != cpu_current());
+  return current_task->context;
+}
+
+
 static void os_init() { 
     pmm->init();
     kmt->init();
     handlers_id = 0;
+    //注册timer中断
+    os->on_irq(0, EVENT_IRQ_TIMER, irq_timer);
+    //注册yield中断
+    os->on_irq(1, EVENT_YIELD, irq_yield);
+    
 #ifdef TEST1
     concurrency_test1();
 #else
@@ -89,15 +117,20 @@ static void os_run() {
 }
 
 static Context* os_trap(Event ev,Context*ctx){
-  extern task_t*tasks[100];
-  if (!current_task)
-      current_task = tasks[0];
-  else          current_task->context = ctx;
-  do {
-    current_task = current_task->next;
-    panic_on(!current_task, "no task");
-  } while (current_task->id % cpu_count() != cpu_current());
-  return current_task->context;
+  Context *next = NULL;
+  //遍历handlers,当ev与handlers[i]->event相等时，调用handlers[i]->handler
+  for (int i = 0; i < handlers_id;i++){
+    if(handlers[i]->event==EVENT_NULL||handlers[i]->event==ev.event){
+      Context*r=handlers[i]->handler(ev,ctx);
+      panic_on(r && next, "returning multiple contexts");
+      if(r)
+          next = r;
+    }
+  } 
+
+  panic_on(!next, "returning NULL context");
+
+  return next;
 }
 
 static void os_on_irq(int seq,int event,handler_t handler){
