@@ -187,10 +187,11 @@ void dev_input_task(void *args) {
   uint32_t known_time = io_read(AM_TIMER_UPTIME).us;
 
   while (1) {
-    uint32_t time;
-    AM_INPUT_KEYBRD_T key;
-    while ((key = io_read(AM_INPUT_KEYBRD)).keycode != 0) {
-      input_keydown(in, key);
+      printf("[input] waiting for keyboard interrupt\n");
+      uint32_t time;
+      AM_INPUT_KEYBRD_T key;
+      while ((key = io_read(AM_INPUT_KEYBRD)).keycode != 0) {
+          input_keydown(in, key);
     }
     time = io_read(AM_TIMER_UPTIME).us;
     if ((time - known_time) / 1000 > 100 && is_empty(in->ptr)) {
