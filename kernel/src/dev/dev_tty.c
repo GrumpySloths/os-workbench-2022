@@ -267,6 +267,8 @@ devops_t tty_ops = {
 // ------------------------------------------------------------------
 
 void dev_tty_task(void *arg) {
+  printf("(tty) tty daemon started.\n");
+
   device_t *in =     dev->lookup("input");
   device_t *ttydev = dev->lookup("tty1");
   device_t *fb =     dev->lookup("fb");
