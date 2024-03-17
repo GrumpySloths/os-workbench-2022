@@ -225,11 +225,12 @@ static int tty_init(device_t *ttydev) {
 
 static int tty_read(device_t *dev, int offset, void *buf, int count) {
 
-  printf("tty is reading data\n");
   tty_t *tty = dev->ptr;
   kmt->sem_wait(&tty->cooked);
-  kmt->sem_wait(&tty->lock);
+  printf("tty is reading data\n");
   tty_cook(dev->ptr, '\n');
+  kmt->sem_wait(&tty->lock);
+
   int nread = 0;
   struct tty_queue *q = &tty->queue;
   while (1) {
