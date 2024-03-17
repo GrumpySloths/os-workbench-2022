@@ -129,7 +129,7 @@ static Context* os_trap(Event ev,Context*ctx){
     }
   } 
   //打印当前的event msg
-  printf("event: %s\n", ev.msg);
+  // printf("event: %s\n", ev.msg);
 
   panic_on(!next, "returning NULL context");
 
