@@ -218,7 +218,7 @@ static int tty_init(device_t *ttydev) {
   q->front = q->rear = q->buf = pmm->alloc(TTY_COOK_BUF_SZ);
   q->end = q->buf + TTY_COOK_BUF_SZ;
   kmt->sem_init(&tty->lock, "tty lock", 1);
-  kmt->sem_init(&tty->cooked, "tty cooked lines", 1);
+  kmt->sem_init(&tty->cooked, "tty cooked lines", 0);
   welcome(ttydev);
   return 0;
 }
@@ -227,8 +227,6 @@ static int tty_read(device_t *dev, int offset, void *buf, int count) {
 
   tty_t *tty = dev->ptr;
   kmt->sem_wait(&tty->cooked);
-  printf("tty is reading data\n");
-  tty_cook(dev->ptr, '\n');
   kmt->sem_wait(&tty->lock);
 
   int nread = 0;
