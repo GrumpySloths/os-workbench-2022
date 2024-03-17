@@ -39,19 +39,19 @@ static void concurrency_test1(){
 }
 
 #else
-static void tty_reader(void *arg) {
-  device_t *tty = dev->lookup(arg);
-  char cmd[128], resp[128], ps[16];
-  snprintf(ps, 16, "(%s) $ ", arg);
-  while (1) {
-    tty->ops->write(tty, 0, ps, strlen(ps));
-    printf("tty start reading\n");
-    int nread = tty->ops->read(tty, 0, cmd, sizeof(cmd) - 1);
-    cmd[nread] = '\0';
-    sprintf(resp, "tty reader task: got %d character(s).\n", strlen(cmd));
-    tty->ops->write(tty, 0, resp, strlen(resp));
-  }
-}
+// static void tty_reader(void *arg) {
+//   device_t *tty = dev->lookup(arg);
+//   char cmd[128], resp[128], ps[16];
+//   snprintf(ps, 16, "(%s) $ ", arg);
+//   while (1) {
+//     tty->ops->write(tty, 0, ps, strlen(ps));
+//     printf("tty start reading\n");
+//     int nread = tty->ops->read(tty, 0, cmd, sizeof(cmd) - 1);
+//     cmd[nread] = '\0';
+//     sprintf(resp, "tty reader task: got %d character(s).\n", strlen(cmd));
+//     tty->ops->write(tty, 0, resp, strlen(resp));
+//   }
+// }
 
 #endif
 
@@ -96,7 +96,7 @@ static void os_init() {
 #else
     dev->init();
 
-    kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
+    // kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
     // kmt->create(task_alloc(), "tty_reader", tty_reader, "tty2");
 #endif
     //构建轮询链表
