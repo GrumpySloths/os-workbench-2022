@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<assert.h>
-#define _GNU_SOURCE
+#define __USE_GNU
 #include<dlfcn.h>
 
 int main(int argc, char *argv[]) {
