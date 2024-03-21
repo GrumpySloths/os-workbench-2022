@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
       //定义一个返回int 的函数指针
       int (*func)(void);
       //通过dlsym获取函数指针,函数名为line
-      func = dlsym(handle, line);
+      func = dlsym(handle, "foo");
       //打印该函数的值
       printf("%d\n", func());
     }
