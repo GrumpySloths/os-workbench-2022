@@ -43,6 +43,8 @@ int main(int argc, char *argv[]) {
       func = dlsym(handle, "foo");
       printf("%d\n", func());
     }else{
+      //打印line
+      printf("%s\n",line);
       //定义一个返回int 的函数指针
       int (*func)(void);
       //通过dlsym获取函数指针,函数名为line
