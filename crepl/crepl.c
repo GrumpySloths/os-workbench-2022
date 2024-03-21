@@ -43,12 +43,12 @@ int main(int argc, char *argv[]) {
       func = dlsym(handle, "foo");
       printf("%d\n", func());
     }else{
-      //打印line
-      printf("%s\n",line);
+      //将line结尾的\n替换为\0
+      line[strlen(line)-1]=0;
       //定义一个返回int 的函数指针
       int (*func)(void);
       //通过dlsym获取函数指针,函数名为line
-      func = dlsym(handle, "foo");
+      func = dlsym(handle, line);
       //打印该函数的值
       printf("%d\n", func());
     }
