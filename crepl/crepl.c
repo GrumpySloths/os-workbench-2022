@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     }
     printf("Got %zu chars.\n", strlen(line)); // ??
     // 将line通过mkstemp api写入文件到/tmp目录下,后缀是.c
-    int fd=mkstemp("/tmp/crepl.c");
+    int fd=mkstemps("/tmp/creplXXXXXX.c",2);
     write(fd,line,strlen(line));
     close(fd);
     // 通过system调用gcc编译这个文件
