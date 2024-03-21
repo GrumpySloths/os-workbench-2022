@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     template[strlen(template)-2]=0;
     // 通过system调用gcc编译这个文件,使其变为.so文件
     char cmd[4096];
-    snprintf(cmd, sizeof(cmd), "gcc -shared -fPIC %s -o %s.so", template, template);
+    snprintf(cmd, sizeof(cmd), "gcc -shared -fPIC %s.c -o %s.so", template, template);
     printf("cmd=%s\n",cmd);
     system(cmd);
     // 通过system调用./a.out执行这个文件
