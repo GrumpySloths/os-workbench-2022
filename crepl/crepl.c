@@ -15,7 +15,7 @@ int handle_count = 0;
 int wrapper_count = 0;
 
 int main(int argc, char *argv[]) {
-  static char line[4096];
+  static char line[1024];
   void*handle=NULL;
   while (1) {
     printf("crepl> ");
