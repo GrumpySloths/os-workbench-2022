@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<assert.h>
+#include<dlfcn.h>
 
 int main(int argc, char *argv[]) {
   static char line[4096];
@@ -20,6 +21,8 @@ int main(int argc, char *argv[]) {
     printf("template=%s\n",template);
     write(fd,line,strlen(line));
     close(fd);
+    //去除template 的.c后缀
+    template[strlen(template)-2]=0;
     // 通过system调用gcc编译这个文件,使其变为.so文件
     char cmd[4096];
     snprintf(cmd, sizeof(cmd), "gcc -shared -fPIC %s -o %s.so", template, template);
