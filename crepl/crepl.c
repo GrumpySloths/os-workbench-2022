@@ -32,6 +32,14 @@ int main(int argc, char *argv[]) {
       system(cmd);
       // 使用dlopen将.so文件加载到内存中
       handle = dlopen(template, RTLD_NOW);
+      if (handle == NULL) {
+        fprintf(stderr, "%s\n", dlerror());
+        continue;
+      }
+      //利用dlsym执行foo函数
+      int (*func)(void);
+      func = dlsym(handle, "foo");
+      printf("%d\n", func());
     }else{
       //定义一个返回int 的函数指针
       int (*func)(void);
