@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     //根据line是否以"int"开头进行判断
     if (strncmp(line, "int", 3) == 0) {
       // 将line通过mkstemp api写入文件到/tmp目录下,后缀是.c
-      char template[] = "/tmp/creplXXXXXX.c";
+      char template[100] = "/tmp/creplXXXXXX.c";
       int fd=mkstemps(template,2);
       assert(fd>=0);
       printf("template=%s\n",template);
