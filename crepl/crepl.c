@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<assert.h>
+#define _GNU_SOURCE
 #include<dlfcn.h>
 
 int main(int argc, char *argv[]) {
@@ -48,7 +49,7 @@ int main(int argc, char *argv[]) {
       //定义一个返回int 的函数指针
       int (*func)(void);
       //通过dlsym获取函数指针,函数名为line
-      func = dlsym(handle, line);
+      func = dlsym(RTLD_DEFAULT, line);
       //打印该函数的值
       printf("%d\n", func());
     }
