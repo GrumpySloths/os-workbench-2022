@@ -2,6 +2,15 @@
 #include <devices.h>
 
 #define NEVENTS 128
+
+#ifdef DEV_INPUT_TRACE
+  #define TRACE_ENTRY printf("[trace] %s:entry\n", __func__)
+  #define TRACE_EXIT printf("[trace] %s:exit\n", __func__)
+#else
+  #define TRACE_ENTRY ((void)0)
+  #define TRACE_EXIT ((void)0)
+#endif
+
 static sem_t sem_kbdirq;
 static char keymap[][2];
 
@@ -86,8 +95,10 @@ static void input_keydown(device_t *dev, AM_INPUT_KEYBRD_T key) {
 }
 
 static Context *input_notify(Event ev, Context *context) {
-  kmt->sem_signal(&sem_kbdirq);
-  return NULL;
+    TRACE_ENTRY;
+    kmt->sem_signal(&sem_kbdirq);
+    TRACE_EXIT;
+    return NULL;
 }
 
 static int input_init(device_t *dev) {
