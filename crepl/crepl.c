@@ -12,6 +12,14 @@
 int wrapper_count = 0;
 
 int main(int argc, char *argv[]) {
+
+  //利用popen调用plugin.py,向plugin.py输入数据
+  FILE *fp = popen("python3 plugin.py", "w");
+  if (fp == NULL) {
+    perror("popen");
+    return 1;
+  }
+
   static char line[1024];
   void*handle=NULL;
   while (1) {
@@ -47,10 +55,8 @@ int main(int argc, char *argv[]) {
         continue;
       }
 
-      //将line 管道给plugin.py并执行
-      char cmd2[4096];
-      snprintf(cmd2, sizeof(cmd2), "Added %s | python3 plugin.py ", template);
-      system(cmd2);
+      //将line 信息传递给plugin.py
+      fprintf(fp, "%s", line);
       // printf("\033[32m Added:\033[0m %s", line);
     }else{
 
