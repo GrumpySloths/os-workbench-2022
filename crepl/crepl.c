@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
       printf("cmd execve success\n");
       printf("find expr_name:%s\n",expr_name);
       strcat(template, ".so");
-      handle = dlopen(template, RTLD_LAZY);
+      handle = dlopen(template, RTLD_LAZY|RTLD_GLOBAL);
       if (handle == NULL) {
         fprintf(stderr, "%s\n", dlerror());
         continue;
