@@ -78,14 +78,14 @@ int main(int argc, char *argv[]) {
       // 使用dlopen将.so文件加载到内存中
       //创建新的变量为template加上.so后缀
       printf("cmd execve success\n");
+      printf("find expr_name:%s\n",expr_name);
       strcat(template, ".so");
-      handle = dlopen(template, RTLD_NOW);
+      handle = dlopen(template, RTLD_LAZY);
       if (handle == NULL) {
         fprintf(stderr, "%s\n", dlerror());
         continue;
       }
       printf("dlopen success\n");
-      printf("find expr_name:%s\n",expr_name);
       // 执行wrapper函数
       int (*wrapper_func)(void) = dlsym(handles[handle_count-1], expr_name);
       if (wrapper_func == NULL) {
