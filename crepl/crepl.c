@@ -83,7 +83,8 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "%s\n", dlerror());
         continue;
       }
-      //执行wrapper函数
+      printf("dlopen success\n");
+      // 执行wrapper函数
       int (*wrapper_func)(void) = dlsym(handles[handle_count-1], expr_name);
       if (wrapper_func == NULL) {
         printf("can't find symbol %s\n", expr_name);
