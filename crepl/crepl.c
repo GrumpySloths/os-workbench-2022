@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
         continue;
       }
 
-      //将line 信息传递给plugin.py
+      // //将line 信息传递给plugin.py
       fprintf(fp, "%s", line);
       // printf("\033[32m Added:\033[0m %s", line);
     }else{
