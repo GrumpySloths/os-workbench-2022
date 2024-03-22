@@ -7,7 +7,15 @@
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
 #endif
 
-
+#ifdef DEV_TIMER_TRACE
+static int trace_counter = 0;
+#define TRACE_ENTRY printf("[trace %d] %s:entry\n", trace_counter, __func__);
+#define TRACE_EXIT printf("[trace %d] %s:exit\n", trace_counter, __func__);\
+  trace_counter++;
+#else
+#define TRACE_ENTRY ((void)0)
+#define TRACE_EXIT ((void)0)
+#endif
 static inline task_t *task_alloc() {
   return pmm->alloc(sizeof(task_t));
 }
@@ -133,7 +141,9 @@ static Context* os_trap(Event ev,Context*ctx){
   
   //如果是timer中断打印该信息
   if(ev.event==EVENT_IRQ_TIMER){
-    printf("%s\n",ev.msg);
+      TRACE_ENTRY;
+      printf("%d,%s\n", ev.msg);
+      TRACE_EXIT;
   }
 
   panic_on(!next, "returning NULL context");
