@@ -320,4 +320,6 @@ void dev_tty_task(void *arg) {
       ttydev->ops->write(ttydev, 0, "", 0);
     }
   }
+
+  panic("tty daemon should not return");
 }

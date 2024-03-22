@@ -213,4 +213,6 @@ void dev_input_task(void *args) {
     }
     kmt->sem_wait(&sem_kbdirq);
   }
+  
+  panic("input task exit");
 }
