@@ -84,12 +84,12 @@ int main(int argc, char *argv[]) {
         continue;
       }
       //执行wrapper函数
-      int (*wrapper_func)(void) = dlsym(handles[handle_count], expr_name);
+      int (*wrapper_func)(void) = dlsym(handles[handle_count-1], expr_name);
       if (wrapper_func == NULL) {
         fprintf(stderr, "%s\n", dlerror());
         continue;
       }
-      printf("%d\n", wrapper_func());
+      printf("result:%d\n", wrapper_func());
     }
 
 
