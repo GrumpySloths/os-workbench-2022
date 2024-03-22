@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 
       //将line 管道给plugin.py并执行
       char cmd2[4096];
-      snprintf(cmd2, sizeof(cmd2), "python3 plugin.py Added %s", template);
+      snprintf(cmd2, sizeof(cmd2), "Added %s | python3 plugin.py ", template);
       system(cmd2);
       // printf("\033[32m Added:\033[0m %s", line);
     }else{
