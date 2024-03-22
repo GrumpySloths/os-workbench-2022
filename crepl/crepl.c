@@ -47,7 +47,11 @@ int main(int argc, char *argv[]) {
         continue;
       }
 
-      printf("\033[32m Added:\033[0m %s", line);
+      //将line 管道给plugin.py并执行
+      char cmd2[4096];
+      snprintf(cmd2, sizeof(cmd2), "python3 plugin.py Added %s", template);
+      system(cmd2);
+      // printf("\033[32m Added:\033[0m %s", line);
     }else{
 
       //line为表达式的处理
@@ -75,7 +79,7 @@ int main(int argc, char *argv[]) {
 
       // 通过system调用gcc编译这个文件,使其变为.so文件
       char cmd[4096];
-      snprintf(cmd, sizeof(cmd), "gcc -shared -fPIC %s.c -o %s.so", template, template);
+      snprintf(cmd, sizeof(cmd), "gcc -shared -fPIC -w %s.c -o %s.so", template, template);
       system(cmd);
 
       // 使用dlopen将.so文件加载到内存中
