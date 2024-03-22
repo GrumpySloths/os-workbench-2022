@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
       char wrapper[4096];
       char expr_name[100];
       snprintf(expr_name,sizeof(expr_name),"__expr_wrapper_%d",wrapper_count);
-      snprintf(wrapper, sizeof(wrapper), "int %s() {return %s;}", 
+      snprintf(wrapper, sizeof(wrapper), ":::C\nint %s() {return %s;}", 
       expr_name, line);
       write(fd,wrapper,strlen(wrapper));
       close(fd);
