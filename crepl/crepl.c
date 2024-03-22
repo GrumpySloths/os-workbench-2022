@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
         perror("popen");
         return 1;
       }
-      fprintf(fp, "%s", line);
+      fprintf(fp, "Added: %s", line);
 
       //关闭文件流
       pclose(fp);
