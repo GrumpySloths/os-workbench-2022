@@ -30,8 +30,8 @@ static device_t *dev_create(int size, const char* name, int id, devops_t *ops) {
   return dev;
 }
 
-void dev_input_task(void*arg);
-void dev_tty_task(void*arg);
+void dev_input_task();
+void dev_tty_task();
 
 static void dev_init() {
 #define INIT(id, device_type, dev_name, dev_id, dev_ops) \
