@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
         continue;
       }
 
-      printf("\033[33m Added:\033[0m %s\n", line);
+      printf("\033[32m Added:\033[0m %s", line);
     }else{
 
       //line为表达式的处理
