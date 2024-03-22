@@ -3,8 +3,8 @@
 
 #define NEVENTS 128
 
-static int trace_counter = 0;
 #ifdef DEV_INPUT_TRACE
+static int trace_counter = 0;
 #define TRACE_ENTRY printf("[trace %d] %s:entry\n", trace_counter, __func__);
 #define TRACE_EXIT printf("[trace %d] %s:exit\n", trace_counter, __func__);\
   trace_counter++;
