@@ -85,6 +85,7 @@ int main(int argc, char *argv[]) {
         continue;
       }
       printf("dlopen success\n");
+      printf("find expr_name:%s\n",expr_name);
       // 执行wrapper函数
       int (*wrapper_func)(void) = dlsym(handles[handle_count-1], expr_name);
       if (wrapper_func == NULL) {
