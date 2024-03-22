@@ -142,7 +142,7 @@ static Context* os_trap(Event ev,Context*ctx){
   //如果是timer中断打印该信息
   if(ev.event==EVENT_IRQ_TIMER){
       TRACE_ENTRY;
-      printf("%d,%s\n", ev.msg);
+      printf("%s\n", ev.msg);
       TRACE_EXIT;
   }
 
