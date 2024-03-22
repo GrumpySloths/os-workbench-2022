@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
       // 使用dlopen将.so文件加载到内存中
       //创建新的变量为template加上.so后缀
       strcat(template,".so");
-      handle = dlopen(template, RTLD_NOW);
+      handle = dlopen(template, RTLD_LAZY|RTLD_GLOBAL);
       if (handle == NULL) {
         fprintf(stderr, "%s\n", dlerror());
         continue;
