@@ -12,6 +12,9 @@
 device_t *devices[0 DEVICES(DEV_CNT)];
 
 static device_t *dev_lookup(const char *name) {
+  //打印设备名
+  printf("dev_lookup: %s\n", name);
+  
   for (int i = 0; i < LENGTH(devices); i++) 
     if (strcmp(devices[i]->name, name) == 0)
       return devices[i];
