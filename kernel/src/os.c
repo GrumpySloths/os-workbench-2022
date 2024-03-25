@@ -2,6 +2,7 @@
 #include <devices.h>
 
 #define MB (1<<20)
+#define FL_IF          0x00000200  // Interrupt Enable
 
 #ifndef TEST
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
@@ -91,6 +92,23 @@ static Context* irq_yield(Event ev,Context*ctx){
   return current_task->context;
 }
 
+//注册 iodev中断函数
+static Context* irq_iodev(Event ev,Context*ctx){
+  extern task_t*tasks[100];
+  if (!current_task)
+      current_task = tasks[0];
+  else          current_task->context = ctx;
+  do {
+    current_task = current_task->next;
+    panic_on(!current_task, "no task");
+  } while (current_task->id % cpu_count() != cpu_current());
+  return current_task->context;
+}
+
+//检测返回的context是否合法
+static bool sane_context(Context* ctx) { 
+  return (ctx->rflags & FL_IF) == 0; 
+}
 
 static void os_init() { 
     pmm->init();
@@ -100,6 +118,8 @@ static void os_init() {
     os->on_irq(0, EVENT_IRQ_TIMER, irq_timer);
     //注册yield中断
     os->on_irq(1, EVENT_YIELD, irq_yield);
+    //注册iodev中断
+    os->on_irq(2, EVENT_IRQ_IODEV, irq_iodev);
 
 #ifdef TEST1
     concurrency_test1();
@@ -149,6 +169,8 @@ static Context* os_trap(Event ev,Context*ctx){
   }
 
   panic_on(!next, "returning NULL context");
+  //检查中断是否开启
+  panic_on(sane_context(next), "interrupt is closed");
 
   return next;
 }
