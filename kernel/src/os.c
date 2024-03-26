@@ -173,7 +173,7 @@ static Context* os_trap(Event ev, Context* ctx) {
         }
     }
     // 打印当前的event msg
-    printf("event %d: %s\n", msg_counter,ev.msg);
+    printf("event %d: %s\n", msg_counter++,ev.msg);
 
     // 如果是timer中断打印该信息
 #ifdef DEV_TIMER_TRACE
