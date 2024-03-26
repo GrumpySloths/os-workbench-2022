@@ -159,7 +159,7 @@ static void os_run() {
         ; //os-run代表着一个cpu，故该线程不能停止
 }
 
-static int msg_counter = 0;
+// static int msg_counter = 0;
 static Context* os_trap(Event ev, Context* ctx) {
     Context* next = NULL;
     // 遍历handlers,当ev与handlers[i]->event相等时，调用handlers[i]->handler
@@ -173,7 +173,7 @@ static Context* os_trap(Event ev, Context* ctx) {
         }
     }
     // 打印当前的event msg
-    printf("event %d: %s\n", msg_counter++,ev.msg);
+    // printf("event %d: %s\n", msg_counter++,ev.msg);
 
     // 如果是timer中断打印该信息
 #ifdef DEV_TIMER_TRACE
