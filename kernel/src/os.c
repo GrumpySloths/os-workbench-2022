@@ -17,6 +17,20 @@ static int trace_counter = 0;
 #define TRACE_ENTRY ((void)0)
 #define TRACE_EXIT ((void)0)
 #endif
+
+//trace iodev
+#ifdef DEV_IODEV_TRACE
+static int iodev_trace_counter = 0;
+#define IODEV_TRACE_ENTRY printf("[iodev trace %d] %s:entry\n" \
+                                  , iodev_trace_counter, __func__);
+#define IODEV_TRACE_EXIT printf("[iodev trace %d] %s:exit\n"\
+                                , iodev_trace_counter, __func__);\
+                                  iodev_trace_counter++;
+#else
+#define IODEV_TRACE_ENTRY ((void)0)
+#define IODEV_TRACE_EXIT ((void)0)
+#endif
+
 static inline task_t *task_alloc() {
   return pmm->alloc(sizeof(task_t));
 }
@@ -168,6 +182,13 @@ static Context* os_trap(Event ev,Context*ctx){
       TRACE_EXIT;
   }
 
+  //如果是iodev中断打印该信息
+  if(ev.event==EVENT_IRQ_IODEV){
+      IODEV_TRACE_ENTRY;
+      printf("event:%s\n", ev.msg);
+      IODEV_TRACE_EXIT;
+  }
+  
   panic_on(!next, "returning NULL context");
   //检查中断是否开启
   panic_on(sane_context(next), "interrupt is closed");
