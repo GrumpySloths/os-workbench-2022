@@ -18,6 +18,8 @@ struct spinlock {
     int locked;
     int cpu;
     const char* name;
+    //interrupt state
+    bool i;
 };
 
 struct semaphore {

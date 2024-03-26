@@ -17,30 +17,32 @@ void kmt_spin_init(spinlock_t *lk, const char *name) {
     lk->name = name;
 #ifndef TEST
     lk->cpu = cpu_current();
+    lk->i = false;
 #endif
 }
 
 void kmt_spin_lock(spinlock_t *lk) {
     bool i = ienabled();
+    lk->i = i;
     iset(false);
 
     while (atomic_xchg(&lk->locked, 1))
         ;
+    
+    assert(lk->locked == 1);
+
 #ifndef TEST
     lk->cpu = cpu_current();
 #endif
 
-    if(i)
-        iset(true);
 }
 
-void kmt_spin_unlock(spinlock_t *lk) { 
-    bool i = ienabled();
-    iset(false);
+void kmt_spin_unlock(spinlock_t *lk) {
+    assert(lk->i = false);
 
     atomic_xchg(&lk->locked, 0);
 
-    if(i)
+    if(lk->i)
         iset(true);
 }
 
