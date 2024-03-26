@@ -98,6 +98,8 @@ static void input_keydown(device_t *dev, AM_INPUT_KEYBRD_T key) {
 
 static Context *input_notify(Event ev, Context *context) {
     TRACE_ENTRY;
+    //打印ev.msg
+    printf("event %d: %s\n", ev.event, ev.msg);
     kmt->sem_signal(&sem_kbdirq);
     TRACE_EXIT;
     return NULL;
@@ -201,7 +203,7 @@ void dev_input_task(void *args) {
 
   while (1) {
       TRACE_ENTRY;
-      
+
       uint32_t time;
       AM_INPUT_KEYBRD_T key;
       while ((key = io_read(AM_INPUT_KEYBRD)).keycode != 0) {
