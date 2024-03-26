@@ -38,7 +38,8 @@ void kmt_spin_lock(spinlock_t *lk) {
 }
 
 void kmt_spin_unlock(spinlock_t *lk) {
-    assert(lk->i = false);
+    bool i = ienabled();
+    assert(i == false);
 
     atomic_xchg(&lk->locked, 0);
 
