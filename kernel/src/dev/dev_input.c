@@ -99,7 +99,7 @@ static void input_keydown(device_t *dev, AM_INPUT_KEYBRD_T key) {
 static Context *input_notify(Event ev, Context *context) {
     TRACE_ENTRY;
     //打印ev.msg
-    printf("event %d: %s\n", ev.event, ev.msg);
+    // printf("event %d: %s\n", ev.event, ev.msg);
     kmt->sem_signal(&sem_kbdirq);
     TRACE_EXIT;
     return NULL;
