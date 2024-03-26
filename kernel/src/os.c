@@ -159,21 +159,22 @@ static void os_run() {
         ; //os-run代表着一个cpu，故该线程不能停止
 }
 
-static Context* os_trap(Event ev,Context*ctx){
-  Context *next = NULL;
-  //遍历handlers,当ev与handlers[i]->event相等时，调用handlers[i]->handler
-  for (int i = 0; i < handlers_id;i++){
-    if(handlers[i]->event==EVENT_NULL||handlers[i]->event==ev.event){
-      Context*r=handlers[i]->handler(ev,ctx);
-      panic_on(r && next, "returning multiple contexts");
-      if(r)
-          next = r;
+static Context* os_trap(Event ev, Context* ctx) {
+    Context* next = NULL;
+    // 遍历handlers,当ev与handlers[i]->event相等时，调用handlers[i]->handler
+    for (int i = 0; i < handlers_id; i++) {
+        if (handlers[i]->event == EVENT_NULL ||
+            handlers[i]->event == ev.event) {
+            Context* r = handlers[i]->handler(ev, ctx);
+            panic_on(r && next, "returning multiple contexts");
+            if (r)
+                next = r;
+        }
     }
-  } 
-  //打印当前的event msg
-  printf("event: %s\n", ev.msg);
-  
-  //如果是timer中断打印该信息
+    // 打印当前的event msg
+    printf("event : %s\n", ev.msg);
+
+    // 如果是timer中断打印该信息
 #ifdef DEV_TIMER_TRACE
   if(ev.event==EVENT_IRQ_TIMER){
       TRACE_ENTRY;
