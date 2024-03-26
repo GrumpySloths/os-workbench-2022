@@ -149,8 +149,6 @@ static void os_init() {
     } 
 
 
-    // kmt->sem_init(&empty, "empty", 1);dev_input_task
-    // kmt->sem_init(&fill, "fill", 0);
   }
 
 static void os_run() {
@@ -173,7 +171,7 @@ static Context* os_trap(Event ev,Context*ctx){
     }
   } 
   //打印当前的event msg
-  // printf("event: %s\n", ev.msg);
+  printf("event: %s\n", ev.msg);
   
   //如果是timer中断打印该信息
 #ifdef DEV_TIMER_TRACE
