@@ -176,19 +176,23 @@ static Context* os_trap(Event ev,Context*ctx){
   // printf("event: %s\n", ev.msg);
   
   //如果是timer中断打印该信息
+#ifdef DEV_TIMER_TRACE
   if(ev.event==EVENT_IRQ_TIMER){
       TRACE_ENTRY;
       printf("event:%s\n", ev.msg);
       TRACE_EXIT;
   }
+#endif
 
+#ifdef DEV_IODEV_TRACE
   //如果是iodev中断打印该信息
   if(ev.event==EVENT_IRQ_IODEV){
       IODEV_TRACE_ENTRY;
       printf("event:%s\n", ev.msg);
       IODEV_TRACE_EXIT;
   }
-  
+#endif
+
   panic_on(!next, "returning NULL context");
   //检查中断是否开启
   panic_on(sane_context(next), "interrupt is closed");
