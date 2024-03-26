@@ -53,13 +53,12 @@ static void print_list() {
     Log("--------------------------");
 }
 static int power_count(size_t size) { 
-  int count = 0; 
-  if(size%2==0)
-      count--;
-  while (size) {
-      count++;
-      size /=2;
-  }
+  int count = 0;
+  unsigned int power = 1;
+    while (power < size) {
+        power *= 2;
+        count++;
+    }
   return count;
 }
 /**
@@ -103,6 +102,8 @@ void *malloc(size_t size) {
   header_t*p,*prevp;
   // size_t real_size = sizeof(header_t) + size;
   size_t size_align = 1 << power_count(size);
+  assert(size_align >= size);
+
   size_t real_size = size_align + sizeof(header_t);
   // Log("real_size:%d mb\n", real_size >> 20);
   printf("real_size:%d\n", real_size);

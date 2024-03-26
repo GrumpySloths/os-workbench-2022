@@ -35,7 +35,7 @@ static device_t *dev_create(int size, const char* name, int id, devops_t *ops) {
   return dev;
 }
 
-void dev_input_task(void*args);
+// void dev_input_task(void*args);
 void dev_tty_task(void*args);
 
 static void dev_init() {
@@ -45,7 +45,7 @@ static void dev_init() {
 
   DEVICES(INIT);
 
-  kmt->create(pmm->alloc(sizeof(task_t)), "input-task", dev_input_task, NULL);
+  // kmt->create(pmm->alloc(sizeof(task_t)), "input-task", dev_input_task, NULL);
   kmt->create(pmm->alloc(sizeof(task_t)), "tty-task",   dev_tty_task,   NULL);
 }
 

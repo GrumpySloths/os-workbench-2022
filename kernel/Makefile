@@ -10,10 +10,15 @@ endif
 include $(AM_HOME)/Makefile
 include ../Makefile.lab
 image: git
-# ifdef DEBUG
-CFLAGS += -DTEST1
-# endif
 
+# concurrence test
+# CFLAGS += -DTEST1
+
+#dev_input debug
+# CFLAGS += -DDEV_INPUT_TRACE
+
+#dev_timer_debug
+CFLAGS += -DDEV_TIMER_TRACE
 
 test: git
 	@gcc $(shell find src/ -name "*.c")  \

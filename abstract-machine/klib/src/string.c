@@ -58,17 +58,39 @@ int strncmp(const char *s1, const char *s2, size_t n)
 
 void *memset(void *s, int c, size_t n)
 {
-  panic("Not implemented");
+  //实现memset
+  char *tmp = s;
+  while (n-- > 0)
+    *tmp++ = c;
+  return s;
 }
 
 void *memmove(void *dst, const void *src, size_t n)
 {
-  panic("Not implemented");
+  //实现memmove
+  char *tmp = dst;
+  const char *s = src;
+  if (s < tmp && tmp < s + n) {
+    tmp += n;
+    s += n;
+    while (n-- > 0)
+      *--tmp = *--s;
+  } else {
+    while (n-- > 0)
+      *tmp++ = *s++;
+  }
+
+  return dst;
 }
 
 void *memcpy(void *out, const void *in, size_t n)
 {
-  panic("Not implemented");
+  //实现memcpy
+  char *dst = out;
+  const char *src = in;
+  while (n-- > 0)
+    *dst++ = *src++;
+  return out;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n)
