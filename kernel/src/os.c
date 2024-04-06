@@ -119,6 +119,13 @@ static Context* irq_iodev(Event ev,Context*ctx){
   return current_task->context;
 }
 
+//注册syscall中断函数
+static Context* irq_syscall(Event ev,Context*ctx){
+  printf("syscall is called\n");
+
+  return NULL;
+}
+
 //检测返回的context是否合法
 static bool sane_context(Context* ctx) { 
   return (ctx->rflags & FL_IF) == 0; 
@@ -136,6 +143,8 @@ static void os_init() {
     os->on_irq(1, EVENT_YIELD, irq_yield);
     //注册iodev中断
     os->on_irq(2, EVENT_IRQ_IODEV, irq_iodev);
+    //注册syscall中断
+    os->on_irq(3, EVENT_SYSCALL, irq_syscall);
 
 #ifdef TEST1
     concurrency_test1();

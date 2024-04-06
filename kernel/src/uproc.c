@@ -16,6 +16,9 @@ static void pgfree(void* ptr){
 
 void uproc_init() {
     printf("uproc_init\n");
+    void (*entry)(void *arg) = (void*)_init;
+
+    kmt->create(pmm->alloc(sizeof(task_t)), "initcode", entry, NULL);
     vme_init(pgalloc, pgfree);
     
 }
