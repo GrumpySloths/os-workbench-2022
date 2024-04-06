@@ -123,7 +123,7 @@ static Context* irq_iodev(Event ev,Context*ctx){
 static Context* irq_syscall(Event ev,Context*ctx){
   printf("syscall is called\n");
   //根据ctx.GPR1 来执行相应的系统调用
-  switch(ctx->rdi){
+  switch(ctx->rax){
     case SYS_exit:
       printf("syscall exit\n");
       break;
