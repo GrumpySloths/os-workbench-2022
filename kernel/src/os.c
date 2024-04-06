@@ -120,13 +120,15 @@ static Context* irq_iodev(Event ev,Context*ctx){
 }
 
 //检测返回的context是否合法
-// static bool sane_context(Context* ctx) { 
-//   return (ctx->rflags & FL_IF) == 0; 
-// }
+static bool sane_context(Context* ctx) { 
+  return (ctx->rflags & FL_IF) == 0; 
+}
 
 static void os_init() { 
     pmm->init();
     kmt->init();
+    uproc->init();
+
     handlers_id = 0;
     //注册timer中断
     os->on_irq(0, EVENT_IRQ_TIMER, irq_timer);
@@ -195,7 +197,7 @@ static Context* os_trap(Event ev, Context* ctx) {
 
   panic_on(!next, "returning NULL context");
   //检查中断是否开启
-  // panic_on(sane_context(next), "interrupt is closed");
+  panic_on(sane_context(next), "interrupt is closed");
 
   return next;
 }
