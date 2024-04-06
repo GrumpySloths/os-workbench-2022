@@ -14,7 +14,10 @@ static void pgfree(void* ptr){
     pmm->free(ptr);
 }
 
-void uproc_init() { vme_init(pgalloc, pgfree); }
+void uproc_init() {
+    printf("uproc_init\n");
+    vme_init(pgalloc, pgfree);
+}
 
 MODULE_DEF(uproc) = {
     .init=uproc_init,
