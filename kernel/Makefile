@@ -18,7 +18,10 @@ image: git
 # CFLAGS += -DDEV_INPUT_TRACE
 
 #dev_timer_debug
-CFLAGS += -DDEV_TIMER_TRACE
+# CFLAGS += -DDEV_TIMER_TRACE
+
+#dev_iodev_debug
+# CFLAGS += -DDEV_IODEV_TRACE
 
 test: git
 	@gcc $(shell find src/ -name "*.c")  \

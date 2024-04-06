@@ -6,6 +6,7 @@ union task {
         int id;
         void  (*entry)(void *);
         void* arg;
+        AddrSpace* ar; //用户地址空间
         union task* next;
         Context* context;
     };
