@@ -131,6 +131,8 @@ static Context* irq_syscall(Event ev,Context*ctx){
       printf("syscall kputc\n");
       break;
     default:
+      //打印rdi的值
+      printf("rdi:%d\n",ctx->rdi);
       printf("undefined syscall,program exit\n");
       panic("undefined syscall");
       break;
