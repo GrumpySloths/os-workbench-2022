@@ -2,6 +2,8 @@
 #include <klib.h>
 #include <klib-macros.h>
 #include <queue.h>
+#include<syscall.h>
+#include<user.h>
 
 #define MAX_CPU 8
 #define STACK_SIZE 8192

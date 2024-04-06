@@ -122,8 +122,20 @@ static Context* irq_iodev(Event ev,Context*ctx){
 //注册syscall中断函数
 static Context* irq_syscall(Event ev,Context*ctx){
   printf("syscall is called\n");
-
-  return NULL;
+  //根据ctx.GPR1 来执行相应的系统调用
+  switch(ctx->rdi){
+    case SYS_exit:
+      printf("syscall exit\n");
+      break;
+    case SYS_kputc:
+      printf("syscall kputc\n");
+      break;
+    default:
+      printf("undefined syscall,program exit\n");
+      panic("undefined syscall");
+      break;
+  }
+  return ctx;
 }
 
 //检测返回的context是否合法
