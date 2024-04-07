@@ -1,7 +1,9 @@
 #include <os.h>
 #include <syscall.h>
-
+// #include <x86_64-qemu.h>
 #include "initcode.inc"
+
+#define PAGESIZE 4096
 
 typedef unsigned char  uchar;
 typedef unsigned int   uint;
@@ -63,7 +65,10 @@ void uproc_init() {
 
     //为task创建相应地址空间映射
     uvmfirst(task->ar,_init,_init_len);
-    
+    //为进程创建用户栈
+    Context* ctx = task->context;
+    mappages(task->ar, (void*)ctx->rsp, PAGESIZE, 
+                            (void*)ctx->rsp0, MMAP_WRITE);
 }
 
 int uproc_kputc(task_t* task, char ch) { 
