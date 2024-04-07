@@ -128,7 +128,7 @@ static Context* irq_syscall(Event ev,Context*ctx){
       printf("syscall exit\n");
       break;
     case SYS_kputc:
-      printf("syscall kputc\n");
+      uproc->kputc(current_task,ctx->rdi);
       break;
     default:
       //打印rdi的值

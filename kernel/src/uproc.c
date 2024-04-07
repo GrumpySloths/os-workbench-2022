@@ -23,6 +23,12 @@ void uproc_init() {
     
 }
 
+int uproc_kputc(task_t* task, char ch) { 
+    putch(ch);
+    return 0;
+}
+
 MODULE_DEF(uproc) = {
     .init=uproc_init,
+    .kputc=uproc_kputc,
 };
