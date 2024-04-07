@@ -52,15 +52,17 @@ static void uvmfirst(AddrSpace*ar,uchar*src,uint sz){
 
 void uproc_init() {
     printf("uproc_init\n");
-    void (*entry)(void *arg) = (void*)_init;
+    vme_init(pgalloc, pgfree);
+
+    void (*entry)(void *arg) = (void*)0;
 
     task_t*task=pmm->alloc(sizeof(task_t));
+    protect(task->ar);
     kmt->create(task, "initcode", entry, NULL);
 
     //为task创建相应地址空间映射
     uvmfirst(task->ar,_init,_init_len);
     
-    vme_init(pgalloc, pgfree);
 }
 
 int uproc_kputc(task_t* task, char ch) { 

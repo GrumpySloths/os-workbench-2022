@@ -97,7 +97,7 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     panic_on(tasks_id>=100,"too many tasks");
     task->arg = arg;
     //初始化task的用户地址空间
-    protect(task->ar);
+    // protect(task->ar);
 
     kmt_spin_lock(printf_lock);
     //打印heap地址
