@@ -4,6 +4,7 @@
 #include <queue.h>
 #include<syscall.h>
 #include<user.h>
+#include<debug.h>
 
 #define MAX_CPU 8
 #define STACK_SIZE 8192

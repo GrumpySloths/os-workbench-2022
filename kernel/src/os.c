@@ -203,9 +203,10 @@ static Context* os_trap(Event ev, Context* ctx) {
         }
     }
     // 打印当前的event msg
-    kmt->spin_lock(printf_lock);
-    printf("event:  %s\n", ev.msg);
-    kmt->spin_unlock(printf_lock);
+    // kmt->spin_lock(printf_lock);
+    // printf("event:  %s\n", ev.msg);
+    // kmt->spin_unlock(printf_lock);
+    printk("event:  %s\n", ev.msg);
 
     // 如果是timer中断打印该信息
 #ifdef DEV_TIMER_TRACE
