@@ -6,6 +6,7 @@
 #include<user.h>
 #include<debug.h>
 
+#define PAGESIZE 4096
 #define MAX_CPU 8
 #define STACK_SIZE 8192
 //tasks scheduler

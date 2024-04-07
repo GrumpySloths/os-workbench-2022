@@ -111,6 +111,10 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     //创建用户态上下文
     task->context = ucontext(task->ar, stack, task->entry);
     panic_on(task->context == NULL, "kcontext failed");
+    //为用户态进程堆栈分配空间
+    Context* ctx = task->context;
+    map(task->ar,(void*)(ctx->rsp-PAGESIZE),
+                        (void*)(ctx->rsp0-PAGESIZE),MMAP_WRITE);
 
     return 1;
 }

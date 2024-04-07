@@ -3,7 +3,6 @@
 // #include <x86_64-qemu.h>
 #include "initcode.inc"
 
-#define PAGESIZE 4096
 
 typedef unsigned char  uchar;
 typedef unsigned int   uint;
