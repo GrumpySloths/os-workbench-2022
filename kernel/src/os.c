@@ -132,12 +132,15 @@ static Context* irq_syscall(Event ev,Context*ctx){
     case SYS_kputc:
       uproc->kputc(current_task,ctx->rdi);
       break;
-    default:
-      //打印rdi的值
-      printf("rdi:%d\n",ctx->rdi);
-      printf("undefined syscall,program exit\n");
-      panic("undefined syscall");
+    case SYS_getpid:
+      uproc->getpid(current_task);
       break;
+    default:
+        // 打印rdi的值
+        printf("rdi:%d\n", ctx->rdi);
+        printf("undefined syscall,program exit\n");
+        panic("undefined syscall");
+        break;
   }
   return ctx;
 }

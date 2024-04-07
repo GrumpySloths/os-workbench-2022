@@ -77,7 +77,13 @@ int uproc_kputc(task_t* task, char ch) {
     return 0;
 }
 
+int uproc_getpid(task_t*task){
+    return task->id;
+
+}
+
 MODULE_DEF(uproc) = {
     .init=uproc_init,
     .kputc=uproc_kputc,
+    .getpid=uproc_getpid,
 };
