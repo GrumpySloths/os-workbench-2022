@@ -15,6 +15,9 @@
 
 // tasks_scheduler_t tasks_scheduler;
 
+//定义对printf的自旋锁
+spinlock_t* printf_lock;
+
 int tasks_id ;
 task_t *tasks[100];
 

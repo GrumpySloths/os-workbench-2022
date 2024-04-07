@@ -9,8 +9,7 @@ static inline int atomic_xchg(volatile int *addr, int newval) {
 }
 #endif
 
-//定义对printf的自旋锁
-spinlock_t printf_lock;
+
 
 void kmt_spin_init(spinlock_t *lk, const char *name) { 
     lk->locked = 0;
@@ -100,10 +99,10 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     //初始化task的用户地址空间
     protect(task->ar);
 
-    kmt_spin_lock(&printf_lock);
+    kmt_spin_lock(printf_lock);
     //打印heap地址
     printf("heap.start=%p,heap.end=%p\n",heap.start,heap.end);
-    kmt_spin_unlock(&printf_lock);
+    kmt_spin_unlock(printf_lock);
 
     // panic_on(!IN_RANGE((void*)task->stack, heap), "stack out of heap range");
     // panic_on(task->stack == NULL, "alloc stack failed");
@@ -128,7 +127,8 @@ void kmt_init(){
     }
     tasks_id=0;
     //初始化printf锁
-    kmt_spin_init(&printf_lock, "printf_lock");
+    printf_lock=pmm->alloc(sizeof(spinlock_t));
+    kmt_spin_init(printf_lock, "printf_lock");
 }
 
 MODULE_DEF(kmt) = {
