@@ -112,10 +112,10 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     task->context = ucontext(task->ar, stack, task->entry);
     panic_on(task->context == NULL, "kcontext failed");
     //为用户态进程堆栈分配空间
-    Context* ctx = task->context;
+    // Context* ctx = task->context;
     // ctx->rsp = ctx->rsp - PAGESIZE * tasks_id * 2;
-    map(task->ar, (void *)(ctx->rsp - PAGESIZE), (void *)(ctx->rsp0 - PAGESIZE),
-        MMAP_WRITE);
+    // map(task->ar, (void *)(ctx->rsp - PAGESIZE), (void *)(ctx->rsp0 - PAGESIZE),
+    //     MMAP_WRITE);
 
     return 1;
 }

@@ -65,9 +65,9 @@ void uproc_init() {
     //为task创建相应地址空间映射
     uvmfirst(task->ar,_init,_init_len);
     //为进程创建用户栈
-    // Context* ctx = task->context;
-    // map(task->ar,(void*)(ctx->rsp-PAGESIZE),
-    //                     (void*)(ctx->rsp0-PAGESIZE),MMAP_WRITE);
+    Context* ctx = task->context;
+    map(task->ar,(void*)(ctx->rsp-PAGESIZE),
+                        (void*)(ctx->rsp0-PAGESIZE),MMAP_WRITE);
     // mappages(task->ar, (void*)ctx->rsp, PAGESIZE, 
     //                         (void*)ctx->rsp0, MMAP_WRITE);
 }
