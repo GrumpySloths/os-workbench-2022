@@ -31,6 +31,7 @@ static int iodev_trace_counter = 0;
 #define IODEV_TRACE_EXIT ((void)0)
 #endif
 
+#ifndef VME_DEBUG
 static inline task_t *task_alloc() {
   return pmm->alloc(sizeof(task_t));
 }
@@ -79,6 +80,7 @@ static void tty_reader(void *arg) {
 }
 
 #endif
+#endif
 
 //注册 timer 中断函数
 static Context* irq_timer(Event ev,Context*ctx){
@@ -121,7 +123,7 @@ static Context* irq_iodev(Event ev,Context*ctx){
 
 //注册syscall中断函数
 static Context* irq_syscall(Event ev,Context*ctx){
-  
+
   //根据ctx.GPR1 来执行相应的系统调用
   switch(ctx->rax){
     case SYS_exit:
@@ -160,6 +162,7 @@ static void os_init() {
     //注册syscall中断
     os->on_irq(3, EVENT_SYSCALL, irq_syscall);
 
+#ifndef VME_DEBUG
 #ifdef TEST1
     concurrency_test1();
 #else
@@ -168,6 +171,8 @@ static void os_init() {
     kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
     kmt->create(task_alloc(), "tty_reader", tty_reader, "tty2");
 #endif
+#endif
+
     //构建轮询链表
     for (int i = 0; i < tasks_id;i++){
       tasks[i]->next=tasks[(i+1)%tasks_id];

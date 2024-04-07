@@ -97,9 +97,10 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     tasks_id++;
     panic_on(tasks_id>=100,"too many tasks");
     task->arg = arg;
-    // ptr = pmm->alloc(STACK_SIZE);
+    //初始化task的用户地址空间
+    protect(task->ar);
+
     kmt_spin_lock(&printf_lock);
-    // printf("task->stack=%p\n",task->stack);
     //打印heap地址
     printf("heap.start=%p,heap.end=%p\n",heap.start,heap.end);
     kmt_spin_unlock(&printf_lock);
@@ -107,8 +108,10 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     // panic_on(!IN_RANGE((void*)task->stack, heap), "stack out of heap range");
     // panic_on(task->stack == NULL, "alloc stack failed");
     Area stack=(Area){&task->context+1,task+1};
-    task->context=kcontext(stack,task->entry,task->arg);
-    panic_on(task->context==NULL,"kcontext failed");
+    // task->context=kcontext(stack,task->entry,task->arg);
+    //创建用户态上下文
+    task->context = ucontext(task->ar, stack, task->entry);
+    panic_on(task->context == NULL, "kcontext failed");
 
     return 1;
 }
