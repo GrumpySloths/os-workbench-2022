@@ -121,7 +121,7 @@ static Context* irq_iodev(Event ev,Context*ctx){
 
 //注册syscall中断函数
 static Context* irq_syscall(Event ev,Context*ctx){
-  printf("syscall is called\n");
+  
   //根据ctx.GPR1 来执行相应的系统调用
   switch(ctx->rax){
     case SYS_exit:
