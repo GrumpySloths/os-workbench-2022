@@ -67,8 +67,10 @@ void uproc_init() {
     uvmfirst(task->ar,_init,_init_len);
     //为进程创建用户栈
     Context* ctx = task->context;
-    mappages(task->ar, (void*)ctx->rsp, PAGESIZE, 
-                            (void*)ctx->rsp0, MMAP_WRITE);
+    map(task->ar,(void*)(ctx->rsp-PAGESIZE),
+                        (void*)(ctx->rsp0-PAGESIZE),MMAP_WRITE);
+    // mappages(task->ar, (void*)ctx->rsp, PAGESIZE, 
+    //                         (void*)ctx->rsp0, MMAP_WRITE);
 }
 
 int uproc_kputc(task_t* task, char ch) { 
