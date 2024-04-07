@@ -43,7 +43,7 @@ static void uvmfirst(AddrSpace*ar,uchar*src,uint sz){
     //将mem的所有值赋0
     memset(mem,0,sz_aligned);
     //构建虚拟地址和物理地址的映射
-    mappages(ar,0,sz_aligned,mem,MMAP_WRITE);
+    mappages(ar,ar->area.start,sz_aligned,mem,MMAP_WRITE);
     //将src的内容复制到mem中
     memmove(mem,src,sz);
 
@@ -54,10 +54,11 @@ void uproc_init() {
     printf("uproc_init\n");
     vme_init(pgalloc, pgfree);
 
-    void (*entry)(void *arg) = (void*)0;
 
     task_t*task=pmm->alloc(sizeof(task_t));
     protect(task->ar);
+
+    void (*entry)(void *arg) = (void*)task->ar->area.start;
     kmt->create(task, "initcode", entry, NULL);
 
     //为task创建相应地址空间映射
