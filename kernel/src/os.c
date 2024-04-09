@@ -3,6 +3,7 @@
 
 #define MB (1<<20)
 #define FL_IF          0x00000200  // Interrupt Enable
+#define KERNEL_PAGETABLE 0x1000
 
 #ifndef TEST
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
@@ -145,9 +146,29 @@ static Context* irq_syscall(Event ev,Context*ctx){
   return ctx;
 }
 
+//注册pagefault中断函数
+static Context* irq_pagefault(Event ev,Context*ctx){
+  //打印pagefault信息
+  printf("fault_addr:%p,cause:%p\n",ev.ref,ev.cause);
+  printf("err msg:%s\n",ev.msg);
+
+  panic("pagefault");
+  return ctx;
+}
+
 //检测返回的context是否合法
 static bool sane_context(Context* ctx) { 
-  return (ctx->rflags & FL_IF) == 0; 
+
+  if ((ctx->rflags & FL_IF) == 0){
+    perror("interrupt is closed");
+    return true;
+  }
+  if(ctx->cr3==(void*)KERNEL_PAGETABLE){
+    perror("cr3 is not set");
+    return true;
+  }
+
+  return false;
 }
 
 static void os_init() { 
@@ -164,6 +185,8 @@ static void os_init() {
     os->on_irq(2, EVENT_IRQ_IODEV, irq_iodev);
     //注册syscall中断
     os->on_irq(3, EVENT_SYSCALL, irq_syscall);
+    //注册pagefault中断
+    os->on_irq(4, EVENT_PAGEFAULT, irq_pagefault);
 
 #ifndef VME_DEBUG
 #ifdef TEST1
@@ -228,7 +251,7 @@ static Context* os_trap(Event ev, Context* ctx) {
 
   panic_on(!next, "returning NULL context");
   //检查中断是否开启
-  panic_on(sane_context(next), "interrupt is closed");
+  panic_on(sane_context(next), "returning to invalid context");
 
   return next;
 }
