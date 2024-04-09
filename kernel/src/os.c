@@ -181,6 +181,7 @@ static void print_context(Context*ctx){
   perror("rip:%p\n",ctx->rip);
   perror("rflags:%p\n",ctx->rflags);
   perror("rdi:%p\n",ctx->rdi);
+  perror("cr3:%p\n",ctx->cr3);
 
 }
 
