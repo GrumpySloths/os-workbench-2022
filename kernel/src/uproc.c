@@ -60,6 +60,9 @@ void uproc_init() {
     protect(task->ar);
 
     void (*entry)(void *arg) = (void*)task->ar->area.start;
+    //打印entry地址
+    printf("entry:%p\n",entry);
+    
     kmt->create(task, "initcode", entry, NULL);
 
     //为task创建相应地址空间映射
