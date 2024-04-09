@@ -178,7 +178,8 @@ static void print_context(Context*ctx){
   perror("rsp0:%p\n",ctx->rsp0);
   perror("rip:%p\n",ctx->rip);
   perror("rflags:%p\n",ctx->rflags);
-
+  perror("rdi:%p\n",ctx->rdi);
+  
 }
 
 static void os_init() { 
@@ -227,7 +228,7 @@ static void os_run() {
 
 // static int msg_counter = 0;
 static Context* os_trap(Event ev, Context* ctx) {
-  
+
     //打印寄存器现场
     print_context(ctx);
 
