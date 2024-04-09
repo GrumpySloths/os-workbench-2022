@@ -69,8 +69,8 @@ void uproc_init() {
 
     map(task->ar,(void*)(ctx->rsp-PAGESIZE),
                         (void*)(ctx->rsp0-PAGESIZE),MMAP_WRITE);
-    ctx->rsp -= 40;
-    ctx->rsp0 -= 40;
+    // ctx->rsp -= 40;
+    // ctx->rsp0 -= 40;
     // mappages(task->ar, (void*)ctx->rsp, PAGESIZE,
     //                         (void*)ctx->rsp0, MMAP_WRITE);
 }
