@@ -171,6 +171,16 @@ static bool sane_context(Context* ctx) {
   return false;
 }
 
+//打印context的通用寄存器
+static void print_context(Context*ctx){
+
+  perror("rsp:%p\n",ctx->rsp);
+  perror("rsp0:%p\n",ctx->rsp0);
+  perror("rip:%p\n",ctx->rip);
+  perror("rflags:%p\n",ctx->rflags);
+
+}
+
 static void os_init() { 
     pmm->init();
     kmt->init();
@@ -217,6 +227,10 @@ static void os_run() {
 
 // static int msg_counter = 0;
 static Context* os_trap(Event ev, Context* ctx) {
+  
+    //打印寄存器现场
+    print_context(ctx);
+
     Context* next = NULL;
     // 遍历handlers,当ev与handlers[i]->event相等时，调用handlers[i]->handler
     for (int i = 0; i < handlers_id; i++) {
