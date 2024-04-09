@@ -151,8 +151,10 @@ static Context* irq_pagefault(Event ev,Context*ctx){
   //打印pagefault信息
   printf("fault_addr:%p,cause:%p\n",ev.ref,ev.cause);
   printf("err msg:%s\n",ev.msg);
+  void*pa=pmm->alloc(PAGESIZE);
 
-  panic("pagefault");
+  map(current_task->ar,(void*)ROUNDDOWN(ev.ref,PAGESIZE),pa,MMAP_WRITE);
+  // panic("pagefault");
   return ctx;
 }
 
@@ -179,7 +181,7 @@ static void print_context(Context*ctx){
   perror("rip:%p\n",ctx->rip);
   perror("rflags:%p\n",ctx->rflags);
   perror("rdi:%p\n",ctx->rdi);
-  
+
 }
 
 static void os_init() { 
