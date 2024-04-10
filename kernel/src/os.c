@@ -131,7 +131,7 @@ static Context* irq_syscall(Event ev,Context*ctx){
       printf("syscall exit\n");
       break;
     case SYS_kputc:
-      uproc->kputc(current_task,ctx->rdi);
+      ctx->rax=uproc->kputc(current_task,ctx->rdi);
       break;
     case SYS_getpid:
       uproc->getpid(current_task);
