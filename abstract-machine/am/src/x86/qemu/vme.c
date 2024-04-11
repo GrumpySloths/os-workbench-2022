@@ -139,6 +139,8 @@ void unprotect(AddrSpace *as) {
 }
 
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+
+   
   panic_on(!IN_RANGE(va, uvm_area), "mapping an invalid address");
   panic_on((uintptr_t)va != ROUNDDOWN(va, mmu.pgsize) ||
            (uintptr_t)pa != ROUNDDOWN(pa, mmu.pgsize), "non-page-boundary address");

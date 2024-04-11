@@ -1,7 +1,19 @@
+#ifndef __ULIB_H__
+#define __ULIB_H__
 #include <stddef.h>
 #include <stdint.h>
 #include "../kernel/framework/syscall.h"
 #include "../kernel/framework/user.h"
+
+#define assert(cond) \
+  do { \
+    if (!(cond)) { \
+      printf("Assertion fail at %s:%d\n", __FILE__, __LINE__); \
+      }\
+  } while (0)
+
+#define putstr(s) \
+  ({ for (const char *p = s; *p; p++) kputc(*p); })
 
 static inline long syscall(int num, long x1, long x2, long x3, long x4) {
   register long a0 asm ("rax") = num;
@@ -50,3 +62,9 @@ static inline int sleep(int seconds) {
 static inline int64_t uptime() {
   return syscall(SYS_uptime, 0, 0, 0, 0);
 }
+
+
+//ulib.c
+int printf(const char *fmt, ...);
+
+#endif

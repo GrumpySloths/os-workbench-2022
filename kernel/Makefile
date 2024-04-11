@@ -23,6 +23,14 @@ image: git
 #dev_iodev_debug
 # CFLAGS += -DDEV_IODEV_TRACE
 
+#vme_deubg
+CFLAGS+= -DVME_DEBUG
+
+#print_debug
+CFLAGS+= -DPRINT_DEBUG
+#perror debug
+CFLAGS+=-DPERROR_DEBUG
+
 test: git
 	@gcc $(shell find src/ -name "*.c")  \
 			$(shell find test/ -name "*.c") \

@@ -4,6 +4,7 @@ OBJS = $(addsuffix .o, $(basename $(SRCS)))
 
 CROSS_COMPILE = x86_64-linux-gnu-
 
+# -ffreestanding -fno-builtin
 CFLAGS  = -O1 -m64 -fPIC -mno-sse -ggdb -Wall -Werror
 CFLAGS += -ffreestanding -fno-builtin -nostdlib -fno-stack-protector
 CFLAGS += -fno-asynchronous-unwind-tables
