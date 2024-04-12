@@ -69,6 +69,8 @@ int main(int argc, char *argv[]) {
                           RootDirSectors);
   int CountOfClusters = DataSec / hdr->BPB_SecPerClus;
   printf("CountOfClusters: %d\n", CountOfClusters);
+  //打印BPB_FATSz32
+  printf("BPB_FATSz32: %d\n", hdr->BPB_FATSz32);
   // file system traversal
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
