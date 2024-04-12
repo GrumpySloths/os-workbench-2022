@@ -61,19 +61,14 @@ int main(int argc, char *argv[]) {
   struct fat32hdr *hdr = map_disk(argv[1]);
 
   // TODO: frecov
-  //打印fat32hdr的所有属性
-  printf("BS_jmpBoot: %s\n", hdr->BS_jmpBoot);
-  printf("BS_OEMName: %s\n", hdr->BS_OEMName);
-  printf("BPB_BytsPerSec: %d\n", hdr->BPB_BytsPerSec);
-  printf("BPB_SecPerClus: %d\n", hdr->BPB_SecPerClus);
-  printf("BPB_RsvdSecCnt: %d\n", hdr->BPB_RsvdSecCnt);
-  printf("BPB_NumFATs: %d\n", hdr->BPB_NumFATs);
-  printf("BPB_RootEntCnt: %d\n", hdr->BPB_RootEntCnt);
-  printf("BPB_TotSec16: %d\n", hdr->BPB_TotSec16);
-  printf("BPB_Media: %d\n", hdr->BPB_Media);
-  printf("BPB_FATSz16: %d\n", hdr->BPB_FATSz16);
-  printf("BPB_SecPerTrk: %d\n", hdr->BPB_SecPerTrk);
-
+  // determined CountOfClusters
+  int RootDirSectors=((hdr->BPB_RootEntCnt*32)+(hdr->BPB_BytsPerSec-1))/hdr->BPB_BytsPerSec;
+  int FATSz=hdr->BPB_FATSz32;
+  int TotSec = hdr->BPB_TotSec32;
+  int DataSec = TotSec - (hdr->BPB_RsvdSecCnt + (hdr->BPB_NumFATs * FATSz) +
+                          RootDirSectors);
+  int CountOfClusters = DataSec / hdr->BPB_SecPerClus;
+  printf("CountOfClusters: %d\n", CountOfClusters);
   // file system traversal
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
