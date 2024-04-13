@@ -122,8 +122,8 @@ int main(int argc, char *argv[]) {
   u32 RootDirAddr = FirstSectorofCluster * hdr->BPB_BytsPerSec;
   struct fat32dir *rootdir = (struct fat32dir *)((char *)hdr + RootDirAddr);
   printf("RootDirAddr: %d\n", RootDirAddr);
-  printf("RootDirAddr: %d\n", rootdir->DIR_Attr);
-  printf("RootDirAddr: %d\n", rootdir->DIR_FileSize);
+  printf("RootDir attr: %d\n", rootdir->DIR_Attr);
+  printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
 
 
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
