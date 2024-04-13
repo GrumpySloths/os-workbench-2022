@@ -127,7 +127,11 @@ int main(int argc, char *argv[]) {
   printf("RootDirAddr: %d\n", RootDirAddr);
   printf("RootDir attr: %d\n", rootdir->DIR_Attr);
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
-  //打印根目录的FstClusLO 和 FstClusHI
+
+  for (int i = 0; i < 2;i++){
+      printf("file name:%s\n", rootdir[i].DIR_Name);
+  }
+  // 打印根目录的FstClusLO 和 FstClusHI
   printf("RootDir FstClusLO: %d\n", rootdir->DIR_FstClusLO);
   printf("RootDir FstClusHI: %d\n", rootdir->DIR_FstClusHI);
   //根据FstClusLO 和 FstClusHI 计算出下一个cluster的地址
@@ -139,11 +143,7 @@ int main(int argc, char *argv[]) {
   printf("NextDir attr: %d\n", nextdir->DIR_Attr);
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   printf("Nextdir name:%s\n", nextdir->DIR_Name);
-  //获取NextDir 文件的所有内容并打印
-  char *content = (char *)nextdir;
-  for (int i = 0; i < nextdir->DIR_FileSize; i++) {
-    printf("%c", content[i]);
-  }
+
 
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 
