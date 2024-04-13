@@ -179,6 +179,7 @@ int main(int argc, char *argv[]) {
     }
     EntCnt++;
   }
+  printf("EntCnt:%d\n", EntCnt);
   // for (int i = 0; i < 5;i++){
   //     printf("file name:%s\n", nextdir[i].DIR_Name);
   // }
