@@ -181,9 +181,8 @@ int main(int argc, char *argv[]) {
     cnt++;
   }
   printf("EntCnt:%d,cnt:%d\n", EntCnt,cnt);
-  // for (int i = 0; i < 5;i++){
-  //     printf("file name:%s\n", nextdir[i].DIR_Name);
-  // }
+  //打印nextdir的FstClusLO 和 FstClusHI
+  printf("NextDir FstClusLO: %d\n", nextdir->DIR_FstClusLO);
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
