@@ -169,7 +169,7 @@ int main(int argc, char *argv[]) {
   //   printf("debug point\n");
   // }
   // int cur = 0;
-  while (nextdir[EntCnt].DIR_Attr && EntCnt<20) {
+  while (nextdir[EntCnt].DIR_Attr && EntCnt<50) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
       print_long_name((struct fat32longdir *)&nextdir[EntCnt]);
     } else {
