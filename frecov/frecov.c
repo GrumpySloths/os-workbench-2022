@@ -100,6 +100,8 @@ struct fat32longdir {
 void *map_disk(const char *fname);
 void print_long_name(struct fat32longdir*longdir);
 
+static int EntCnt = 0;
+
 int main(int argc, char *argv[]) {
   if (argc < 2) {
     fprintf(stderr, "Usage: %s fs-image\n", argv[0]);
@@ -166,14 +168,14 @@ int main(int argc, char *argv[]) {
   //   }
   //   printf("debug point\n");
   // }
-  int cur = 0;
-  while (nextdir[cur].DIR_Attr) {
-    if (nextdir[cur].DIR_Attr == ATTR_LONG_NAME) {
-      print_long_name((struct fat32longdir *)&nextdir[cur]);
+  // int cur = 0;
+  while (nextdir[EntCnt].DIR_Attr) {
+    if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
+      print_long_name((struct fat32longdir *)&nextdir[EntCnt]);
     } else {
-      printf("Short name: %s\n", nextdir[cur].DIR_Name);
+      printf("Short name: %s\n", nextdir[EntCnt].DIR_Name);
     }
-    cur++;
+    EntCnt++;
   }
   // for (int i = 0; i < 5;i++){
   //     printf("file name:%s\n", nextdir[i].DIR_Name);
@@ -247,5 +249,6 @@ void print_long_name(struct fat32longdir*longdir){
   }
   printf("\n");
 
-  longdir += n;
+  // longdir += n;
+  EntCnt += n;
 }
