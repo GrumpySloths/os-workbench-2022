@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
   while(!nextdir){
     //判断是否为long name
     if(nextdir->DIR_Attr==ATTR_LONG_NAME){
-        print_long_name(nextdir);
+        print_long_name((struct fat32longdir*)nextdir);
     }else{
       //打印short name
       printf("Short name: %s\n", nextdir->DIR_Name);
