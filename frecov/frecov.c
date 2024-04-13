@@ -115,7 +115,16 @@ int main(int argc, char *argv[]) {
   printf("FSI_TrailSig: %x\n", fsi->FSI_TrailSig);
 
   printf("RootClus: %d\n", hdr->BPB_RootClus);
-  //获取根目录的地址
+  //获取根目录的地址并将其属性打印出来
+  u32 RootClus = hdr->BPB_RootClus;
+  u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + RootDirSectors;
+  u32 FirstSectorofCluster = ((RootClus - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
+  u32 RootDirAddr = FirstSectorofCluster * hdr->BPB_BytsPerSec;
+  struct fat32dir *rootdir = (struct fat32dir *)((char *)hdr + RootDirAddr);
+  printf("RootDirAddr: %d\n", RootDirAddr);
+  printf("RootDirAddr: %d\n", rootdir->DIR_Attr);
+  printf("RootDirAddr: %d\n", rootdir->DIR_FileSize);
+
 
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 
