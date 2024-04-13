@@ -155,21 +155,20 @@ int main(int argc, char *argv[]) {
   struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
   struct fat32dir* temp = nextdir;
   //遍历nextdir,打印所有的文件名，long name和short name分情况考虑
-  while(temp){
-      printf("test\n");
-      // 判断是否为long name
-    if (temp->DIR_Attr == ATTR_LONG_NAME) {
-          print_long_name((struct fat32longdir *)temp);
-    }else{
-      //打印short name
-      printf("Short name: %s\n", temp->DIR_Name);
-    }
-    printf("debug point\n");
-    temp = (struct fat32dir *)((char *)temp+ sizeof(struct fat32dir));
-  }
-  // for (int i = 0; i < 5;i++){
-  //     printf("file name:%s\n", nextdir[i].DIR_Name);
+  // while(temp){
+  //     printf("test\n");
+  //     // 判断是否为long name
+  //   if (temp->DIR_Attr == ATTR_LONG_NAME) {
+  //         print_long_name((struct fat32longdir *)temp);
+  //   }else{
+  //     //打印short name
+  //     printf("Short name: %s\n", temp->DIR_Name);
+  //   }
+  //   printf("debug point\n");
   // }
+  for (int i = 0; i < 5;i++){
+      printf("file name:%s\n", nextdir[i].DIR_Name);
+  }
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
