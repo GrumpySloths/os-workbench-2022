@@ -129,9 +129,6 @@ int main(int argc, char *argv[]) {
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
   printf("Rootdir name:%s\n", rootdir->DIR_Name);
 
-  for (int i = 0; i < 2;i++){
-      printf("file name:%s\n", rootdir[i].DIR_Name);
-  }
   // 打印根目录的FstClusLO 和 FstClusHI
   printf("RootDir FstClusLO: %d\n", rootdir->DIR_FstClusLO);
   printf("RootDir FstClusHI: %d\n", rootdir->DIR_FstClusHI);
@@ -140,15 +137,10 @@ int main(int argc, char *argv[]) {
   u32 NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
   u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
   struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
-  printf("NextDirAddr: %d\n", NextDirAddr);
-  printf("NextDir attr: %d\n", nextdir->DIR_Attr);
-  printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
-  printf("Nextdir name:%s\n", nextdir->DIR_Name);
-
-
+  for (int i = 0; i < 10;i++){
+      printf("file name:%s\n", nextdir[i].DIR_Name);
+  }
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
-
-
 }
 
 void *map_disk(const char *fname) {
