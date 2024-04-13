@@ -171,11 +171,11 @@ int main(int argc, char *argv[]) {
   //   printf("debug point\n");
   // }
   int cnt= 0;
-  while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes) {
+  while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
       print_long_name((struct fat32longdir *)&nextdir[EntCnt]);
     } else {
-      printf("Short name: %s\n", nextdir[EntCnt].DIR_Name);
+      printf("Short name: %s EntCnt:%d\n", nextdir[EntCnt].DIR_Name, EntCnt);
     }
     EntCnt++;
     cnt++;
