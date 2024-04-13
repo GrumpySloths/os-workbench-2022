@@ -154,20 +154,20 @@ int main(int argc, char *argv[]) {
   u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
   struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
   //遍历nextdir,打印所有的文件名，long name和short name分情况考虑
-  // while(nextdir){
-  //     printf("test\n");
-  //     // 判断是否为long name
-  //   if (nextdir->DIR_Attr == ATTR_LONG_NAME) {
-  //         print_long_name((struct fat32longdir *)nextdir);
-  //   }else{
-  //     //打印short name
-  //     printf("Short name: %s\n", nextdir->DIR_Name);
-  //   }
-  //   nextdir++;
-  // }
-  for (int i = 0; i < 5;i++){
-      printf("file name:%s\n", nextdir[i].DIR_Name);
+  while(nextdir){
+      printf("test\n");
+      // 判断是否为long name
+    if (nextdir->DIR_Attr == ATTR_LONG_NAME) {
+          print_long_name((struct fat32longdir *)nextdir);
+    }else{
+      //打印short name
+      printf("Short name: %s\n", nextdir->DIR_Name);
+    }
+    nextdir++;
   }
+  // for (int i = 0; i < 5;i++){
+  //     printf("file name:%s\n", nextdir[i].DIR_Name);
+  // }
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
