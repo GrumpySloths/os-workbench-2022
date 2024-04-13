@@ -11,6 +11,15 @@ typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
 
+// legal file attribute types
+#define ATTR_READ_ONLY 0x01
+#define ATTR_HIDDEN 0x02
+#define ATTR_SYSTEM 0x04
+#define ATTR_VOLUME_ID 0x08
+#define ATTR_DIRECTORY 0x10
+#define ATTR_ARCHIVE 0x20
+#define ATTR_LONG_NAME (ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID)
+
 // Copied from the manual
 struct fat32hdr {
   u8  BS_jmpBoot[3];
@@ -44,6 +53,31 @@ struct fat32hdr {
   u16 Signature_word;
 } __attribute__((packed));
 
+struct FSInfo{ 
+  u32 FSI_LeadSig;
+  u8  FSI_Reserved1[480];
+  u32 FSI_StrucSig;
+  u32 FSI_Free_Count;
+  u32 FSI_Nxt_Free;
+  u8  FSI_Reserved2[12];
+  u32 FSI_TrailSig;
+} __attribute__((packed));
+
+//描述fat32 directory entry
+struct fat32dir {
+  u8  DIR_Name[11];
+  u8  DIR_Attr;
+  u8  DIR_NTRes;
+  u8  DIR_CrtTimeTenth;
+  u16 DIR_CrtTime;
+  u16 DIR_CrtDate;
+  u16 DIR_LstAccDate;
+  u16 DIR_FstClusHI;
+  u16 DIR_WrtTime;
+  u16 DIR_WrtDate;
+  u16 DIR_FstClusLO;
+  u32 DIR_FileSize;
+} __attribute__((packed));
 
 void *map_disk(const char *fname);
 
@@ -73,6 +107,9 @@ int main(int argc, char *argv[]) {
   printf("BPB_FATSz32: %d\n", hdr->BPB_FATSz32);
   // file system traversal
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
+  //打印RootClus field
+  printf("RootClus: %d\n", hdr->BPB_RootClus);
+
 }
 
 void *map_disk(const char *fname) {
