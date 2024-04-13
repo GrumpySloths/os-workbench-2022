@@ -154,7 +154,7 @@ int main(int argc, char *argv[]) {
   u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
   struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
   //遍历nextdir,打印所有的文件名，long name和short name分情况考虑
-  while(nextdir){
+  while(nextdir!=NULL){
       printf("test\n");
       // 判断是否为long name
     if (nextdir->DIR_Attr == ATTR_LONG_NAME) {
