@@ -127,7 +127,15 @@ int main(int argc, char *argv[]) {
   //打印根目录的FstClusLO 和 FstClusHI
   printf("RootDir FstClusLO: %d\n", rootdir->DIR_FstClusLO);
   printf("RootDir FstClusHI: %d\n", rootdir->DIR_FstClusHI);
-
+  //根据FstClusLO 和 FstClusHI 计算出下一个cluster的地址
+  u32 NextCluster = (rootdir->DIR_FstClusHI << 16) + rootdir->DIR_FstClusLO;
+  u32 NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
+  u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
+  struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
+  printf("NextDirAddr: %d\n", NextDirAddr);
+  printf("NextDir attr: %d\n", nextdir->DIR_Attr);
+  printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
+  printf("Nextdir name:%s\n", nextdir->DIR_Name);
 
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 
