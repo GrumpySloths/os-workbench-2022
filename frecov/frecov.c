@@ -166,9 +166,18 @@ int main(int argc, char *argv[]) {
   //   }
   //   printf("debug point\n");
   // }
-  for (int i = 0; i < 5;i++){
-      printf("file name:%s\n", nextdir[i].DIR_Name);
+  int cur = 0;
+  while (nextdir[cur].DIR_Attr) {
+    if (nextdir[cur].DIR_Attr == ATTR_LONG_NAME) {
+      print_long_name((struct fat32longdir *)&nextdir[cur]);
+    } else {
+      printf("Short name: %s\n", nextdir[cur].DIR_Name);
+    }
+    cur++;
   }
+  // for (int i = 0; i < 5;i++){
+  //     printf("file name:%s\n", nextdir[i].DIR_Name);
+  // }
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
