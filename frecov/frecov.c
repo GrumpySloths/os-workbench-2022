@@ -155,6 +155,8 @@ int main(int argc, char *argv[]) {
   u32 NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
   u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
   struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
+  //打印nextdir文件大小
+  printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   struct fat32dir* temp = nextdir;
   //遍历nextdir,打印所有的文件名，long name和short name分情况考虑
   // while(temp){
@@ -169,7 +171,7 @@ int main(int argc, char *argv[]) {
   //   printf("debug point\n");
   // }
   // int cur = 0;
-  while (nextdir[EntCnt].DIR_Attr && EntCnt<50) {
+  while (nextdir[EntCnt].DIR_Attr && EntCnt<5) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
       print_long_name((struct fat32longdir *)&nextdir[EntCnt]);
     } else {
