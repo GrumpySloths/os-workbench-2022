@@ -106,9 +106,10 @@ int main(int argc, char *argv[]) {
   //打印BPB_FATSz32
   printf("BPB_FATSz32: %d\n", hdr->BPB_FATSz32);
   // file system traversal
-  munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
   //打印RootClus field
   printf("RootClus: %d\n", hdr->BPB_RootClus);
+  munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
+
 
 }
 
