@@ -164,6 +164,7 @@ int main(int argc, char *argv[]) {
       //打印short name
       printf("Short name: %s\n", temp->DIR_Name);
     }
+    printf("debug point\n");
     temp++;
   }
   // for (int i = 0; i < 5;i++){
