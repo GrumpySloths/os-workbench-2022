@@ -108,11 +108,11 @@ int main(int argc, char *argv[]) {
   //获取FSInfo的地址并将其属性进行打印
   printf("BPB_FSInfo: %d\n", hdr->BPB_FSInfo);
   struct FSInfo *fsi = (struct FSInfo *)((char *)hdr + hdr->BPB_FSInfo * hdr->BPB_BytsPerSec);
-  printf("FSI_LeadSig: %p\n", fsi->FSI_LeadSig);
-  printf("FSI_StrucSig: %p\n", fsi->FSI_StrucSig);
+  printf("FSI_LeadSig: %p\n", (void*)fsi->FSI_LeadSig);
+  printf("FSI_StrucSig: %p\n", (void*)fsi->FSI_StrucSig);
   printf("FSI_Free_Count: %d\n", fsi->FSI_Free_Count);
   printf("FSI_Nxt_Free: %d\n", fsi->FSI_Nxt_Free);
-  printf("FSI_TrailSig: %p\n", fsi->FSI_TrailSig);
+  printf("FSI_TrailSig: %p\n", (void*)fsi->FSI_TrailSig);
 
   printf("RootClus: %d\n", hdr->BPB_RootClus);
   //获取根目录的地址
