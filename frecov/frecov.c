@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
       printf("Short name: %s\n", temp->DIR_Name);
     }
     printf("debug point\n");
-    temp++;
+    temp = (struct fat32dir *)((char *)temp+ sizeof(struct fat32dir));
   }
   // for (int i = 0; i < 5;i++){
   //     printf("file name:%s\n", nextdir[i].DIR_Name);
