@@ -20,6 +20,10 @@ typedef uint32_t u32;
 #define ATTR_ARCHIVE 0x20
 #define ATTR_LONG_NAME (ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID)
 
+// long name mask
+#define ATTR_LONG_NAME_MASK (ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID \
+                             | ATTR_DIRECTORY | ATTR_ARCHIVE)
+#define Last_Long_Entry 0x40
 // Copied from the manual
 struct fat32hdr {
   u8  BS_jmpBoot[3];
@@ -79,10 +83,22 @@ struct fat32dir {
   u32 DIR_FileSize;
 } __attribute__((packed));
 
+// long name directory entry structure
+struct fat32longdir {
+  u8  LDIR_Ord;
+  u16 LDIR_Name1[5];
+  u8  LDIR_Attr;
+  u8  LDIR_Type;
+  u8  LDIR_Chksum;
+  u16 LDIR_Name2[6];
+  u16 LDIR_FstClusLO;
+  u16 LDIR_Name3[2];
+} __attribute__((packed));
 
 
 
 void *map_disk(const char *fname);
+void print_long_name(struct fat32longdir*longdir);
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
@@ -137,9 +153,18 @@ int main(int argc, char *argv[]) {
   u32 NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
   u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
   struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
-  for (int i = 0; i < 10;i++){
-      printf("file name:%s\n", nextdir[i].DIR_Name);
+  //遍历nextdir,打印所有的文件名，long name和short name分情况考虑
+  while(!nextdir){
+    //判断是否为long name
+    if(nextdir->DIR_Attr==ATTR_LONG_NAME){
+        print_long_name(nextdir);
+    }else{
+      //打印short name
+      printf("Short name: %s\n", nextdir->DIR_Name);
+    }
+    nextdir++;
   }
+
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
@@ -176,4 +201,38 @@ release:
     close(fd);
   }
   exit(1);
+}
+
+//定义一个函数，打印fat32 directory entry's long name
+void print_long_name(struct fat32longdir*longdir){
+  //check last name entry mask
+  assert(longdir->LDIR_Ord & Last_Long_Entry);
+  //get last id
+  int n=longdir->LDIR_Ord^Last_Long_Entry;
+  //from 1 to n print the name
+  //设置一个数组来存储long name,其最大长度为255
+  u16 name[255];
+
+  int cur = 0;
+  for (int i = n - 1; i >= 0; i--) {
+    //get name1
+    for(int j=0;j<5;j++){
+      name[cur++]=longdir[i].LDIR_Name1[j];
+    }
+    //get name2
+    for(int j=0;j<6;j++){
+      name[cur++]=longdir[i].LDIR_Name2[j];
+    }
+    //get name3
+    for(int j=0;j<2;j++){
+      name[cur++]=longdir[i].LDIR_Name3[j];
+    }
+  }
+  //print the name,遇到null打印换行符后停止
+  for (int i = 0; name[i] != 0;i++){
+      printf("%c", name[i]);
+  }
+  printf("\n");
+
+  longdir += n;
 }
