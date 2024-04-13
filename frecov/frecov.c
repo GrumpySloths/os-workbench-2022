@@ -127,6 +127,7 @@ int main(int argc, char *argv[]) {
   printf("RootDirAddr: %d\n", RootDirAddr);
   printf("RootDir attr: %d\n", rootdir->DIR_Attr);
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
+  printf("Rootdir name:%s\n", rootdir->DIR_Name);
 
   for (int i = 0; i < 2;i++){
       printf("file name:%s\n", rootdir[i].DIR_Name);
