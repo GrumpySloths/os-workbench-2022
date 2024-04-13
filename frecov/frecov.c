@@ -124,22 +124,10 @@ int main(int argc, char *argv[]) {
   printf("RootDirAddr: %d\n", RootDirAddr);
   printf("RootDir attr: %d\n", rootdir->DIR_Attr);
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
-  //获取根目录下所有文件名称并将其打印
-  for (int i = 0; i < hdr->BPB_RootEntCnt; i++) {
-    if (rootdir[i].DIR_Name[0] == 0x00) {
-      break;
-    }
-    if (rootdir[i].DIR_Name[0] == 0xE5) {
-      continue;
-    }
-    if (rootdir[i].DIR_Attr == ATTR_LONG_NAME) {
-      continue;
-    }
-    char name[12];
-    memcpy(name, rootdir[i].DIR_Name, 11);
-    name[11] = '\0';
-    printf("%s\n", name);
-  }
+  //打印根目录的FstClusLO 和 FstClusHI
+  printf("RootDir FstClusLO: %d\n", rootdir->DIR_FstClusLO);
+  printf("RootDir FstClusHI: %d\n", rootdir->DIR_FstClusHI);
+
 
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 
