@@ -105,9 +105,18 @@ int main(int argc, char *argv[]) {
   printf("CountOfClusters: %d\n", CountOfClusters);
   //打印BPB_FATSz32
   printf("BPB_FATSz32: %d\n", hdr->BPB_FATSz32);
-  // file system traversal
-  //打印RootClus field
+  //获取FSInfo的地址并将其属性进行打印
+  printf("BPB_FSInfo: %d\n", hdr->BPB_FSInfo);
+  struct FSInfo *fsi = (struct FSInfo *)((char *)hdr + hdr->BPB_FSInfo * hdr->BPB_BytsPerSec);
+  printf("FSI_LeadSig: %d\n", fsi->FSI_LeadSig);
+  printf("FSI_StrucSig: %d\n", fsi->FSI_StrucSig);
+  printf("FSI_Free_Count: %d\n", fsi->FSI_Free_Count);
+  printf("FSI_Nxt_Free: %d\n", fsi->FSI_Nxt_Free);
+  printf("FSI_TrailSig: %d\n", fsi->FSI_TrailSig);
+
   printf("RootClus: %d\n", hdr->BPB_RootClus);
+  //获取根目录的地址
+
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 
 
