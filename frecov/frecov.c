@@ -79,6 +79,9 @@ struct fat32dir {
   u32 DIR_FileSize;
 } __attribute__((packed));
 
+
+
+
 void *map_disk(const char *fname);
 
 int main(int argc, char *argv[]) {
@@ -136,6 +139,11 @@ int main(int argc, char *argv[]) {
   printf("NextDir attr: %d\n", nextdir->DIR_Attr);
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   printf("Nextdir name:%s\n", nextdir->DIR_Name);
+  //获取NextDir 文件的所有内容并打印
+  char *content = (char *)nextdir;
+  for (int i = 0; i < nextdir->DIR_FileSize; i++) {
+    printf("%c", content[i]);
+  }
 
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 
