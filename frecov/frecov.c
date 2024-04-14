@@ -250,8 +250,8 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir*nextd
         printf("nextCluster:%x\n", NextCluster);
     }
 
-    if(NextCluster==ENDOFFILE){
-        EntCnt = ENDOFFILE;
+    if(NextCluster==(u32)ENDOFFILE){
+        EntCnt = (u32)ENDOFFILE;
         return;
     }
 
