@@ -104,6 +104,7 @@ void print_long_name(struct fat32longdir*longdir);
 struct fat32dir * get_RootDir(struct fat32hdr *hdr);
 struct fat32dir *ClusToDir(struct fat32hdr *hdr,int ClusId);
 u32 DirToClus(struct fat32dir*dir);
+u32 NextClus(struct fat32hdr *hdr, u32 ClusId);
 static int EntCnt = 0;
 
 int main(int argc, char *argv[]) {
@@ -127,12 +128,18 @@ int main(int argc, char *argv[]) {
   int DataSec = TotSec - (hdr->BPB_RsvdSecCnt + (hdr->BPB_NumFATs * FATSz) +
                           RootDirSectors);
   int CountOfClusters = DataSec / hdr->BPB_SecPerClus;
+
+#ifdef DEBUG
   printf("CountOfClusters: %d\n", CountOfClusters);
   //打印BPB_FATSz32
   printf("BPB_FATSz32: %d\n", hdr->BPB_FATSz32);
   //获取FSInfo的地址并将其属性进行打印
   printf("BPB_FSInfo: %d\n", hdr->BPB_FSInfo);
+#endif
+
   struct FSInfo *fsi = (struct FSInfo *)((char *)hdr + hdr->BPB_FSInfo * hdr->BPB_BytsPerSec);
+
+#ifdef DEBUG  
   printf("FSI_LeadSig: %x\n", fsi->FSI_LeadSig);
   printf("FSI_StrucSig: %x\n", fsi->FSI_StrucSig);
   printf("FSI_Free_Count: %d\n", fsi->FSI_Free_Count);
@@ -140,6 +147,8 @@ int main(int argc, char *argv[]) {
   printf("FSI_TrailSig: %x\n", fsi->FSI_TrailSig);
 
   printf("RootClus: %d\n", hdr->BPB_RootClus);
+#endif
+
   //获取根目录的地址并将其属性打印出来
   u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + RootDirSectors;
   struct fat32dir *rootdir = get_RootDir(hdr);
@@ -152,30 +161,22 @@ int main(int argc, char *argv[]) {
   struct fat32dir*nextdir=ClusToDir(hdr,NextCluster);
 
   //根据NextCluster计算对应的fat entry
-  int FATOffset = NextCluster * 4;
-  int FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
-  int FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
-  u32 *FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
-  printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
-  u32 FATValue = FAT[FATEntOffset / 4] & ENDOFFILE;
+  // int FATOffset = NextCluster * 4;
+  // int FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
+  // int FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
+  // u32 *FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
+  // printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
+  // u32 FATValue = FAT[FATEntOffset / 4] & ENDOFFILE;
+  u32 FATValue=NextClus(hdr,NextCluster);
 
   //根据FaTValue 循环打印fat list，直至遇到ENDOFFILE
   while (FATValue < ENDOFFILE) {
-    FATOffset = FATValue * 4;
-    FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
-    FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
-    FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
-    printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
-    FATValue = FAT[FATEntOffset / 4] & ENDOFFILE;
+
+    printf("Entry value: %x\n", FATValue );
+    FATValue = NextClus(hdr, FATValue);
   }
 
-  //根据FATValue计算下一个cluster的地址
-  // NextCluster = FATValue;
-  // NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
-  // NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
-  // nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
-
-
+  printf("Entry value: %x\n", FATValue );
   // 打印nextdir文件大小
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   struct fat32dir* temp = nextdir;
@@ -295,6 +296,19 @@ struct fat32dir* ClusToDir(struct fat32hdr*hdr,int ClusId){
 }
 
 u32 DirToClus(struct fat32dir*dir){
+
   u32 ClusId = (dir->DIR_FstClusHI << 16) + dir->DIR_FstClusLO;
   return ClusId;
+}
+
+u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
+
+  int FATOffset = ClusId * 4;
+  int FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
+  int FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
+  u32 *FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
+  // printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
+  u32 FATValue = FAT[FATEntOffset / 4] & ENDOFFILE; 
+
+  return FATValue;
 }
