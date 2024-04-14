@@ -186,6 +186,8 @@ int main(int argc, char *argv[]) {
     }
     EntCnt++;
     cnt++;
+    if(EntCnt>128)
+        break;
   }
   printf("EntCnt:%d,cnt:%d\n", EntCnt,cnt);
 
