@@ -297,6 +297,8 @@ u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
   } else {
       EntCnt += n;
   }
+
+  return name;
 }
 
 struct fat32dir* get_RootDir(struct fat32hdr*hdr){
