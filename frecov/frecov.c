@@ -100,7 +100,7 @@ typedef struct fat32longdir {
 
 
 void *map_disk(const char *fname);
-void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId);
+void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir*next);
 struct fat32dir * get_RootDir(fat32hdr *hdr);
 struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
 u32 DirToClus(fat32dir*dir);
@@ -178,7 +178,8 @@ int main(int argc, char *argv[]) {
   int cnt= 0;
   while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
-      print_long_name((struct fat32longdir *)&nextdir[EntCnt],hdr,NextCluster);
+      print_long_name((struct fat32longdir *)&nextdir[EntCnt],
+                                    hdr,NextCluster,nextdir);
     } else {
       printf("Short name: %s EntCnt:%d\n", nextdir[EntCnt].DIR_Name, EntCnt);
     }
@@ -227,7 +228,7 @@ release:
 }
 
 //定义一个函数，打印fat32 directory entry's long name
-void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId){
+void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir*nextdir){
 
     fat32dir *next = NULL;
     // check last name entry mask
@@ -283,7 +284,8 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId){
 
   if(EntCnt+n>=128){
       EntCnt = (EntCnt + n) % 128;
-  }else{
+      *nextdir = *next;
+  } else {
       EntCnt += n;
   }
 }
