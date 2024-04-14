@@ -100,7 +100,7 @@ typedef struct fat32longdir {
 
 
 void *map_disk(const char *fname);
-void print_long_name(fat32longdir*longdir);
+void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId);
 struct fat32dir * get_RootDir(fat32hdr *hdr);
 struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
 u32 DirToClus(fat32dir*dir);
@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
   int cnt= 0;
   while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
-      print_long_name((struct fat32longdir *)&nextdir[EntCnt]);
+      print_long_name((struct fat32longdir *)&nextdir[EntCnt],hdr,NextCluster);
     } else {
       printf("Short name: %s EntCnt:%d\n", nextdir[EntCnt].DIR_Name, EntCnt);
     }
@@ -227,33 +227,53 @@ release:
 }
 
 //定义一个函数，打印fat32 directory entry's long name
-void print_long_name(fat32longdir*longdir){
-  //check last name entry mask
-  // assert(longdir->LDIR_Ord & Last_Long_Entry);
-  if(!(longdir->LDIR_Ord & Last_Long_Entry)){
-      EntCnt++;
-      return;
-  }
-  //get last id
-  int n=longdir->LDIR_Ord^Last_Long_Entry;
-  //from 1 to n print the name
-  //设置一个数组来存储long name,其最大长度为255
-  u16 name[255];
+void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId){
 
-  int cur = 0;
-  for (int i = n - 1; i >= 0; i--) {
-    //get name1
-    for(int j=0;j<5;j++){
-      name[cur++]=longdir[i].LDIR_Name1[j];
+    fat32dir *next = NULL;
+    // check last name entry mask
+    assert(longdir->LDIR_Ord & Last_Long_Entry);
+
+    // if(!(longdir->LDIR_Ord & Last_Long_Entry)){
+    //     EntCnt++;
+    //     return;
+    // }
+
+    // get last id
+    int n = longdir->LDIR_Ord ^ Last_Long_Entry;
+
+    //判断是否越界
+    if(EntCnt+n>=128){
+      u32 NextCluster = NextClus(hdr,ClusId);
+      next = ClusToDir(hdr,NextCluster);
     }
-    //get name2
-    for(int j=0;j<6;j++){
-      name[cur++]=longdir[i].LDIR_Name2[j];
-    }
-    //get name3
-    for(int j=0;j<2;j++){
-      name[cur++]=longdir[i].LDIR_Name3[j];
-    }
+    // from 1 to n print the name
+    // 设置一个数组来存储long name,其最大长度为255
+    u16 name[255];
+    fat32longdir *tmp = longdir;
+    int tmp_i = 0;
+    int cur = 0;
+    for (int i = n - 1; i >= 0; i--) {
+
+        if(EntCnt+i>=128){
+            tmp_i = (EntCnt + i) % 128;
+            tmp=(fat32longdir*)next;
+        }else{
+            tmp_i = i;
+            tmp=longdir;
+        }
+
+        // get name1
+        for (int j = 0; j < 5; j++) {
+            name[cur++] = tmp[tmp_i].LDIR_Name1[j];
+        }
+        // get name2
+        for (int j = 0; j < 6; j++) {
+            name[cur++] = tmp[tmp_i].LDIR_Name2[j];
+        }
+        // get name3
+        for (int j = 0; j < 2; j++) {
+            name[cur++] = tmp[tmp_i].LDIR_Name3[j];
+        }
   }
   //print the name,遇到null打印换行符后停止
   for (int i = 0; name[i] != 0;i++){
@@ -261,8 +281,11 @@ void print_long_name(fat32longdir*longdir){
   }
   printf("\n");
 
-  // longdir += n;
-  EntCnt += n;
+  if(EntCnt+n>=128){
+      EntCnt = (EntCnt + n) % 128;
+  }else{
+      EntCnt += n;
+  }
 }
 
 struct fat32dir* get_RootDir(struct fat32hdr*hdr){
