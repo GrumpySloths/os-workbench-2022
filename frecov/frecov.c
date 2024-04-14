@@ -255,8 +255,8 @@ u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
         EntCnt = (u32)ENDOFFILE;
         return NULL;
     }
-    u16* name = (u16*)malloc(sizeof(u16) * 255);
-
+    // u16* name = (u16*)malloc(sizeof(u16) * 255);
+    u16 name[255];
 #ifndef DEBUG_LONGNAME
     // from 1 to n print the name
     // 设置一个数组来存储long name,其最大长度为255
@@ -300,7 +300,7 @@ u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
       EntCnt += n;
   }
 
-  return name;
+  return NULL;
 }
 
 struct fat32dir* get_RootDir(struct fat32hdr*hdr){
