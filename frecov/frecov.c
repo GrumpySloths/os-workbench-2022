@@ -323,6 +323,8 @@ struct fat32dir* ClusToDir(struct fat32hdr*hdr,int ClusId){
   u32 NextSector = ((ClusId - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
   u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
   struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
+  printf("nextdir:%p\n", nextdir);
+  printf("equal addr:%p\n",(char *)hdr + NextDirAddr);
 
   return nextdir;
 }
