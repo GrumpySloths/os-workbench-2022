@@ -297,7 +297,7 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir*nextd
 
   if(EntCnt+n>=128){
       EntCnt = (EntCnt + n) % 128;
-      *nextdir = *next;
+      nextdir = next;
   } else {
       EntCnt += n;
   }
