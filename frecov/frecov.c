@@ -27,7 +27,7 @@ typedef uint32_t u32;
 
 #define ENDOFFILE 0xFFFFFFF
 // Copied from the manual
-struct fat32hdr {
+typedef struct fat32hdr {
   u8  BS_jmpBoot[3];
   u8  BS_OEMName[8];
   u16 BPB_BytsPerSec;
@@ -57,9 +57,9 @@ struct fat32hdr {
   u8  BS_FilSysType[8];
   u8  __padding_1[420];
   u16 Signature_word;
-} __attribute__((packed));
+} __attribute__((packed)) fat32hdr;
 
-struct FSInfo{ 
+typedef struct FSInfo{ 
   u32 FSI_LeadSig;
   u8  FSI_Reserved1[480];
   u32 FSI_StrucSig;
@@ -67,10 +67,10 @@ struct FSInfo{
   u32 FSI_Nxt_Free;
   u8  FSI_Reserved2[12];
   u32 FSI_TrailSig;
-} __attribute__((packed));
+} __attribute__((packed)) FSInfo;
 
 //描述fat32 directory entry
-struct fat32dir {
+typedef struct fat32dir {
   u8  DIR_Name[11];
   u8  DIR_Attr;
   u8  DIR_NTRes;
@@ -83,10 +83,10 @@ struct fat32dir {
   u16 DIR_WrtDate;
   u16 DIR_FstClusLO;
   u32 DIR_FileSize;
-} __attribute__((packed));
+} __attribute__((packed)) fat32dir;
 
 // long name directory entry structure
-struct fat32longdir {
+typedef struct fat32longdir {
   u8  LDIR_Ord;
   u16 LDIR_Name1[5];
   u8  LDIR_Attr;
@@ -95,14 +95,14 @@ struct fat32longdir {
   u16 LDIR_Name2[6];
   u16 LDIR_FstClusLO;
   u16 LDIR_Name3[2];
-} __attribute__((packed));
+} __attribute__((packed)) fat32longdir;
 
 
 
 void *map_disk(const char *fname);
-void print_long_name(struct fat32longdir*longdir);
-struct fat32dir * get_RootDir(struct fat32hdr *hdr);
-struct fat32dir *ClusToDir(struct fat32hdr *hdr,int ClusId);
+void print_long_name(fat32longdir*longdir);
+struct fat32dir * get_RootDir(fat32hdr *hdr);
+struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
 u32 DirToClus(struct fat32dir*dir);
 u32 NextClus(struct fat32hdr *hdr, u32 ClusId);
 
