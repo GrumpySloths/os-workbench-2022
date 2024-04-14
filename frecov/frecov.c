@@ -24,6 +24,8 @@ typedef uint32_t u32;
 #define ATTR_LONG_NAME_MASK (ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID \
                              | ATTR_DIRECTORY | ATTR_ARCHIVE)
 #define Last_Long_Entry 0x40
+
+#define ENDOFFILE 0xFFFFFFFF
 // Copied from the manual
 struct fat32hdr {
   u8  BS_jmpBoot[3];
@@ -163,28 +165,29 @@ int main(int argc, char *argv[]) {
   u32 *FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
   printf("Entry value: %x\n", FAT[FATEntOffset / 4] & 0x0FFFFFFF);
   u32 FATValue = FAT[FATEntOffset / 4] & 0x0FFFFFFF;
+
+  //根据FaTValue 循环打印fat list，直至遇到ENDOFFILE
+  while (FATValue < ENDOFFILE) {
+    printf("FATValue: %x\n", FATValue);
+    FATOffset = FATValue * 4;
+    FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
+    FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
+    FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
+    printf("Entry value: %x\n", FAT[FATEntOffset / 4] & 0x0FFFFFFF);
+    FATValue = FAT[FATEntOffset / 4] & 0x0FFFFFFF;
+  }
+
   //根据FATValue计算下一个cluster的地址
-  NextCluster = FATValue;
-  NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
-  NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
-  nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
+  // NextCluster = FATValue;
+  // NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
+  // NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
+  // nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
 
 
   // 打印nextdir文件大小
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   struct fat32dir* temp = nextdir;
-  //遍历nextdir,打印所有的文件名，long name和short name分情况考虑
-  // while(temp){
-  //     printf("test\n");
-  //     // 判断是否为long name
-  //   if (temp->DIR_Attr == ATTR_LONG_NAME) {
-  //         print_long_name((struct fat32longdir *)temp);
-  //   }else{
-  //     //打印short name
-  //     printf("Short name: %s\n", temp->DIR_Name);
-  //   }
-  //   printf("debug point\n");
-  // }
+
   int cnt= 0;
   while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
