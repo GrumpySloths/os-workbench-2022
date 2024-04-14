@@ -155,7 +155,15 @@ int main(int argc, char *argv[]) {
   u32 NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
   u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
   struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
-  //打印nextdir文件大小
+
+  //根据NextCluster计算对应的fat entry
+  int FATOffset = NextCluster * 4;
+  int FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
+  int FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
+  u32 *FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
+  printf("Entry value: %x\n", FAT[FATEntOffset / 4] & 0x0FFFFFFF);
+  
+  // 打印nextdir文件大小
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   struct fat32dir* temp = nextdir;
   //遍历nextdir,打印所有的文件名，long name和short name分情况考虑
@@ -181,8 +189,8 @@ int main(int argc, char *argv[]) {
     cnt++;
   }
   printf("EntCnt:%d,cnt:%d\n", EntCnt,cnt);
-  //打印nextdir的FstClusLO 和 FstClusHI
-  printf("NextDir FstClusLO: %d\n", nextdir->DIR_FstClusLO);
+
+
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
