@@ -107,6 +107,7 @@ u32 DirToClus(fat32dir*dir);
 u32 NextClus(fat32hdr *hdr, u32 ClusId);
 
 static int EntCnt = 0;
+static u32 NextCluster = 0;
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
@@ -158,7 +159,7 @@ int main(int argc, char *argv[]) {
   printf("Rootdir name:%s\n", rootdir->DIR_Name);
 
   //根据FstClusLO 和 FstClusHI 计算出下一个cluster的地址
-  u32 NextCluster = DirToClus(rootdir);
+  NextCluster = DirToClus(rootdir);
   struct fat32dir*nextdir=ClusToDir(hdr,NextCluster);
 
 
@@ -244,7 +245,7 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir*nextd
 
     //判断是否越界
     if(EntCnt+n>=128){
-      u32 NextCluster = NextClus(hdr,ClusId);
+      NextCluster = NextClus(hdr,ClusId);
       next = ClusToDir(hdr,NextCluster);
     }
     // from 1 to n print the name
