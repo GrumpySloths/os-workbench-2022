@@ -164,11 +164,11 @@ int main(int argc, char *argv[]) {
   printf("Entry value: %x\n", FAT[FATEntOffset / 4] & 0x0FFFFFFF);
   u32 FATValue = FAT[FATEntOffset / 4] & 0x0FFFFFFF;
   //根据FATValue计算下一个cluster的地址
-  NextCluster = FATValue;
-  NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
-  NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
-  nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
-  
+  // NextCluster = FATValue;
+  // NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
+  // NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
+  // nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
+
 
   // 打印nextdir文件大小
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
   //   printf("debug point\n");
   // }
   int cnt= 0;
-  while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
+  while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<200) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
       print_long_name((struct fat32longdir *)&nextdir[EntCnt]);
     } else {
