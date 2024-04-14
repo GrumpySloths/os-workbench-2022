@@ -101,7 +101,7 @@ struct fat32longdir {
 
 void *map_disk(const char *fname);
 void print_long_name(struct fat32longdir*longdir);
-
+struct fat32dir * get_RootDir(struct fat32hdr *hdr);
 static int EntCnt = 0;
 
 int main(int argc, char *argv[]) {
@@ -275,4 +275,17 @@ void print_long_name(struct fat32longdir*longdir){
 
   // longdir += n;
   EntCnt += n;
+}
+
+struct fat32dir* get_RootDir(struct fat32hdr*hdr){
+
+  int RootDirSectors=((hdr->BPB_RootEntCnt*32)+(hdr->BPB_BytsPerSec-1))/hdr->BPB_BytsPerSec; 
+
+  u32 RootClus = hdr->BPB_RootClus;
+  u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + RootDirSectors;
+  u32 FirstSectorofCluster = ((RootClus - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
+  u32 RootDirAddr = FirstSectorofCluster * hdr->BPB_BytsPerSec;
+  struct fat32dir *rootdir = (struct fat32dir *)((char *)hdr + RootDirAddr);
+
+  return rootdir;
 }
