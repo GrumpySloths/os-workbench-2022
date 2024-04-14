@@ -249,40 +249,43 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir*nextd
         next = ClusToDir(hdr, NextCluster);
         printf("nextCluster:%x\n", NextCluster);
     }
+
+#ifndef DEBUG_LONGNAME
     // from 1 to n print the name
     // 设置一个数组来存储long name,其最大长度为255
-  //   u16 name[255];
-  //   fat32longdir *tmp = longdir;
-  //   int tmp_i = 0;
-  //   int cur = 0;
-  //   for (int i = n - 1; i >= 0; i--) {
+    u16 name[255];
+    fat32longdir *tmp = longdir;
+    int tmp_i = 0;
+    int cur = 0;
+    for (int i = n - 1; i >= 0; i--) {
 
-  //       if(EntCnt+i>=128){
-  //           tmp_i = (EntCnt + i) % 128;
-  //           tmp=(fat32longdir*)next;
-  //       }else{
-  //           tmp_i = i;
-  //           tmp=longdir;
-  //       }
+        if(EntCnt+i>=128){
+            tmp_i = (EntCnt + i) % 128;
+            tmp=(fat32longdir*)next;
+        }else{
+            tmp_i = i;
+            tmp=longdir;
+        }
 
-  //       // get name1
-  //       for (int j = 0; j < 5; j++) {
-  //           name[cur++] = tmp[tmp_i].LDIR_Name1[j];
-  //       }
-  //       // get name2
-  //       for (int j = 0; j < 6; j++) {
-  //           name[cur++] = tmp[tmp_i].LDIR_Name2[j];
-  //       }
-  //       // get name3
-  //       for (int j = 0; j < 2; j++) {
-  //           name[cur++] = tmp[tmp_i].LDIR_Name3[j];
-  //       }
-  // }
-  //print the name,遇到null打印换行符后停止
-  // for (int i = 0; name[i] != 0;i++){
-  //     printf("%c", name[i]);
-  // }
-  // printf("\n");
+        // get name1
+        for (int j = 0; j < 5; j++) {
+            name[cur++] = tmp[tmp_i].LDIR_Name1[j];
+        }
+        // get name2
+        for (int j = 0; j < 6; j++) {
+            name[cur++] = tmp[tmp_i].LDIR_Name2[j];
+        }
+        // get name3
+        for (int j = 0; j < 2; j++) {
+            name[cur++] = tmp[tmp_i].LDIR_Name3[j];
+        }
+  }
+  // print the name,遇到null打印换行符后停止
+  for (int i = 0; name[i] != 0;i++){
+      printf("%c", name[i]);
+  }
+  printf("\n");
+#endif
 
   if(EntCnt+n>=128){
       EntCnt = (EntCnt + n) % 128;
