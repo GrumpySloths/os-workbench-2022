@@ -147,9 +147,6 @@ int main(int argc, char *argv[]) {
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
   printf("Rootdir name:%s\n", rootdir->DIR_Name);
 
-  // 打印根目录的FstClusLO 和 FstClusHI
-  printf("RootDir FstClusLO: %d\n", rootdir->DIR_FstClusLO);
-  printf("RootDir FstClusHI: %d\n", rootdir->DIR_FstClusHI);
   //根据FstClusLO 和 FstClusHI 计算出下一个cluster的地址
   u32 NextCluster = DirToClus(rootdir);
   struct fat32dir*nextdir=ClusToDir(hdr,NextCluster);
