@@ -105,6 +105,7 @@ struct fat32dir * get_RootDir(struct fat32hdr *hdr);
 struct fat32dir *ClusToDir(struct fat32hdr *hdr,int ClusId);
 u32 DirToClus(struct fat32dir*dir);
 u32 NextClus(struct fat32hdr *hdr, u32 ClusId);
+
 static int EntCnt = 0;
 
 int main(int argc, char *argv[]) {
@@ -160,18 +161,11 @@ int main(int argc, char *argv[]) {
   u32 NextCluster = DirToClus(rootdir);
   struct fat32dir*nextdir=ClusToDir(hdr,NextCluster);
 
-  //根据NextCluster计算对应的fat entry
-  // int FATOffset = NextCluster * 4;
-  // int FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
-  // int FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
-  // u32 *FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
-  // printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
-  // u32 FATValue = FAT[FATEntOffset / 4] & ENDOFFILE;
+
   u32 FATValue=NextClus(hdr,NextCluster);
 
   //根据FaTValue 循环打印fat list，直至遇到ENDOFFILE
   while (FATValue < ENDOFFILE) {
-
     printf("Entry value: %x\n", FATValue );
     FATValue = NextClus(hdr, FATValue);
   }
@@ -300,7 +294,7 @@ u32 DirToClus(struct fat32dir*dir){
   u32 ClusId = (dir->DIR_FstClusHI << 16) + dir->DIR_FstClusLO;
   return ClusId;
 }
-
+// 依据FAT表的值，返回下一个cluster的地址
 u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
 
   int FATOffset = ClusId * 4;
@@ -312,3 +306,4 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
 
   return FATValue;
 }
+
