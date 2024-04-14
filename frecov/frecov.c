@@ -181,10 +181,7 @@ int main(int argc, char *argv[]) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
       u16*longname=print_long_name((struct fat32longdir *)&nextdir[EntCnt],
                                     hdr,NextCluster,&nextdir);
-      for (int i = 0; longname[i] != 0;i++){
-              printf("%c", longname[i]);
-          }
-          printf("\n");
+
       // printf("%s\n", longname);
     } else {
         printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
@@ -290,10 +287,10 @@ u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
         }
   }
   // print the name,遇到null打印换行符后停止
-  // for (int i = 0; name[i] != 0;i++){
-  //     printf("%c", name[i]);
-  // }
-  // printf("\n");
+  for (int i = 0; name[i] != 0;i++){
+      printf("%c", name[i]);
+  }
+  printf("\n");
 #endif
 
   if(EntCnt+n>=128){
