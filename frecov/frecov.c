@@ -250,7 +250,7 @@ u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
     if(NextCluster==(u32)ENDOFFILE){
         printf("到达文件末尾\n");
         EntCnt = (u32)ENDOFFILE;
-        return;
+        return NULL;
     }
 
 #ifndef DEBUG_LONGNAME
