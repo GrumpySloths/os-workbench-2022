@@ -141,10 +141,9 @@ int main(int argc, char *argv[]) {
   //获取根目录的地址并将其属性打印出来
   u32 RootClus = hdr->BPB_RootClus;
   u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + RootDirSectors;
-  u32 FirstSectorofCluster = ((RootClus - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
-  u32 RootDirAddr = FirstSectorofCluster * hdr->BPB_BytsPerSec;
-  struct fat32dir *rootdir = (struct fat32dir *)((char *)hdr + RootDirAddr);
-  printf("RootDirAddr: %d\n", RootDirAddr);
+  // u32 FirstSectorofCluster = ((RootClus - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
+  // u32 RootDirAddr = FirstSectorofCluster * hdr->BPB_BytsPerSec;
+  struct fat32dir *rootdir = get_RootDir(hdr);
   printf("RootDir attr: %d\n", rootdir->DIR_Attr);
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
   printf("Rootdir name:%s\n", rootdir->DIR_Name);
