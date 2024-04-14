@@ -250,6 +250,11 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir*nextd
         printf("nextCluster:%x\n", NextCluster);
     }
 
+    if(NextCluster==ENDOFFILE){
+        EntCnt = ENDOFFILE;
+        return;
+    }
+
 #ifndef DEBUG_LONGNAME
     // from 1 to n print the name
     // 设置一个数组来存储long name,其最大长度为255
