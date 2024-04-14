@@ -103,8 +103,8 @@ void *map_disk(const char *fname);
 void print_long_name(fat32longdir*longdir);
 struct fat32dir * get_RootDir(fat32hdr *hdr);
 struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
-u32 DirToClus(struct fat32dir*dir);
-u32 NextClus(struct fat32hdr *hdr, u32 ClusId);
+u32 DirToClus(fat32dir*dir);
+u32 NextClus(fat32hdr *hdr, u32 ClusId);
 
 static int EntCnt = 0;
 
