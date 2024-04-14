@@ -102,6 +102,7 @@ struct fat32longdir {
 void *map_disk(const char *fname);
 void print_long_name(struct fat32longdir*longdir);
 struct fat32dir * get_RootDir(struct fat32hdr *hdr);
+// struct fat32dir*
 static int EntCnt = 0;
 
 int main(int argc, char *argv[]) {
@@ -139,10 +140,7 @@ int main(int argc, char *argv[]) {
 
   printf("RootClus: %d\n", hdr->BPB_RootClus);
   //获取根目录的地址并将其属性打印出来
-  u32 RootClus = hdr->BPB_RootClus;
   u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + RootDirSectors;
-  // u32 FirstSectorofCluster = ((RootClus - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
-  // u32 RootDirAddr = FirstSectorofCluster * hdr->BPB_BytsPerSec;
   struct fat32dir *rootdir = get_RootDir(hdr);
   printf("RootDir attr: %d\n", rootdir->DIR_Attr);
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
