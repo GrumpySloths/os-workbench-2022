@@ -245,9 +245,9 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir*nextd
 
     //判断是否越界
     if(EntCnt+n>=128){
-        printf("nextCluster:%d\n", NextCluster);
         NextCluster = NextClus(hdr, ClusId);
         next = ClusToDir(hdr, NextCluster);
+        printf("nextCluster:%x\n", NextCluster);
     }
     // from 1 to n print the name
     // 设置一个数组来存储long name,其最大长度为255
