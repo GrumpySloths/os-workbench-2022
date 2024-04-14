@@ -25,7 +25,7 @@ typedef uint32_t u32;
                              | ATTR_DIRECTORY | ATTR_ARCHIVE)
 #define Last_Long_Entry 0x40
 
-#define ENDOFFILE 0xFFFFFFFF
+#define ENDOFFILE 0xFFFFFFF
 // Copied from the manual
 struct fat32hdr {
   u8  BS_jmpBoot[3];
