@@ -100,7 +100,7 @@ typedef struct fat32longdir {
 
 
 void *map_disk(const char *fname);
-void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next);
+u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next);
 struct fat32dir * get_RootDir(fat32hdr *hdr);
 struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
 u32 DirToClus(fat32dir*dir);
@@ -175,7 +175,7 @@ int main(int argc, char *argv[]) {
   // 打印nextdir文件大小
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   struct fat32dir* temp = nextdir;
-
+  
   int cnt= 0;
   while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
@@ -231,16 +231,11 @@ release:
 }
 
 //定义一个函数，打印fat32 directory entry's long name
-void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**nextdir){
+u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**nextdir){
 
     fat32dir *next = NULL;
     // check last name entry mask
     assert(longdir->LDIR_Ord & Last_Long_Entry);
-
-    // if(!(longdir->LDIR_Ord & Last_Long_Entry)){
-    //     EntCnt++;
-    //     return;
-    // }
 
     // get last id
     int n = longdir->LDIR_Ord ^ Last_Long_Entry;
@@ -289,10 +284,11 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
         }
   }
   // print the name,遇到null打印换行符后停止
-  for (int i = 0; name[i] != 0;i++){
-      printf("%c", name[i]);
-  }
-  printf("\n");
+  printf("%s\n", name);
+  // for (int i = 0; name[i] != 0;i++){
+  //     printf("%c", name[i]);
+  // }
+  // printf("\n");
 #endif
 
   if(EntCnt+n>=128){
@@ -323,8 +319,6 @@ struct fat32dir* ClusToDir(struct fat32hdr*hdr,int ClusId){
   u32 NextSector = ((ClusId - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
   u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
   struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
-  printf("nextdir:%p\n", nextdir);
-  printf("equal addr:%p\n",(char *)hdr + NextDirAddr);
 
   return nextdir;
 }
