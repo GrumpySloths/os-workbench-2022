@@ -179,10 +179,12 @@ int main(int argc, char *argv[]) {
   int cnt= 0;
   while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
-      print_long_name((struct fat32longdir *)&nextdir[EntCnt],
+      u16*longname=print_long_name((struct fat32longdir *)&nextdir[EntCnt],
                                     hdr,NextCluster,&nextdir);
+      printf("%s\n", longname);
     } else {
-      printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name, EntCnt,cnt);
+        printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
+               EntCnt, cnt);
     }
     EntCnt++;
     cnt++;
@@ -284,7 +286,7 @@ u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
         }
   }
   // print the name,遇到null打印换行符后停止
-  printf("%s\n", name);
+  // printf("%s\n", name);
   // for (int i = 0; name[i] != 0;i++){
   //     printf("%c", name[i]);
   // }
