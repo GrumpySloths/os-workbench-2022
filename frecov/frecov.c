@@ -164,10 +164,10 @@ int main(int argc, char *argv[]) {
   printf("Entry value: %x\n", FAT[FATEntOffset / 4] & 0x0FFFFFFF);
   u32 FATValue = FAT[FATEntOffset / 4] & 0x0FFFFFFF;
   //根据FATValue计算下一个cluster的地址
-  // NextCluster = FATValue;
-  // NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
-  // NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
-  // nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
+  NextCluster = FATValue;
+  NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
+  NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
+  nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
 
 
   // 打印nextdir文件大小
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
   //   printf("debug point\n");
   // }
   int cnt= 0;
-  while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes) {
+  while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
       print_long_name((struct fat32longdir *)&nextdir[EntCnt]);
     } else {
@@ -239,7 +239,11 @@ release:
 //定义一个函数，打印fat32 directory entry's long name
 void print_long_name(struct fat32longdir*longdir){
   //check last name entry mask
-  assert(longdir->LDIR_Ord & Last_Long_Entry);
+  // assert(longdir->LDIR_Ord & Last_Long_Entry);
+  if(!(longdir->LDIR_Ord & Last_Long_Entry)){
+      EntCnt++;
+      return;
+  }
   //get last id
   int n=longdir->LDIR_Ord^Last_Long_Entry;
   //from 1 to n print the name
