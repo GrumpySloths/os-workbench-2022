@@ -102,7 +102,7 @@ struct fat32longdir {
 void *map_disk(const char *fname);
 void print_long_name(struct fat32longdir*longdir);
 struct fat32dir * get_RootDir(struct fat32hdr *hdr);
-// struct fat32dir*
+struct fat32dir *ClusToDir(struct fat32hdr *hdr,int ClusId);
 static int EntCnt = 0;
 
 int main(int argc, char *argv[]) {
@@ -151,9 +151,10 @@ int main(int argc, char *argv[]) {
   printf("RootDir FstClusHI: %d\n", rootdir->DIR_FstClusHI);
   //根据FstClusLO 和 FstClusHI 计算出下一个cluster的地址
   u32 NextCluster = (rootdir->DIR_FstClusHI << 16) + rootdir->DIR_FstClusLO;
-  u32 NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
-  u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
-  struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
+  // u32 NextSector = ((NextCluster - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
+  // u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
+  // struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
+  struct fat32dir*nextdir=ClusToDir(hdr,NextCluster);
 
   //根据NextCluster计算对应的fat entry
   int FATOffset = NextCluster * 4;
@@ -285,4 +286,15 @@ struct fat32dir* get_RootDir(struct fat32hdr*hdr){
   struct fat32dir *rootdir = (struct fat32dir *)((char *)hdr + RootDirAddr);
 
   return rootdir;
+}
+
+struct fat32dir* ClusToDir(struct fat32hdr*hdr,int ClusId){
+
+  int RootDirSectors=((hdr->BPB_RootEntCnt*32)+(hdr->BPB_BytsPerSec-1))/hdr->BPB_BytsPerSec; 
+  u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + RootDirSectors; 
+  u32 NextSector = ((ClusId - 2) * hdr->BPB_SecPerClus) + FirstDataSector;
+  u32 NextDirAddr = NextSector * hdr->BPB_BytsPerSec;
+  struct fat32dir *nextdir = (struct fat32dir *)((char *)hdr + NextDirAddr);
+
+  return nextdir;
 }
