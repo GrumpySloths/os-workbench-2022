@@ -227,7 +227,7 @@ release:
 }
 
 //定义一个函数，打印fat32 directory entry's long name
-void print_long_name(struct fat32longdir*longdir){
+void print_long_name(fat32longdir*longdir){
   //check last name entry mask
   // assert(longdir->LDIR_Ord & Last_Long_Entry);
   if(!(longdir->LDIR_Ord & Last_Long_Entry)){
