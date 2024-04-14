@@ -163,18 +163,17 @@ int main(int argc, char *argv[]) {
   int FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
   int FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
   u32 *FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
-  printf("Entry value: %x\n", FAT[FATEntOffset / 4] & 0x0FFFFFFF);
-  u32 FATValue = FAT[FATEntOffset / 4] & 0x0FFFFFFF;
+  printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
+  u32 FATValue = FAT[FATEntOffset / 4] & ENDOFFILE;
 
   //根据FaTValue 循环打印fat list，直至遇到ENDOFFILE
   while (FATValue < ENDOFFILE) {
-    printf("FATValue: %x\n", FATValue);
     FATOffset = FATValue * 4;
     FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
     FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
     FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
-    printf("Entry value: %x\n", FAT[FATEntOffset / 4] & 0x0FFFFFFF);
-    FATValue = FAT[FATEntOffset / 4] & 0x0FFFFFFF;
+    printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
+    FATValue = FAT[FATEntOffset / 4] & ENDOFFILE;
   }
 
   //根据FATValue计算下一个cluster的地址
