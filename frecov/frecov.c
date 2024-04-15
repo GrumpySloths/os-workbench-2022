@@ -179,10 +179,12 @@ int main(int argc, char *argv[]) {
   int cnt= 0;
   while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
-      print_long_name((struct fat32longdir *)&nextdir[EntCnt],
-                                    hdr,NextCluster,&nextdir);
+        int a = 1;
+        printf("a=%d\n", a);
+        print_long_name((struct fat32longdir *)&nextdir[EntCnt], hdr,
+                        NextCluster, &nextdir);
 
-      // printf("%s\n", longname);
+        // printf("%s\n", longname);
     } else {
         printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
                EntCnt, cnt);
