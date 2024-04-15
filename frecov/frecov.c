@@ -253,7 +253,7 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
     if(NextCluster==(u32)ENDOFFILE){
         printf("到达文件末尾\n");
         EntCnt = (u32)ENDOFFILE;
-        return NULL;
+        // return NULL;
     }
     // u16* name = (u16*)malloc(sizeof(u16) * 255);
     u16 name[255];
@@ -300,7 +300,7 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
       EntCnt += n;
   }
 
-  return NULL;
+  // return NULL;
 }
 
 struct fat32dir* get_RootDir(struct fat32hdr*hdr){
