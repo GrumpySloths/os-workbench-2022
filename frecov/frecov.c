@@ -243,8 +243,7 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
 
     // get last id
     int n = longdir->LDIR_Ord ^ Last_Long_Entry;
-    int a = 0;
-    printf("a=%d\n", a);
+
     // 判断是否越界
     if(EntCnt+n>=128){
         NextCluster = NextClus(hdr, ClusId);
