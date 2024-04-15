@@ -260,7 +260,7 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
 #ifndef DEBUG_LONGNAME
     // from 1 to n print the name
     // 设置一个数组来存储long name,其最大长度为255
-    fat32longdir **tmp=NULL;
+    fat32longdir **tmp=&longdir;
     int tmp_i = 0;
     int cur = 0;
     for (int i = n - 1; i >= 0; i--) {
