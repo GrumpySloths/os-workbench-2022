@@ -100,7 +100,7 @@ typedef struct fat32longdir {
 
 
 void *map_disk(const char *fname);
-u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next);
+void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next);
 struct fat32dir * get_RootDir(fat32hdr *hdr);
 struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
 u32 DirToClus(fat32dir*dir);
@@ -234,7 +234,7 @@ release:
 }
 
 //定义一个函数，打印fat32 directory entry's long name
-u16* print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**nextdir){
+void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**nextdir){
 
     fat32dir *next = NULL;
     // check last name entry mask
