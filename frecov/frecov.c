@@ -179,8 +179,7 @@ int main(int argc, char *argv[]) {
   int cnt= 0;
   while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
-        int a = 1;
-        printf("a=%d\n", a);
+
         print_long_name((struct fat32longdir *)&nextdir[EntCnt], hdr,
                         NextCluster, &nextdir);
 
@@ -244,8 +243,9 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
 
     // get last id
     int n = longdir->LDIR_Ord ^ Last_Long_Entry;
-
-    //判断是否越界
+    int a = 0;
+    printf("a=%d\n", a);
+    // 判断是否越界
     if(EntCnt+n>=128){
         NextCluster = NextClus(hdr, ClusId);
         next = ClusToDir(hdr, NextCluster);
