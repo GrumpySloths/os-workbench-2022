@@ -375,8 +375,7 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
 void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
     //获取dir name，并添加.bmp后缀
 
-    char name[50];
-    printf("len of dir:%d\n",(int)strlen(dirpath));
+    char name[30];
     strcpy(name,dirpath);
     memcpy(name+strlen(dirpath),dir->DIR_Name,11);
     name[strlen(dirpath)+11]='\0';
