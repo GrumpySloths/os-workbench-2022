@@ -379,7 +379,8 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
     //获取dir name，并添加.bmp后缀
 
     char name[30];
-    strcpy(name,dirpath);
+    int cluscnt = 0;
+    strcpy(name, dirpath);
     memcpy(name+strlen(dirpath),dir->DIR_Name,11);
     name[strlen(dirpath)+11]='\0';
     strcat(name,".bmp");
@@ -393,12 +394,14 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
             break;
         }
         printf("##%d  ", fstclus);
-        //将fstclus中的内容写入文件
+        cluscnt++;
+        // 将fstclus中的内容写入文件
         void *head = (void *)ClusToDir(hdr,fstclus);
         fwrite(head,hdr->BPB_BytsPerSec,hdr->BPB_SecPerClus,fp);
 
         fstclus=NextClus(hdr,fstclus);
     }
     printf("\n");
+    printf("cluscnt:%d\n", cluscnt);
     fclose(fp);
 }
