@@ -376,7 +376,7 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
     //获取dir name，并添加.bmp后缀
 
     char name[50];
-    printf("len of dir:%u\n",strlen(dirpath));
+    printf("len of dir:%lu\n",strlen(dirpath));
     strcpy(name,dirpath);
     memcpy(name+strlen(dirpath),dir->DIR_Name,11);
     name[strlen(dirpath)+11]='\0';
