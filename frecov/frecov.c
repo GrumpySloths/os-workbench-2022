@@ -100,7 +100,13 @@ typedef struct fat32longdir {
   u16 LDIR_Name3[2];
 } __attribute__((packed)) fat32longdir;
 
-
+// typedef struct fat32Info_t{
+//     int RootDirSectors;
+//     int FATSz;
+//     int TotSec;
+//     int DataSec;
+//     int CountOfClusters;
+// } fat32Info_t;
 
 void *map_disk(const char *fname);
 void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next);
@@ -112,6 +118,7 @@ void FileSch(fat32hdr*hdr,fat32dir*dir);
 
 static int EntCnt = 0;
 static u32 NextCluster = 0;
+// static fat32Info_t *fat32Info=NULL;
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
@@ -257,7 +264,7 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
     if(EntCnt+n>=128){
         NextCluster = NextClus(hdr, ClusId);
         next = ClusToDir(hdr, NextCluster);
-        printf("nextCluster:%x\n", NextCluster);
+        printf("nextCluster:%d\n", NextCluster);
     }
 
     if(NextCluster==(u32)ENDOFFILE){
