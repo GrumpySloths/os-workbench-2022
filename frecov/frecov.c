@@ -363,7 +363,7 @@ void FileSch(fat32hdr*hdr,fat32dir*dir){
             printf("Reserved cluster\n");
             break;
         }
-        printf("##%x  ", fstclus);
+        printf("##%d  ", fstclus);
         fstclus=NextClus(hdr,fstclus);
     }
     printf("\n");
