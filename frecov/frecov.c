@@ -145,11 +145,6 @@ int main(int argc, char *argv[]) {
   fat32Info=&(struct fat32Info_t){.CountOfClusters=CountOfClusters,.DataSec=DataSec,
                                         .FATSz=FATSz,.RootDirSectors=RootDirSectors,
                                         .TotSec=TotSec};
-  // fat32Info->CountOfClusters = CountOfClusters;
-  // fat32Info->DataSec = DataSec;
-  // fat32Info->FATSz = FATSz;
-  // fat32Info->RootDirSectors = RootDirSectors;
-  // fat32Info->TotSec = TotSec;
 
   printf("CountOfClusters: %d\n", CountOfClusters);
 
@@ -204,9 +199,9 @@ int main(int argc, char *argv[]) {
 
         print_long_name((struct fat32longdir *)&nextdir[EntCnt], hdr,
                         NextCluster, &nextdir);
-        // printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
-        //        EntCnt, cnt);
-        // FileSch(hdr, &nextdir[EntCnt]);
+        printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
+               EntCnt, cnt);
+        FileSch(hdr, &nextdir[EntCnt]);
         // printf("%s\n", longname);
     } else {
         printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
@@ -273,7 +268,7 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
     if(EntCnt+n>=128){
         NextCluster = NextClus(hdr, ClusId);
         next = ClusToDir(hdr, NextCluster);
-        printf("nextCluster:%d\n", NextCluster);
+        printf("nextCluster: 0x%x\n", NextCluster);
     }
 
     if(NextCluster==(u32)ENDOFFILE){
