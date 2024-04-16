@@ -201,8 +201,11 @@ int main(int argc, char *argv[]) {
 
         print_long_name((struct fat32longdir *)&nextdir[EntCnt], hdr,
                         NextCluster, &nextdir);
-        printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
-               EntCnt, cnt);
+
+        int cluscnt = nextdir[EntCnt].DIR_FileSize /
+                      (hdr->BPB_BytsPerSec * hdr->BPB_SecPerClus);
+        printf("Short name: %s cluster conut:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
+               cluscnt, cnt);
         FileSch(hdr, &nextdir[EntCnt],path);
         // printf("%s\n", longname);
     } else {
