@@ -25,7 +25,10 @@ typedef uint32_t u32;
                              | ATTR_DIRECTORY | ATTR_ARCHIVE)
 #define Last_Long_Entry 0x40
 
+//FAT Entry Defines
 #define ENDOFFILE 0xFFFFFFF
+#define RESERVED_START 0xFFFFFF8
+#define RESERVED_END 0xFFFFFFE
 // Copied from the manual
 typedef struct fat32hdr {
   u8  BS_jmpBoot[3];
@@ -189,6 +192,10 @@ int main(int argc, char *argv[]) {
                EntCnt, cnt);
         u32 fstclus=DirToClus(&nextdir[EntCnt]);
         while(fstclus<ENDOFFILE){
+            if(fstclus>=RESERVED_START && fstclus<=RESERVED_END){
+                printf("Reserved cluster\n");
+                break;
+            }
             printf("##%x  ", fstclus);
             fstclus=NextClus(hdr,fstclus);
         }
