@@ -135,6 +135,8 @@ int main(int argc, char *argv[]) {
                           RootDirSectors);
   int CountOfClusters = DataSec / hdr->BPB_SecPerClus;
 
+  printf("CountOfClusters: %d\n", CountOfClusters);
+
 #ifdef DEBUG
   printf("CountOfClusters: %d\n", CountOfClusters);
   //打印BPB_FATSz32
@@ -186,9 +188,9 @@ int main(int argc, char *argv[]) {
 
         print_long_name((struct fat32longdir *)&nextdir[EntCnt], hdr,
                         NextCluster, &nextdir);
-        printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
-               EntCnt, cnt);
-        FileSch(hdr, &nextdir[EntCnt]);
+        // printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
+        //        EntCnt, cnt);
+        // FileSch(hdr, &nextdir[EntCnt]);
         // printf("%s\n", longname);
     } else {
         printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
