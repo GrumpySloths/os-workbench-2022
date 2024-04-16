@@ -142,11 +142,14 @@ int main(int argc, char *argv[]) {
                           RootDirSectors);
   int CountOfClusters = DataSec / hdr->BPB_SecPerClus;
 
-  fat32Info->CountOfClusters = CountOfClusters;
-  fat32Info->DataSec = DataSec;
-  fat32Info->FATSz = FATSz;
-  fat32Info->RootDirSectors = RootDirSectors;
-  fat32Info->TotSec = TotSec;
+  fat32Info=&(struct fat32Info_t){.CountOfClusters=CountOfClusters,.DataSec=DataSec,
+                                        .FATSz=FATSz,.RootDirSectors=RootDirSectors,
+                                        .TotSec=TotSec};
+  // fat32Info->CountOfClusters = CountOfClusters;
+  // fat32Info->DataSec = DataSec;
+  // fat32Info->FATSz = FATSz;
+  // fat32Info->RootDirSectors = RootDirSectors;
+  // fat32Info->TotSec = TotSec;
 
   printf("CountOfClusters: %d\n", CountOfClusters);
 
@@ -368,7 +371,7 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
   if(!(FATValue>=RESERVED_START&&FATValue<=ENDOFFILE)){
       assert(FATValue <= fat32Info->CountOfClusters);
   }
-  
+
   return FATValue;
 }
 
