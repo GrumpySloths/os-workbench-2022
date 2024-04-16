@@ -187,6 +187,7 @@ int main(int argc, char *argv[]) {
     } else {
         printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
                EntCnt, cnt);
+        
     }
     EntCnt++;
     cnt++;
