@@ -371,6 +371,13 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
 }
 
 void FileSch(fat32hdr*hdr,fat32dir*dir){
+    //获取dir name，并添加.bmp后缀
+    char name[16];
+    memcpy(name,dir->DIR_Name,11);
+    name[11]='\0';
+    strcat(name,".bmp");
+    //打开该文件
+    FILE *fp=fopen(name,"wb");
 
     u32 fstclus=DirToClus(dir);
     while(fstclus<ENDOFFILE){
@@ -379,7 +386,12 @@ void FileSch(fat32hdr*hdr,fat32dir*dir){
             break;
         }
         printf("##%d  ", fstclus);
+        //将fstclus中的内容写入文件
+        void *head = (void *)ClusToDir(hdr,fstclus);
+        fwrite(head,hdr->BPB_BytsPerSec,hdr->BPB_SecPerClus,fp);
+
         fstclus=NextClus(hdr,fstclus);
     }
     printf("\n");
+    fclose(fp);
 }
