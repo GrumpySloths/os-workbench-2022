@@ -187,7 +187,12 @@ int main(int argc, char *argv[]) {
     } else {
         printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
                EntCnt, cnt);
-        
+        u32 fstclus=DirToClus(&nextdir[EntCnt]);
+        while(fstclus<ENDOFFILE){
+            printf("##%x  ", fstclus);
+            fstclus=NextClus(hdr,fstclus);
+        }
+        printf("\n");
     }
     EntCnt++;
     cnt++;
