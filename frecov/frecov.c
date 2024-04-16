@@ -100,13 +100,13 @@ typedef struct fat32longdir {
   u16 LDIR_Name3[2];
 } __attribute__((packed)) fat32longdir;
 
-// typedef struct fat32Info_t{
-//     int RootDirSectors;
-//     int FATSz;
-//     int TotSec;
-//     int DataSec;
-//     int CountOfClusters;
-// } fat32Info_t;
+typedef struct fat32Info_t{
+    int RootDirSectors;
+    int FATSz;
+    int TotSec;
+    int DataSec;
+    int CountOfClusters;
+} fat32Info_t;
 
 void *map_disk(const char *fname);
 void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next);
@@ -118,7 +118,7 @@ void FileSch(fat32hdr*hdr,fat32dir*dir);
 
 static int EntCnt = 0;
 static u32 NextCluster = 0;
-// static fat32Info_t *fat32Info=NULL;
+static fat32Info_t *fat32Info=NULL;
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
@@ -141,6 +141,12 @@ int main(int argc, char *argv[]) {
   int DataSec = TotSec - (hdr->BPB_RsvdSecCnt + (hdr->BPB_NumFATs * FATSz) +
                           RootDirSectors);
   int CountOfClusters = DataSec / hdr->BPB_SecPerClus;
+
+  fat32Info->CountOfClusters = CountOfClusters;
+  fat32Info->DataSec = DataSec;
+  fat32Info->FATSz = FATSz;
+  fat32Info->RootDirSectors = RootDirSectors;
+  fat32Info->TotSec = TotSec;
 
   printf("CountOfClusters: %d\n", CountOfClusters);
 
@@ -358,7 +364,11 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
   u32 *FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
   // printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
   u32 FATValue = FAT[FATEntOffset / 4] & ENDOFFILE; 
-
+  
+  if(!(FATValue>=RESERVED_START&&FATValue<=ENDOFFILE)){
+      assert(FATValue <= fat32Info->CountOfClusters);
+  }
+  
   return FATValue;
 }
 
