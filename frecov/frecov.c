@@ -108,6 +108,7 @@ struct fat32dir * get_RootDir(fat32hdr *hdr);
 struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
 u32 DirToClus(fat32dir*dir);
 u32 NextClus(fat32hdr *hdr, u32 ClusId);
+void FileSch(fat32hdr*hdr,fat32dir*dir);
 
 static int EntCnt = 0;
 static u32 NextCluster = 0;
@@ -190,16 +191,7 @@ int main(int argc, char *argv[]) {
     } else {
         printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
                EntCnt, cnt);
-        u32 fstclus=DirToClus(&nextdir[EntCnt]);
-        while(fstclus<ENDOFFILE){
-            if(fstclus>=RESERVED_START && fstclus<=RESERVED_END){
-                printf("Reserved cluster\n");
-                break;
-            }
-            printf("##%x  ", fstclus);
-            fstclus=NextClus(hdr,fstclus);
-        }
-        printf("\n");
+        FileSch(hdr, &nextdir[EntCnt]);
     }
     EntCnt++;
     cnt++;
@@ -359,3 +351,16 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
   return FATValue;
 }
 
+void FileSch(fat32hdr*hdr,fat32dir*dir){
+
+    u32 fstclus=DirToClus(dir);
+    while(fstclus<ENDOFFILE){
+        if(fstclus>=RESERVED_START && fstclus<=RESERVED_END){
+            printf("Reserved cluster\n");
+            break;
+        }
+        printf("##%x  ", fstclus);
+        fstclus=NextClus(hdr,fstclus);
+    }
+    printf("\n");
+}
