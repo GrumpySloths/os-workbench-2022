@@ -114,7 +114,7 @@ struct fat32dir * get_RootDir(fat32hdr *hdr);
 struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
 u32 DirToClus(fat32dir*dir);
 u32 NextClus(fat32hdr *hdr, u32 ClusId);
-void FileSch(fat32hdr*hdr,fat32dir*dir);
+void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath);
 
 static int EntCnt = 0;
 static u32 NextCluster = 0;
@@ -147,6 +147,8 @@ int main(int argc, char *argv[]) {
                                         .TotSec=TotSec};
 
   printf("CountOfClusters: %d\n", CountOfClusters);
+
+  char path[100] = "./res/";
 
 #ifdef DEBUG
   printf("CountOfClusters: %d\n", CountOfClusters);
@@ -201,12 +203,12 @@ int main(int argc, char *argv[]) {
                         NextCluster, &nextdir);
         printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
                EntCnt, cnt);
-        FileSch(hdr, &nextdir[EntCnt]);
+        FileSch(hdr, &nextdir[EntCnt],path);
         // printf("%s\n", longname);
     } else {
         printf("Short name: %s EntCnt:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
                EntCnt, cnt);
-        FileSch(hdr, &nextdir[EntCnt]);
+        FileSch(hdr, &nextdir[EntCnt],path);
     }
     EntCnt++;
     cnt++;
@@ -370,13 +372,14 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
   return FATValue;
 }
 
-void FileSch(fat32hdr*hdr,fat32dir*dir){
-    //获取dir name，并添加.bmp后缀
-    char name[16];
-    memcpy(name,dir->DIR_Name,11);
-    name[11]='\0';
+void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
+    //获取dir name，并添加.bmp后缀,
+    char name[30];
+    strcpy(name,dirpath);
+    strncat(name,dir->DIR_Name,11);
+    // name[11]='\0';
     strcat(name,".bmp");
-    //打开该文件
+
     FILE *fp=fopen(name,"wb");
 
     u32 fstclus=DirToClus(dir);
