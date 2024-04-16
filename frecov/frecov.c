@@ -373,11 +373,13 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
 }
 
 void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
-    //获取dir name，并添加.bmp后缀,
+    //获取dir name，并添加.bmp后缀
+
     char name[50];
+    printf("len of dir:%d\n",strlen(dirpath));
     strcpy(name,dirpath);
-    memcpy(name+strlen(dirpath),dir->DIR_Name,11);
-    // name[11]='\0';
+    memcpy(name,dir->DIR_Name,11);
+    name[11]='\0';
     strcat(name,".bmp");
 
     FILE *fp=fopen(name,"wb");
