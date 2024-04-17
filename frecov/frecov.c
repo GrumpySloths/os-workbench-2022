@@ -386,7 +386,7 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
     FILE *fp=fopen(name,"wb");
 
     u32 fstclus=DirToClus(dir);
-    while(fstclus<ENDOFFILE){
+    while(fstclus<CLUS_INVALID){
         if(fstclus>=RESERVED_START && fstclus<=RESERVED_END){
             printf("Reserved cluster\n");
             break;
