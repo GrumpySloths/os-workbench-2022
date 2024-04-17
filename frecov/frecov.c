@@ -361,13 +361,11 @@ u32 DirToClus(struct fat32dir*dir){
 // 依据FAT表的值，返回下一个cluster的地址
 u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
 
-  int FATOffset = ClusId * 4;
-  int FATSecNum = hdr->BPB_RsvdSecCnt + FATOffset / hdr->BPB_BytsPerSec;
-  int FATEntOffset = FATOffset % hdr->BPB_BytsPerSec;
-  u32 *FAT = (u32 *)((char *)hdr + FATSecNum * hdr->BPB_BytsPerSec);
+
+  u32 *FAT = (u32 *)((char *)hdr + hdr->BPB_RsvdSecCnt * hdr->BPB_BytsPerSec);
   // printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
-  u32 FATValue = FAT[FATEntOffset / 4] & ENDOFFILE; 
-  
+  u32 FATValue = FAT[ClusId];
+
   // if(!(FATValue>=RESERVED_START&&FATValue<=ENDOFFILE)){
   //     assert(FATValue <= fat32Info->CountOfClusters);
   // }
