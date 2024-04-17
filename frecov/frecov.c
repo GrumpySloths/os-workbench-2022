@@ -363,12 +363,11 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
 
 
   u32 *FAT = (u32 *)((char *)hdr + hdr->BPB_RsvdSecCnt * hdr->BPB_BytsPerSec);
-  // printf("Entry value: %x\n", FAT[FATEntOffset / 4] & ENDOFFILE);
   u32 FATValue = FAT[ClusId];
 
-  // if(!(FATValue>=RESERVED_START&&FATValue<=ENDOFFILE)){
-  //     assert(FATValue <= fat32Info->CountOfClusters);
-  // }
+  if(!(FATValue>=RESERVED_START&&FATValue<=ENDOFFILE)){
+      assert(FATValue <= fat32Info->CountOfClusters);
+  }
 
   return FATValue;
 }
