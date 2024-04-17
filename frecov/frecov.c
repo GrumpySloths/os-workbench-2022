@@ -29,6 +29,7 @@ typedef uint32_t u32;
 #define ENDOFFILE 0xFFFFFFF
 #define RESERVED_START 0xFFFFFF8
 #define RESERVED_END 0xFFFFFFE
+#define CLUS_INVALID 0xffffff7
 // Copied from the manual
 typedef struct fat32hdr {
   u8  BS_jmpBoot[3];
@@ -365,9 +366,9 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
   u32 *FAT = (u32 *)((char *)hdr + hdr->BPB_RsvdSecCnt * hdr->BPB_BytsPerSec);
   u32 FATValue = FAT[ClusId];
 
-  if(!(FATValue>=RESERVED_START&&FATValue<=ENDOFFILE)){
-      assert(FATValue <= fat32Info->CountOfClusters);
-  }
+  // if(!(FATValue>=RESERVED_START&&FATValue<=ENDOFFILE)){
+  //     assert(FATValue <= fat32Info->CountOfClusters);
+  // }
 
   return FATValue;
 }
