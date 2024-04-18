@@ -381,8 +381,8 @@ void get_filename(fat32dir *dir, char *name) {
 }
 void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
     //获取dir name，并添加.bmp后缀
-    if(dir->DIR_Name[0]=='.'||dir->DIR_Name==0xe5
-        ||dir->DIR_Name==0x00)
+    if(dir->DIR_Name[0]=='.'||dir->DIR_Name[0]==0xe5
+        ||dir->DIR_Name[0]==0x00)
         return;
     char name[30];
     int cluscnt = 0;
