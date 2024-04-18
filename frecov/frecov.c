@@ -271,6 +271,9 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
         NextCluster = NextClus(hdr, ClusId);
         next = ClusToDir(hdr, NextCluster);
         printf("nextCluster: 0x%x\n", NextCluster);
+        EntCnt = (EntCnt + n) % 128;
+        *nextdir = next;
+        return;
     }
 
     if(NextCluster==(u32)ENDOFFILE){
@@ -316,12 +319,13 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
   printf("\n");
 #endif
 
-  if(EntCnt+n>=128){
-      EntCnt = (EntCnt + n) % 128;
-      *nextdir = next;
-  } else {
-      EntCnt += n;
-  }
+  EntCnt += n;
+  // if(EntCnt+n>=128){
+  //     EntCnt = (EntCnt + n) % 128;
+  //     *nextdir = next;
+  // } else {
+  //     EntCnt += n;
+  // }
 
   // return NULL;
 }
@@ -388,9 +392,7 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
     int cluscnt = 0;
     strcpy(name, dirpath);
     get_filename(dir, name+strlen(dirpath));
-    // memcpy(name+strlen(dirpath),dir->DIR_Name,11);
-    // name[strlen(dirpath)+11]='\0';
-    // strcat(name,".bmp");
+
 
     FILE *fp=fopen(name,"wb");
 
