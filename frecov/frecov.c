@@ -205,6 +205,8 @@ int main(int argc, char *argv[]) {
 
         int cluscnt = nextdir[EntCnt].DIR_FileSize /
                       (hdr->BPB_BytsPerSec * hdr->BPB_SecPerClus);
+        
+        
         printf("Short name: %s cluster conut:%d cnt:%d\n", nextdir[EntCnt].DIR_Name,
                cluscnt, cnt);
         FileSch(hdr, &nextdir[EntCnt],path);
