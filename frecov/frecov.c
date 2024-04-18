@@ -375,15 +375,26 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
   return FATValue;
 }
 
+void get_filename(fat32dir *dir, char *name) { 
+    int cur = 0;
+    for (int i = 0; i < 11;i++){
+      if(i==8)
+          name[cur++] = '.';
+      if(dir->DIR_Name[i]!=' ')
+          name[cur++] = dir->DIR_Name[i];
+    }
+    name[cur] = '\0';
+}
 void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
     //获取dir name，并添加.bmp后缀
 
     char name[30];
     int cluscnt = 0;
     strcpy(name, dirpath);
-    memcpy(name+strlen(dirpath),dir->DIR_Name,11);
-    name[strlen(dirpath)+11]='\0';
-    strcat(name,".bmp");
+    get_filename(dir, name+strlen(dirpath));
+    // memcpy(name+strlen(dirpath),dir->DIR_Name,11);
+    // name[strlen(dirpath)+11]='\0';
+    // strcat(name,".bmp");
 
     FILE *fp=fopen(name,"wb");
 
