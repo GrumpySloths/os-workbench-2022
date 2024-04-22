@@ -197,7 +197,7 @@ int main(int argc, char *argv[]) {
   struct fat32dir* temp = nextdir;
   
   int cnt= 0;
-  while (nextdir[EntCnt].DIR_Attr && !nextdir[EntCnt].DIR_NTRes&&EntCnt<128) {
+  for(;DirToClus(&nextdir[EntCnt])<CLUS_INVALID;EntCnt++,cnt++){
     if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
 
         print_long_name((struct fat32longdir *)&nextdir[EntCnt], hdr,
@@ -210,8 +210,8 @@ int main(int argc, char *argv[]) {
             cluscnt, cnt);
     FileSch(hdr, &nextdir[EntCnt],path);
 
-    EntCnt++;
-    cnt++;
+    // EntCnt++;
+    // cnt++;
     if(EntCnt>128)
         break;
   }
