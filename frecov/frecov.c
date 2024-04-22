@@ -251,7 +251,7 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
               if (dirs[d].DIR_Name[0] == 0x00)
                   break;
               if (dirs[d].DIR_Name[0] == 0xe5 ||
-                  dirs[d].DIR_Attr == ATTR_LONG_NAME)
+                  dirs[d].DIR_Attr == ATTR_LONG_NAME||dirs[d].DIR_Name[0]=='.')
                   continue;
               // 打印name
               printf("Short name: %s \n", dirs[d].DIR_Name);
