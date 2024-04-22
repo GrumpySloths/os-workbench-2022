@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
       if(dirs[d].DIR_Name[0]==0xe5||dirs[d].DIR_Attr==ATTR_LONG_NAME)
           continue;
       //打印name
-      printf("Short name: %s\n", dirs[d].DIR_Name);
+      printf("Short name: %s cnt:%d\n", dirs[d].DIR_Name,cnt++);
     } }
       // for(;DirToClus(&nextdir[EntCnt])<CLUS_INVALID;EntCnt++,cnt++){
       //   if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
