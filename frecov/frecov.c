@@ -116,6 +116,7 @@ struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
 u32 DirToClus(fat32dir*dir);
 u32 NextClus(fat32hdr *hdr, u32 ClusId);
 void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath);
+void dfs(fat32hdr *hdr, u32 cluster, u32 isdir);
 
 static int EntCnt = 0;
 static u32 NextCluster = 0;
@@ -197,37 +198,20 @@ int main(int argc, char *argv[]) {
   struct fat32dir* temp = nextdir;
   
   int cnt= 0;
-  for (; NextCluster < CLUS_INVALID;NextCluster=NextClus(hdr,NextCluster)){
-    int ndents=(hdr->BPB_SecPerClus*hdr->BPB_BytsPerSec)/sizeof(struct fat32dir);
-    fat32dir* dirs=ClusToDir(hdr,NextCluster);
+  dfs(hdr, NextCluster, 0);
+  // for (; NextCluster < CLUS_INVALID;NextCluster=NextClus(hdr,NextCluster)){
+  //   int ndents=(hdr->BPB_SecPerClus*hdr->BPB_BytsPerSec)/sizeof(struct fat32dir);
+  //   fat32dir* dirs=ClusToDir(hdr,NextCluster);
 
-    for (int d = 0; d < ndents;d++){
-      if(dirs[d].DIR_Name[0]==0x00)
-          break;
-      if(dirs[d].DIR_Name[0]==0xe5||dirs[d].DIR_Attr==ATTR_LONG_NAME)
-          continue;
-      //打印name
-      printf("Short name: %s cnt:%d\n", dirs[d].DIR_Name,cnt++);
-    } }
-      // for(;DirToClus(&nextdir[EntCnt])<CLUS_INVALID;EntCnt++,cnt++){
-      //   if (nextdir[EntCnt].DIR_Attr == ATTR_LONG_NAME) {
+  //   for (int d = 0; d < ndents;d++){
+  //     if(dirs[d].DIR_Name[0]==0x00)
+  //         break;
+  //     if(dirs[d].DIR_Name[0]==0xe5||dirs[d].DIR_Attr==ATTR_LONG_NAME)
+  //         continue;
+  //     //打印name
+  //     printf("Short name: %s cnt:%d\n", dirs[d].DIR_Name,cnt++);
+  //   } }
 
-      //       print_long_name((struct fat32longdir *)&nextdir[EntCnt], hdr,
-      //                       NextCluster, &nextdir);
-
-      //   }
-      //   int cluscnt = nextdir[EntCnt].DIR_FileSize /
-      //             (hdr->BPB_BytsPerSec * hdr->BPB_SecPerClus);
-      //   printf("Short name: %s ClusCnt:%d cnt:%d\n",
-      //   nextdir[EntCnt].DIR_Name,
-      //           cluscnt, cnt);
-      //   FileSch(hdr, &nextdir[EntCnt],path);
-
-      //   // EntCnt++;
-      //   // cnt++;
-      //   if(EntCnt>128)
-      //       break;
-      // }
       printf("EntCnt:%d,cnt:%d\n", EntCnt, cnt);
 
 
@@ -269,6 +253,26 @@ release:
   exit(1);
 }
 
+void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
+    int cnt = 0;
+
+    for (; NextCluster < CLUS_INVALID;
+         NextCluster = NextClus(hdr, NextCluster)) {
+        int ndents = (hdr->BPB_SecPerClus * hdr->BPB_BytsPerSec) /
+                     sizeof(struct fat32dir);
+        fat32dir *dirs = ClusToDir(hdr, NextCluster);
+
+        for (int d = 0; d < ndents; d++) {
+            if (dirs[d].DIR_Name[0] == 0x00)
+                break;
+            if (dirs[d].DIR_Name[0] == 0xe5 ||
+                dirs[d].DIR_Attr == ATTR_LONG_NAME)
+                continue;
+            // 打印name
+            printf("Short name: %s cnt:%d\n", dirs[d].DIR_Name, cnt++);
+        }
+    }
+}
 //定义一个函数，打印fat32 directory entry's long name
 void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**nextdir){
 
