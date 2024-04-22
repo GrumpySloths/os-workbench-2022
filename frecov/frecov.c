@@ -239,13 +239,13 @@ release:
 
 void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
 
-    for (; NextCluster < CLUS_INVALID;
-         NextCluster = NextClus(hdr, NextCluster)) {
+    for (; cluster < CLUS_INVALID;
+         cluster = NextClus(hdr, cluster)) {
         
         if(isdir){
           int ndents = (hdr->BPB_SecPerClus * hdr->BPB_BytsPerSec) /
                         sizeof(struct fat32dir);
-          fat32dir *dirs = ClusToDir(hdr, NextCluster);
+          fat32dir *dirs = ClusToDir(hdr, cluster);
 
           for (int d = 0; d < ndents; d++) {
               if (dirs[d].DIR_Name[0] == 0x00)
@@ -258,7 +258,7 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
               dfs(hdr, DirToClus(&dirs[d]), 0);
           }
         }else{
-          printf(" #%d ", NextCluster);
+          printf(" #%d ", cluster);
         }
     }
     printf("\n");
