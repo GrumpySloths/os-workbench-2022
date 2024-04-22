@@ -283,6 +283,7 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
               }
               // 打印name
               printf("Short name: %s  long name:%s  cnt:%d\n", dirs[d].DIR_Name,longname,EntCnt++);
+              FileSch(hdr, &dirs[d], "./res/");
               dfs(hdr, DirToClus(&dirs[d]), 0);
           }
         }else{
@@ -327,10 +328,6 @@ u32 NextClus(struct fat32hdr*hdr,u32 ClusId){
 
   u32 *FAT = (u32 *)((char *)hdr + hdr->BPB_RsvdSecCnt * hdr->BPB_BytsPerSec);
   u32 FATValue = FAT[ClusId];
-
-  // if(!(FATValue>=RESERVED_START&&FATValue<=ENDOFFILE)){
-  //     assert(FATValue <= fat32Info->CountOfClusters);
-  // }
 
   return FATValue;
 }
