@@ -197,7 +197,7 @@ int main(int argc, char *argv[]) {
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   struct fat32dir* temp = nextdir;
   
-  dfs(hdr, NextCluster, 0);
+  dfs(hdr, NextCluster, 1);
 
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
@@ -238,24 +238,30 @@ release:
 }
 
 void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
-    int cnt = 0;
 
     for (; NextCluster < CLUS_INVALID;
          NextCluster = NextClus(hdr, NextCluster)) {
-        int ndents = (hdr->BPB_SecPerClus * hdr->BPB_BytsPerSec) /
-                     sizeof(struct fat32dir);
-        fat32dir *dirs = ClusToDir(hdr, NextCluster);
+        
+        if(isdir){
+          int ndents = (hdr->BPB_SecPerClus * hdr->BPB_BytsPerSec) /
+                        sizeof(struct fat32dir);
+          fat32dir *dirs = ClusToDir(hdr, NextCluster);
 
-        for (int d = 0; d < ndents; d++) {
-            if (dirs[d].DIR_Name[0] == 0x00)
-                break;
-            if (dirs[d].DIR_Name[0] == 0xe5 ||
-                dirs[d].DIR_Attr == ATTR_LONG_NAME)
-                continue;
-            // 打印name
-            printf("Short name: %s cnt:%d\n", dirs[d].DIR_Name, cnt++);
+          for (int d = 0; d < ndents; d++) {
+              if (dirs[d].DIR_Name[0] == 0x00)
+                  break;
+              if (dirs[d].DIR_Name[0] == 0xe5 ||
+                  dirs[d].DIR_Attr == ATTR_LONG_NAME)
+                  continue;
+              // 打印name
+              printf("Short name: %s \n", dirs[d].DIR_Name);
+              dfs(hdr, DirToClus(&dirs[d]), 0);
+          }
+        }else{
+          printf(" #%d ", NextCluster);
         }
     }
+    printf("\n");
 }
 //定义一个函数，打印fat32 directory entry's long name
 void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**nextdir){
