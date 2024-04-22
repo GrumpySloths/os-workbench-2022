@@ -113,6 +113,7 @@ typedef struct fat32Info_t{
 } fat32Info_t;
 
 void *map_disk(const char *fname);
+void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next);
 struct fat32dir * get_RootDir(fat32hdr *hdr);
 struct fat32dir *ClusToDir(fat32hdr *hdr,int ClusId);
 u32 DirToClus(fat32dir*dir);
@@ -291,7 +292,8 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
     }
     printf("\n");
 }
-
+//定义一个函数，打印fat32 directory entry's long name
+void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**nextdir){
 
     fat32dir *next = NULL;
     // check last name entry mask
