@@ -254,7 +254,7 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
                   dirs[d].DIR_Attr == ATTR_LONG_NAME||dirs[d].DIR_Name[0]=='.')
                   continue;
               // 打印name
-              printf("Short name: %s \n", dirs[d].DIR_Name);
+              printf("Short name: %s cnt:%d\n", dirs[d].DIR_Name,EntCnt++);
               dfs(hdr, DirToClus(&dirs[d]), 0);
           }
         }else{
