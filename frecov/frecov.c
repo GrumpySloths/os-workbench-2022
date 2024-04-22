@@ -30,6 +30,9 @@ typedef uint32_t u32;
 #define RESERVED_START 0xFFFFFF8
 #define RESERVED_END 0xFFFFFFE
 #define CLUS_INVALID 0xffffff7
+
+//longdir attr
+#define LDIR_NAME_LENGTH 13 // 5+6+2
 // Copied from the manual
 typedef struct fat32hdr {
   u8  BS_jmpBoot[3];
@@ -237,11 +240,25 @@ release:
   exit(1);
 }
 
+void get_longname(fat32longdir*longdir,int n,char*longname){
+    int cur=(n-1)*LDIR_NAME_LENGTH;
+
+    for(int i=0;i<5;i++){
+        longname[cur++]=longdir->LDIR_Name1[i];
+    }
+    for (int i = 0; i < 6;i++){
+        longname[cur++] = longdir->LDIR_Name2[i];
+    }
+    for (int i = 0; i < 2;i++){
+        longname[cur++] = longdir->LDIR_Name3[i];
+    } 
+}
+
 void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
 
-    for (; cluster < CLUS_INVALID;
-         cluster = NextClus(hdr, cluster)) {
-        
+    char longname[255];
+
+    for (; cluster < CLUS_INVALID; cluster = NextClus(hdr, cluster)) {
         if(isdir){
           int ndents = (hdr->BPB_SecPerClus * hdr->BPB_BytsPerSec) /
                         sizeof(struct fat32dir);
@@ -251,10 +268,17 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
               if (dirs[d].DIR_Name[0] == 0x00)
                   break;
               if (dirs[d].DIR_Name[0] == 0xe5 ||
-                  dirs[d].DIR_Attr == ATTR_LONG_NAME||dirs[d].DIR_Name[0]=='.')
+                  dirs[d].DIR_Name[0]=='.')
                   continue;
+              //long name condition 
+              if(dirs[d].DIR_Attr==ATTR_LONG_NAME){
+                fat32longdir *longdir=(fat32longdir*)&dirs[d];
+                int n = longdir->LDIR_Ord ^ Last_Long_Entry; 
+                get_longname(longdir,n,longname);
+                continue;
+              }
               // 打印name
-              printf("Short name: %s cnt:%d\n", dirs[d].DIR_Name,EntCnt++);
+              printf("Short name: %s  long name:%s  cnt:%d\n", dirs[d].DIR_Name,longname,EntCnt++);
               dfs(hdr, DirToClus(&dirs[d]), 0);
           }
         }else{
@@ -327,14 +351,7 @@ void print_long_name(fat32longdir*longdir,fat32hdr*hdr,u32 ClusId,fat32dir**next
 #endif
 
   EntCnt += n;
-  // if(EntCnt+n>=128){
-  //     EntCnt = (EntCnt + n) % 128;
-  //     *nextdir = next;
-  // } else {
-  //     EntCnt += n;
-  // }
 
-  // return NULL;
 }
 
 struct fat32dir* get_RootDir(struct fat32hdr*hdr){
