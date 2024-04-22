@@ -272,8 +272,13 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
                   continue;
               //long name condition 
               if(dirs[d].DIR_Attr==ATTR_LONG_NAME){
-                fat32longdir *longdir=(fat32longdir*)&dirs[d];
-                int n = longdir->LDIR_Ord ^ Last_Long_Entry; 
+                int n;
+                fat32longdir *longdir = (fat32longdir *)&dirs[d];
+                if (longdir->LDIR_Ord & Last_Long_Entry) {
+                    n=longdir->LDIR_Ord ^ Last_Long_Entry;
+                }else{
+                    n = longdir->LDIR_Ord;
+                }
                 get_longname(longdir,n,longname);
                 continue;
               }
