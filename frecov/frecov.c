@@ -283,6 +283,7 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
               }
               // 打印name
               printf("Short name: %s  long name:%s  cnt:%d\n", dirs[d].DIR_Name,longname,EntCnt++);
+              printf("file size:%d\n", dirs[d].DIR_FileSize);
               FileSch(hdr, &dirs[d], "./res/");
               dfs(hdr, DirToClus(&dirs[d]), 0);
           }
