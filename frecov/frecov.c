@@ -7,9 +7,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include "fat32.h"
-
-
-
+#include "bitmap.h"
 
 
 void *map_disk(const char *fname);
@@ -72,7 +70,7 @@ int main(int argc, char *argv[]) {
   printf("FSI_TrailSig: %x\n", fsi->FSI_TrailSig);
 
   printf("RootClus: %d\n", hdr->BPB_RootClus);
-#endif
+
 
   //获取根目录的地址并将其属性打印出来
   u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + RootDirSectors;
@@ -81,7 +79,7 @@ int main(int argc, char *argv[]) {
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
   printf("Rootdir name:%s\n", rootdir->DIR_Name);
 
-#ifdef DEBUG
+
   //根据FstClusLO 和 FstClusHI 计算出下一个cluster的地址
   NextCluster = DirToClus(rootdir);
   struct fat32dir*nextdir=ClusToDir(hdr,NextCluster);
@@ -99,10 +97,10 @@ int main(int argc, char *argv[]) {
   // 打印nextdir文件大小
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   struct fat32dir* temp = nextdir;
-#endif
 
-  NextCluster = 3;
   dfs(hdr, NextCluster, 1);
+#endif 
+  
 
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
