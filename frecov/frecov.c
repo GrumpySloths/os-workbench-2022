@@ -33,6 +33,8 @@ typedef uint32_t u32;
 
 //longdir attr
 #define LDIR_NAME_LENGTH 13 // 5+6+2
+
+#define ROUNDUP(a, sz)  ((((uintptr_t)a) + (sz) - 1) & ~((sz) - 1))
 // Copied from the manual
 typedef struct fat32hdr {
   u8  BS_jmpBoot[3];
@@ -283,7 +285,8 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
               }
               // 打印name
               int filesize = dirs[d].DIR_FileSize / 1024;
-              int cluscnt=dirs[d].DIR_FileSize/(hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus);
+              int ClusSize=hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus;
+              int cluscnt=ROUNDUP(dirs[d].DIR_FileSize,ClusSize)/(hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus);
 
               printf("Short name: %s  long name:%s  cnt:%d\n", dirs[d].DIR_Name,
                      longname, EntCnt++);
