@@ -183,6 +183,7 @@ int main(int argc, char *argv[]) {
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
   printf("Rootdir name:%s\n", rootdir->DIR_Name);
 
+#ifdef DEBUG
   //根据FstClusLO 和 FstClusHI 计算出下一个cluster的地址
   NextCluster = DirToClus(rootdir);
   struct fat32dir*nextdir=ClusToDir(hdr,NextCluster);
@@ -191,7 +192,7 @@ int main(int argc, char *argv[]) {
   u32 FATValue=NextClus(hdr,NextCluster);
 
   //根据FaTValue 循环打印fat list，直至遇到ENDOFFILE
-  while (FATValue < ENDOFFILE) {
+  while (FATValue <CLUS_INVALID) {
     printf("Entry value: %x\n", FATValue );
     FATValue = NextClus(hdr, FATValue);
   }
@@ -200,7 +201,9 @@ int main(int argc, char *argv[]) {
   // 打印nextdir文件大小
   printf("NextDir filesize: %d\n", nextdir->DIR_FileSize);
   struct fat32dir* temp = nextdir;
-  
+#endif
+
+  NextCluster = 3;
   dfs(hdr, NextCluster, 1);
 
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
