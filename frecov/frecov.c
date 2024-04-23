@@ -282,8 +282,12 @@ void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
                 continue;
               }
               // 打印name
-              printf("Short name: %s  long name:%s  cnt:%d\n", dirs[d].DIR_Name,longname,EntCnt++);
-              printf("file size:%d\n", dirs[d].DIR_FileSize);
+              int filesize = dirs[d].DIR_FileSize / 1024;
+              int cluscnt=dirs[d].DIR_FileSize/(hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus);
+
+              printf("Short name: %s  long name:%s  cnt:%d\n", dirs[d].DIR_Name,
+                     longname, EntCnt++);
+              printf("file size:%d kb, cluster count:%d\n", dirs[d].DIR_FileSize/1024,cluscnt);
               FileSch(hdr, &dirs[d], "./res/");
               dfs(hdr, DirToClus(&dirs[d]), 0);
           }
