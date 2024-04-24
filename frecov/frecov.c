@@ -53,9 +53,9 @@ int main(int argc, char *argv[]) {
   int DataSec = TotSec - (hdr->BPB_RsvdSecCnt + (hdr->BPB_NumFATs * FATSz) +
                           RootDirSectors);
   int CountOfClusters = DataSec / hdr->BPB_SecPerClus;
-  // u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + fat32Info->RootDirSectors;
-  // u32 FirstDirAddr = FirstDataSector * hdr->BPB_BytsPerSec;
-  // char* fstclusAddr=(char*)hdr+FirstDirAddr;
+  u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + fat32Info->RootDirSectors;
+  u32 FirstDirAddr = FirstDataSector * hdr->BPB_BytsPerSec;
+  char* fstclusAddr=(char*)hdr+FirstDirAddr;
 
   fat32Info=&(struct fat32Info_t){.CountOfClusters=CountOfClusters,.DataSec=DataSec,
                                         .FATSz=FATSz,.RootDirSectors=RootDirSectors,
