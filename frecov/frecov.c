@@ -158,7 +158,7 @@ void scan(fat32hdr*hdr){
       //bitmap file
       bitmap_file_header *bfh=(bitmap_file_header*)clusaddr;
       int cluscnt=ROUNDUP(bfh->bfSize,clusSize)/clusSize;
-      printf("bitmap file header: %x, cluscnt:%d \n", bfh->bfType,cluscnt);
+      printf("bitmap file header: %x, cluscnt:%d filesize:%d \n", bfh->bfType,cluscnt,bfh->bfSize);
 
       // for (int i = 0; i < cluscnt;i++){
       //   printf(" #%d ", cnt+i);
