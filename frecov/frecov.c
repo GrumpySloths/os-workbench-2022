@@ -35,6 +35,7 @@ void FileRecov(fat32hdr *hdr, fat32dir *dir, char *dirpath,
 static int EntCnt = 0;
 static u32 NextCluster = 0;
 static int discontinuous_file_count = 0;//记录
+static char *discontinuous_file_names[100];
 static fat32Info_t *fat32Info = NULL;
 
 int main(int argc, char *argv[]) {
@@ -119,6 +120,9 @@ int main(int argc, char *argv[]) {
 
   dfs(hdr, NextCluster, 1);
   printf("discontinuous_file_count:%d\n", discontinuous_file_count);
+  for (int i = 0; i < discontinuous_file_count;i++){
+    printf("discontinuous_file_names:%s\n", discontinuous_file_names[i]);
+  }
 #endif
 
 #ifndef DEBUG
@@ -386,9 +390,10 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
             printf("Reserved cluster\n");
             break;
         }
-        if(fstclus-tmp>1)
+        if(fstclus-tmp>1){
+            discontinuous_file_names[discontinuous_file_count] = name;
             discontinuous_file_count++;
-
+        }
         cluscnt++;
         // 将fstclus中的内容写入文件
         void *head = (void *)ClusToDir(hdr,fstclus);
