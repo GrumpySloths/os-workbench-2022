@@ -254,7 +254,7 @@ void DirsSch(fat32hdr *hdr, Queue *queue, u32 *cluster_status) {
     for (int dirsclus=dequeue(queue); !isQueueEmpty(queue);dirsclus=dequeue(queue)){
       fat32dir*dirs=(fat32dir*)(fat32Info->fstclusAddr+dirsclus*fat32Info->clusSz);
       for (int i = 0; i < fat32Info->clusSz / sizeof(fat32dir);i++){
-        if(dirs[i].DIR_Name[0]=0x00)
+        if(dirs[i].DIR_Name[0]==0x00)
             break;
         if(dirs[i].DIR_Name[0]==0xe5||dirs[i].DIR_Name[0]=='.'
                                       ||dirs[i].DIR_Attr==ATTR_LONG_NAME)
