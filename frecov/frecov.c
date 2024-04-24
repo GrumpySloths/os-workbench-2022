@@ -157,8 +157,15 @@ void scan(fat32hdr*hdr){
     if(((bitmap_file_header*)clusaddr)->bfType==0x4d42){
       //bitmap file
       bitmap_file_header *bfh=(bitmap_file_header*)clusaddr;
+      int cluscnt=ROUNDUP(bfh->bfSize,clusSize)/clusSize;
       printf("bitmap file header: %x\n", bfh->bfType);
-    } 
+
+      for (int i = 0; i < cluscnt;i++){
+        printf(" #%d ", cnt+i);
+      }
+      printf("\n");
+    }
+
   }
 }
 void get_longname(fat32longdir*longdir,int n,char*longname){
