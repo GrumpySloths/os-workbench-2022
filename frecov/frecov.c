@@ -166,6 +166,9 @@ bool Isdentrys(fat32hdr*hdr,void*clusaddr){
         char *name=(char*)dirs[i].DIR_Name;
         //容错处理，判断name末尾是否是'\0'
         if(name[strlen(name)]!='\0') continue;
+        if(name[0]==0x00||name[0]==0xe5) continue;
+        if(dirs[i].DIR_Attr==ATTR_LONG_NAME)
+            continue;
 
         if(strstr(name,substr)!=NULL){
             cnt++;
