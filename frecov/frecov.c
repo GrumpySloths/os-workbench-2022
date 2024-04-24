@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 
   fat32Info=&(struct fat32Info_t){.CountOfClusters=CountOfClusters,.DataSec=DataSec,
                                         .FATSz=FATSz,.RootDirSectors=RootDirSectors,
-                                        .TotSec=TotSec,.fstclusAddr=(void*)0};
+                                        .TotSec=TotSec,.fstclusAddr=(void*)fstclusAddr};
 
   printf("CountOfClusters: %d\n", CountOfClusters);
 
