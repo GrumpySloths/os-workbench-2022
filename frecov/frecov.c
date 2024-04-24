@@ -408,10 +408,10 @@ void FileRecov(fat32hdr*hdr,fat32dir*dir,char*dirpath,u32*cluster_status){
 
     u32 fstclus=DirToClus(dir);
 
-    if(cluster_status[fstclus]!=BMP_HEADER){
-        printf("Not a bmp file\n");
-        return;
-    }
+    // if(cluster_status[fstclus]!=BMP_HEADER){
+    //     printf("Not a bmp file\n");
+    //     return;
+    // }
 
     for (int i = 0; i < cluscnt;i++,fstclus++){
         printf("##%d ", fstclus);
