@@ -182,6 +182,16 @@ bool Isdentrys(fat32hdr*hdr,void*clusaddr){
     return cnt>=6;
 
 }
+// 判断cluster是否处于free状态
+bool IsFreeCluster(fat32hdr*hdr,void*clusaddr){
+  //判断clusaddr前512字节是否为0，如果是则返回true，否则返回false
+  for(int i=0;i<512;i++){
+    if(((char*)clusaddr)[i]!=0)
+        return false;
+  }
+  return true;
+}
+
 //逐cluster 扫描data section
 void scan(fat32hdr*hdr,Queue*queue,u32*cluster_status){
   //获取data section的首地址
@@ -204,6 +214,12 @@ void scan(fat32hdr*hdr,Queue*queue,u32*cluster_status){
       cluster_status[cnt]=DENTRYS;
       enqueue(queue, cnt);
       printf("dentrys cluster:%d\n", cnt);
+      continue;
+    }
+    //判断是否是free cluster
+    if(IsFreeCluster(hdr,clusaddr)){
+      cluster_status[cnt]=FREE_CLUSTER;
+      printf("free cluster:%d\n", cnt);
       continue;
     }
   }
