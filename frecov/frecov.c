@@ -163,7 +163,7 @@ bool Isdentrys(fat32hdr*hdr,void*clusaddr){
     int cnt=0;
     char *substr = "BMP";
     for(int i=0;i<hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus/sizeof(fat32dir);i++){
-        char *name=dirs[i].DIR_Name;
+        char *name=(char*)dirs[i].DIR_Name;
         //容错处理，判断name末尾是否是'\0'
         if(name[strlen(name)]!='\0') continue;
 
