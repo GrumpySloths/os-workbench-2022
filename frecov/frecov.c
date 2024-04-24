@@ -170,8 +170,8 @@ bool Isdentrys(fat32hdr*hdr,void*clusaddr){
         if(dirs[i].DIR_Attr==ATTR_LONG_NAME)
             continue;
 
-        if(strstr(name,substr)!=NULL){
-            // printf("name:%s\n", name);
+        if(strncmp(name+8,substr,3)!=NULL){
+            printf("name:%s\n", name);
             cnt++;
         }
     }
