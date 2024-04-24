@@ -391,6 +391,7 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
             break;
         }
         if(fstclus-tmp>1){
+            printf("fstclus:%d  tmp:%d\n", fstclus, tmp);
             printf(
                 "------------------------discontinuous "
                 "cluster------------------------\n");
