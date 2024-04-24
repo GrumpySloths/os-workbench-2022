@@ -92,7 +92,6 @@ int main(int argc, char *argv[]) {
 
 
   //获取根目录的地址并将其属性打印出来
-  u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + RootDirSectors;
   struct fat32dir *rootdir = get_RootDir(hdr);
   printf("RootDir attr: %d\n", rootdir->DIR_Attr);
   printf("RootDir filesize: %d\n", rootdir->DIR_FileSize);
