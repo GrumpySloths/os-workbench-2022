@@ -199,7 +199,8 @@ void scan(fat32hdr*hdr,Queue*queue,u32*cluster_status){
   //获取data section的首地址
   char*fstclusAddr=fat32Info->fstclusAddr;
 
-  u32 clusSize=hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus;
+  // u32 clusSize=hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus;
+  u32 clusSize=fat32Info->clusSz;
 
   int cnt=0;
 
