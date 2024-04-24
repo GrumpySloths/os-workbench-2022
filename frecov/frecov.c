@@ -10,6 +10,7 @@
 #include "bitmap.h"
 #include "queue.h"
 #include <stdbool.h>
+#include <sys/stat.h>
 
 //构建枚举类,0:dentrys 1:bmp header 2:bmp data 3:free cluster
 typedef enum{
