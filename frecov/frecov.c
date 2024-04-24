@@ -176,7 +176,7 @@ bool Isdentrys(fat32hdr*hdr,void*clusaddr){
         }
     }
 
-    return cnt>=15;
+    return cnt>=6;
 
 }
 //逐cluster 扫描data section
