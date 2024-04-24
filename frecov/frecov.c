@@ -8,7 +8,16 @@
 #include <sys/mman.h>
 #include "fat32.h"
 #include "bitmap.h"
+#include "queue.h"
+#include <stdbool.h>
 
+//构建枚举类,0:dentrys 1:bmp header 2:bmp data 3:free cluster
+typedef enum{
+  DENTRYS=0,
+  BMP_HEADER=1,
+  BMP_DATA=2,
+  FREE_CLUSTER=3
+}cluster_type;
 
 void *map_disk(const char *fname);
 struct fat32dir * get_RootDir(fat32hdr *hdr);
@@ -17,7 +26,7 @@ u32 DirToClus(fat32dir*dir);
 u32 NextClus(fat32hdr *hdr, u32 ClusId);
 void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath);
 void dfs(fat32hdr *hdr, u32 cluster, u32 isdir);
-void scan(fat32hdr *hdr);
+void scan(fat32hdr *hdr,Queue*queue,u32*cluster_status);
 
 static int EntCnt = 0;
 static u32 NextCluster = 0;
@@ -102,7 +111,13 @@ int main(int argc, char *argv[]) {
   dfs(hdr, NextCluster, 1);
 #endif
 
-  scan(hdr);
+  Queue *queue_dirs = (Queue *)malloc(sizeof(Queue));
+  initQueue(queue_dirs);
+  //构建长度为CountOfClusters的数组，用于记录每个cluster的状态
+  u32 *cluster_status = (u32 *)malloc(sizeof(u32) * CountOfClusters);
+  memset(cluster_status, 0, sizeof(u32) * CountOfClusters);
+
+  scan(hdr,queue_dirs,cluster_status);
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
@@ -141,8 +156,27 @@ release:
   exit(1);
 }
 
+//判断cluster是否属于目录项
+bool Isdentrys(fat32hdr*hdr,void*clusaddr){
+    fat32dir*dirs=(fat32dir*)clusaddr;
+    //遍历dirs,如果有3个以上dir name包含"BMP"，则返回true，否则返回false
+    int cnt=0;
+    char *substr = "BMP";
+    for(int i=0;i<hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus/sizeof(fat32dir);i++){
+        char *name=dirs[i].DIR_Name;
+        //容错处理，判断name末尾是否是'\0'
+        if(name[strlen(name)]!='\0') continue;
+
+        if(strstr(name,substr)!=NULL){
+            cnt++;
+        }
+    }
+
+    return cnt>=3;
+
+}
 //逐cluster 扫描data section
-void scan(fat32hdr*hdr){
+void scan(fat32hdr*hdr,Queue*queue,u32*cluster_status){
   //获取data section的首地址
   u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + fat32Info->RootDirSectors;
   u32 FirstDirAddr = FirstDataSector * hdr->BPB_BytsPerSec;
@@ -157,15 +191,15 @@ void scan(fat32hdr*hdr){
     if(((bitmap_file_header*)clusaddr)->bfType==0x4d42){
       //bitmap file
       bitmap_file_header *bfh=(bitmap_file_header*)clusaddr;
-      int cluscnt=ROUNDUP(bfh->bfSize,clusSize)/clusSize;
-      printf("bitmap file header: %x, cluscnt:%d filesize:%d \n", bfh->bfType,cluscnt,bfh->bfSize);
-
-      // for (int i = 0; i < cluscnt;i++){
-      //   printf(" #%d ", cnt+i);
-      // }
-      // printf("\n");
+      cluster_status[cnt] = BMP_HEADER;
+      continue;
     }
-
+    //判断是否是dentrys
+    if(Isdentrys(hdr,clusaddr)){
+      cluster_status[cnt]=DENTRYS;
+      printf("dentrys cluster:%d\n", cnt);
+      continue;
+    }
   }
 }
 void get_longname(fat32longdir*longdir,int n,char*longname){
