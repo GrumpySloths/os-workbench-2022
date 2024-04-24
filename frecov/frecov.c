@@ -185,10 +185,10 @@ bool Isdentrys(fat32hdr*hdr,void*clusaddr){
 //逐cluster 扫描data section
 void scan(fat32hdr*hdr,Queue*queue,u32*cluster_status){
   //获取data section的首地址
-  u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + fat32Info->RootDirSectors;
-  u32 FirstDirAddr = FirstDataSector * hdr->BPB_BytsPerSec;
-  char* fstclusAddr=(char*)hdr+FirstDirAddr;
-  // char*fstclusAddr=fat32Info->fstclusAddr;
+  // u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + fat32Info->RootDirSectors;
+  // u32 FirstDirAddr = FirstDataSector * hdr->BPB_BytsPerSec;
+  // char* fstclusAddr=(char*)hdr+FirstDirAddr;
+  char*fstclusAddr=fat32Info->fstclusAddr;
 
   u32 clusSize=hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus;
 
