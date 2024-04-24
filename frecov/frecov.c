@@ -99,9 +99,9 @@ int main(int argc, char *argv[]) {
   struct fat32dir* temp = nextdir;
 
   dfs(hdr, NextCluster, 1);
-#endif 
-  
-  
+#endif
+
+  scan(hdr);
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
@@ -140,6 +140,24 @@ release:
   exit(1);
 }
 
+//逐cluster 扫描data section
+void scan(fat32hdr*hdr){
+  //获取data section的首地址
+  u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + fat32Info->RootDirSectors;
+  u32 FirstDirAddr = FirstDataSector * hdr->BPB_BytsPerSec;
+  char* fstclusAddr=(char*)hdr+FirstDirAddr;
+
+  u32 clusSize=hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus;
+
+  for (void *clusaddr = fstclusAddr; clusaddr < fat32Info->CountOfClusters;clusaddr+=clusSize){
+    //对每个cluster进行分类
+    if(((bitmap_file_header*)clusaddr)->bfType==0x4d42){
+      //bitmap file
+      bitmap_file_header *bfh=(bitmap_file_header*)clusaddr;
+      printf("bitmap file header: %x\n", bfh->bfType);
+    } 
+  }
+}
 void get_longname(fat32longdir*longdir,int n,char*longname){
     int cur=(n-1)*LDIR_NAME_LENGTH;
 
