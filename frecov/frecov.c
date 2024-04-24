@@ -382,7 +382,7 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
             printf("Reserved cluster\n");
             break;
         }
-        printf("##%d  ", fstclus);
+        // printf("##%d  ", fstclus);
         cluscnt++;
         // 将fstclus中的内容写入文件
         void *head = (void *)ClusToDir(hdr,fstclus);
@@ -390,8 +390,8 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
 
         fstclus=NextClus(hdr,fstclus);
     }
-    printf("\n");
-    printf("cluscnt:%d\n", cluscnt);
+    // printf("\n");
+    // printf("cluscnt:%d\n", cluscnt);
     fclose(fp);
 }
 
