@@ -17,6 +17,7 @@ u32 DirToClus(fat32dir*dir);
 u32 NextClus(fat32hdr *hdr, u32 ClusId);
 void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath);
 void dfs(fat32hdr *hdr, u32 cluster, u32 isdir);
+void scan(fat32hdr *hdr);
 
 static int EntCnt = 0;
 static u32 NextCluster = 0;
@@ -149,7 +150,9 @@ void scan(fat32hdr*hdr){
 
   u32 clusSize=hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus;
 
-  for (void *clusaddr = fstclusAddr; clusaddr < fat32Info->CountOfClusters;clusaddr+=clusSize){
+  int cnt=0;
+
+  for (void *clusaddr = fstclusAddr; cnt< fat32Info->CountOfClusters;clusaddr+=clusSize,cnt++){
     //对每个cluster进行分类
     if(((bitmap_file_header*)clusaddr)->bfType==0x4d42){
       //bitmap file
