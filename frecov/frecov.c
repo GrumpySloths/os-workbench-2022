@@ -27,6 +27,9 @@ u32 NextClus(fat32hdr *hdr, u32 ClusId);
 void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath);
 void dfs(fat32hdr *hdr, u32 cluster, u32 isdir);
 void scan(fat32hdr *hdr,Queue*queue,u32*cluster_status);
+void DirsSch(fat32hdr *hdr, Queue *queue, u32 *cluster_status);
+void FileRecov(fat32hdr *hdr, fat32dir *dir, char *dirpath,
+               u32 *cluster_status);
 
 static int EntCnt = 0;
 static u32 NextCluster = 0;
@@ -123,6 +126,7 @@ int main(int argc, char *argv[]) {
   memset(cluster_status, 0, sizeof(u32) * CountOfClusters);
 
   scan(hdr,queue_dirs,cluster_status);
+  DirsSch(hdr,queue_dirs,cluster_status);
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
@@ -199,7 +203,6 @@ void scan(fat32hdr*hdr,Queue*queue,u32*cluster_status){
   //获取data section的首地址
   char*fstclusAddr=fat32Info->fstclusAddr;
 
-  // u32 clusSize=hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus;
   u32 clusSize=fat32Info->clusSz;
 
   int cnt=0;
@@ -242,12 +245,25 @@ void get_longname(fat32longdir*longdir,int n,char*longname){
     } 
 }
 
-// void fileRecov(fat32hdr *hdr, Queue *queue, u32 *cluster_status) {
-    
-//     for (int dirsclus=dequeue(queue); !isQueueEmpty(queue);dirsclus=dequeue(queue)){
-//       fat32dir*dirs=
-//     } 
-// }
+
+void DirsSch(fat32hdr *hdr, Queue *queue, u32 *cluster_status) {
+    char* folderName = "recov/";
+    mkdir(folderName, 0777);
+
+    for (int dirsclus=dequeue(queue); !isQueueEmpty(queue);dirsclus=dequeue(queue)){
+      fat32dir*dirs=(fat32dir*)(fat32Info->fstclusAddr+dirsclus*fat32Info->clusSz);
+      for (int i = 0; i < fat32Info->clusSz / sizeof(fat32dir);i++){
+        if(dirs[i].DIR_Name[0]=0x00)
+            break;
+        if(dirs[i].DIR_Name[0]==0xe5||dirs[i].DIR_Name[0]=='.'
+                                      ||dirs[i].DIR_Attr==ATTR_LONG_NAME)
+            continue;
+        
+        printf("filename:%s\n", dirs[i].DIR_Name);
+        FileRecov(hdr, &dirs[i], folderName, cluster_status);
+      }
+    }
+}
 void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
 
     char longname[255];
@@ -372,5 +388,39 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
     }
     printf("\n");
     printf("cluscnt:%d\n", cluscnt);
+    fclose(fp);
+}
+
+void FileRecov(fat32hdr*hdr,fat32dir*dir,char*dirpath,u32*cluster_status){
+    //获取dir name，并添加.bmp后缀
+    if(dir->DIR_Name[0]=='.'||dir->DIR_Name[0]==0xe5
+        ||dir->DIR_Name[0]==0x00)
+        return;
+    
+    char name[30];
+    int cluscnt = ROUNDUP(dir->DIR_FileSize,fat32Info->clusSz)/fat32Info->clusSz;
+    strcpy(name, dirpath);
+    get_filename(dir, name+strlen(dirpath));
+
+
+    FILE *fp=fopen(name,"wb");
+
+    u32 fstclus=DirToClus(dir);
+
+    if(cluster_status[fstclus]!=BMP_HEADER){
+        printf("Not a bmp file\n");
+        return;
+    }
+
+    for (int i = 0; i < cluscnt;i++,fstclus++){
+        printf("##%d ", fstclus);
+        // 将fstclus中的内容写入文件
+        void *head = (void *)ClusToDir(hdr, fstclus);
+        fwrite(head, hdr->BPB_BytsPerSec, hdr->BPB_SecPerClus, fp); 
+
+    }
+
+    printf("\n");
+    // printf("cluscnt:%d\n", cluscnt);
     fclose(fp);
 }
