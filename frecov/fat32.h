@@ -105,5 +105,6 @@ typedef struct fat32Info_t {
     int TotSec;
     int DataSec;
     int CountOfClusters;
+    int clusSz;
     void* fstclusAddr;
 } fat32Info_t;

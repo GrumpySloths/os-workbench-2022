@@ -56,9 +56,11 @@ int main(int argc, char *argv[]) {
   u32 FirstDataSector = hdr->BPB_RsvdSecCnt + hdr->BPB_NumFATs * hdr->BPB_FATSz32 + RootDirSectors;
   u32 FirstDirAddr = FirstDataSector * hdr->BPB_BytsPerSec;
   void* fstclusAddr=(char*)hdr+FirstDirAddr;
+  u32 clusSize=hdr->BPB_BytsPerSec*hdr->BPB_SecPerClus;
 
   fat32Info=&(struct fat32Info_t){.CountOfClusters=CountOfClusters,.DataSec=DataSec,
                                         .FATSz=FATSz,.RootDirSectors=RootDirSectors,
+                                        .clusSz=clusSize,
                                         .TotSec=TotSec,.fstclusAddr=fstclusAddr};
 
   printf("CountOfClusters: %d\n", CountOfClusters);
@@ -222,6 +224,7 @@ void scan(fat32hdr*hdr,Queue*queue,u32*cluster_status){
       printf("free cluster:%d\n", cnt);
       continue;
     }
+    cluster_status[cnt] = BMP_DATA;
   }
 }
 void get_longname(fat32longdir*longdir,int n,char*longname){
@@ -238,6 +241,12 @@ void get_longname(fat32longdir*longdir,int n,char*longname){
     } 
 }
 
+// void fileRecov(fat32hdr *hdr, Queue *queue, u32 *cluster_status) {
+    
+//     for (int dirsclus=dequeue(queue); !isQueueEmpty(queue);dirsclus=dequeue(queue)){
+//       fat32dir*dirs=
+//     } 
+// }
 void dfs(fat32hdr*hdr,u32 cluster,u32 isdir){
 
     char longname[255];
