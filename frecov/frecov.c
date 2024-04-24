@@ -391,7 +391,11 @@ void FileSch(fat32hdr*hdr,fat32dir*dir,char*dirpath){
             break;
         }
         if(fstclus-tmp>1){
-            discontinuous_file_names[discontinuous_file_count] = (char*)(dir->DIR_Name);
+            printf(
+                "------------------------discontinuous "
+                "cluster------------------------\n");
+            discontinuous_file_names[discontinuous_file_count] =
+                (char *)(dir->DIR_Name);
             discontinuous_file_count++;
         }
         cluscnt++;
