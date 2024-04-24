@@ -171,7 +171,7 @@ bool Isdentrys(fat32hdr*hdr,void*clusaddr){
             continue;
 
         if(strstr(name,substr)!=NULL){
-            printf("name:%s\n", name);
+            // printf("name:%s\n", name);
             cnt++;
         }
     }
@@ -201,7 +201,7 @@ void scan(fat32hdr*hdr,Queue*queue,u32*cluster_status){
     //判断是否是dentrys
     if(Isdentrys(hdr,clusaddr)){
       cluster_status[cnt]=DENTRYS;
-      // printf("dentrys cluster:%d\n", cnt);
+      printf("dentrys cluster:%d\n", cnt);
       continue;
     }
   }
