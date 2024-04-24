@@ -404,14 +404,14 @@ void FileRecov(fat32hdr*hdr,fat32dir*dir,char*dirpath,u32*cluster_status){
     get_filename(dir, name+strlen(dirpath));
 
 
-    FILE *fp=fopen(name,"wb");
-
     u32 fstclus=DirToClus(dir);
 
-    // if(cluster_status[fstclus]!=BMP_HEADER){
-    //     printf("Not a bmp file\n");
-    //     return;
-    // }
+    if(cluster_status[fstclus]!=BMP_HEADER){
+        printf("Not a bmp file\n");
+        return;
+    }
+
+    FILE *fp=fopen(name,"wb");
 
     for (int i = 0; i < cluscnt;i++,fstclus++){
         printf("##%d ", fstclus);
