@@ -171,6 +171,7 @@ bool Isdentrys(fat32hdr*hdr,void*clusaddr){
             continue;
 
         if(strstr(name,substr)!=NULL){
+            printf("name:%s\n", name);
             cnt++;
         }
     }
