@@ -120,6 +120,7 @@ int main(int argc, char *argv[]) {
   dfs(hdr, NextCluster, 1);
 #endif
 
+#ifndef DEBUG
   Queue *queue_dirs = (Queue *)malloc(sizeof(Queue));
   initQueue(queue_dirs);
   //构建长度为CountOfClusters的数组，用于记录每个cluster的状态
@@ -129,6 +130,9 @@ int main(int argc, char *argv[]) {
   scan(hdr,queue_dirs,cluster_status);
   DirsSch(hdr,queue_dirs,cluster_status);
   munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
+#endif
+  
+    return 0;
 }
 
 void *map_disk(const char *fname) {
