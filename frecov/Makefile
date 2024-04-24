@@ -9,4 +9,4 @@ include ../Makefile
 
 frecov:frecov.c
 	@make
-	@./frecov-64 frecov.img
+	@./frecov-64 M5-frecov.img
