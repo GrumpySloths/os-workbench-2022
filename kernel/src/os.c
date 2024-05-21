@@ -188,7 +188,6 @@ static void print_context(Context*ctx){
 static void os_init() { 
     pmm->init();
     kmt->init();
-    uproc->init();
 
     handlers_id = 0;
     //注册timer中断
@@ -203,14 +202,16 @@ static void os_init() {
     os->on_irq(4, EVENT_PAGEFAULT, irq_pagefault);
 
 #ifndef VME_DEBUG
-#ifdef TEST1
-    concurrency_test1();
-#else
-    dev->init();
+  #ifdef TEST1
+      concurrency_test1();
+  #else
+      dev->init();
 
-    kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
-    kmt->create(task_alloc(), "tty_reader", tty_reader, "tty2");
-#endif
+      kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
+      kmt->create(task_alloc(), "tty_reader", tty_reader, "tty2");
+  #endif
+#else
+  uproc->init();
 #endif
 
     //构建轮询链表
