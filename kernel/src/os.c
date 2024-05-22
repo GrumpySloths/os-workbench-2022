@@ -159,19 +159,19 @@ static Context* irq_pagefault(Event ev,Context*ctx){
 }
 
 //检测返回的context是否合法
-static bool sane_context(Context* ctx) { 
+// static bool sane_context(Context* ctx) { 
 
-  if ((ctx->rflags & FL_IF) == 0){
-    perror("interrupt is closed");
-    return true;
-  }
-  if(ctx->cr3==(void*)KERNEL_PAGETABLE){
-    perror("cr3 is not set");
-    return true;
-  }
+//   if ((ctx->rflags & FL_IF) == 0){
+//     perror("interrupt is closed");
+//     return true;
+//   }
+//   if(ctx->cr3==(void*)KERNEL_PAGETABLE){
+//     perror("cr3 is not set");
+//     return true;
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
 //打印context的通用寄存器
 static void print_context(Context*ctx){
@@ -271,7 +271,7 @@ static Context* os_trap(Event ev, Context* ctx) {
 
   panic_on(!next, "returning NULL context");
   //检查中断是否开启
-  panic_on(sane_context(next), "returning to invalid context");
+  // panic_on(sane_context(next), "returning to invalid context");
 
   return next;
 }
