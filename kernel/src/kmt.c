@@ -107,10 +107,10 @@ static int kmt_create(task_t*task,const char *name, void (*entry)(void *arg), vo
     // panic_on(!IN_RANGE((void*)task->stack, heap), "stack out of heap range");
     // panic_on(task->stack == NULL, "alloc stack failed");
     Area stack=(Area){&task->context+1,task+1};
-    // task->context=kcontext(stack,task->entry,task->arg);
+    task->context=kcontext(stack,task->entry,task->arg);
     //创建用户态上下文
-    task->context = ucontext(task->ar, stack, task->entry);
-    panic_on(task->context == NULL, "kcontext failed");
+    // task->context = ucontext(task->ar, stack, task->entry);
+    // panic_on(task->context == NULL, "kcontext failed");
     //为用户态进程堆栈分配空间
     // Context* ctx = task->context;
     // ctx->rsp = ctx->rsp - PAGESIZE * tasks_id * 2;
