@@ -57,6 +57,8 @@ void uproc_init() {
 
 
     task_t*task=pmm->alloc(sizeof(task_t));
+    //为task->ar分配空间
+    task->ar=pmm->alloc(sizeof(AddrSpace));
     protect(task->ar);
 
     void (*entry)(void *arg) = (void*)task->ar->area.start;
