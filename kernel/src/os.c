@@ -149,7 +149,8 @@ static Context* irq_syscall(Event ev,Context*ctx){
 //注册pagefault中断函数
 static Context* irq_pagefault(Event ev,Context*ctx){
   //打印pagefault信息
-  printf("fault_addr:%p,cause:%p\n",ev.ref,ev.cause);
+  printf("fault_addr:%p,cause:%p,cur_rip:%p\n",
+                              ev.ref,ev.cause,ctx->rip);
   printf("err msg:%s\n",ev.msg);
   void*pa=pmm->alloc(PAGESIZE);
 
