@@ -20,35 +20,35 @@ static void pgfree(void* ptr){
 }
 
 //根据给定size的大小创建多页映射
-static int mappages(AddrSpace*ar,void*va,uint size,void*pa,int prot){
+// static int mappages(AddrSpace*ar,void*va,uint size,void*pa,int prot){
     
-    if (size == 0)
-        panic("mappages size is 0");
+//     if (size == 0)
+//         panic("mappages size is 0");
 
-    //根据size计算要分配的页数
-    int npages=ROUNDUP(size,4096)/4096;
+//     //根据size计算要分配的页数
+//     int npages=ROUNDUP(size,4096)/4096;
     
-    //构建循环利用map函数进行地址映射
-    for (int i = 0; i < npages;i++){
-        map(ar,va+i*4096,pa+i*4096,prot);
-    } 
+//     //构建循环利用map函数进行地址映射
+//     for (int i = 0; i < npages;i++){
+//         map(ar,va+i*4096,pa+i*4096,prot);
+//     } 
 
-    return 0;
-}
+//     return 0;
+// }
 //创建第一个用户进程
-static void uvmfirst(AddrSpace*ar,uchar*src,uint sz){
-    //将sz向上取整为pagesize的整数倍
-    uint sz_aligned=ROUNDUP(sz,4096);
-    //分配一个物理页
-    char*mem=pgalloc(sz_aligned);
-    //将mem的所有值赋0
-    memset(mem,0,sz_aligned);
-    //构建虚拟地址和物理地址的映射
-    mappages(ar,ar->area.start,sz_aligned,mem,MMAP_READ|MMAP_WRITE);
-    //将src的内容复制到mem中
-    memmove(mem,src,sz);
+// static void uvmfirst(AddrSpace*ar,uchar*src,uint sz){
+//     //将sz向上取整为pagesize的整数倍
+//     uint sz_aligned=ROUNDUP(sz,4096);
+//     //分配一个物理页
+//     char*mem=pgalloc(sz_aligned);
+//     //将mem的所有值赋0
+//     memset(mem,0,sz_aligned);
+//     //构建虚拟地址和物理地址的映射
+//     mappages(ar,ar->area.start,sz_aligned,mem,MMAP_READ|MMAP_WRITE);
+//     //将src的内容复制到mem中
+//     memmove(mem,src,sz);
 
-}
+// }
 
 
 void uproc_init() {
@@ -68,12 +68,12 @@ void uproc_init() {
     kmt->create(task, "initcode", entry, NULL);
 
     //为task创建相应地址空间映射
-    uvmfirst(task->ar,_init,_init_len);
-    //为进程创建用户栈
-    Context* ctx = task->context;
+    // uvmfirst(task->ar,_init,_init_len);
+    // //为进程创建用户栈
+    // Context* ctx = task->context;
 
-    map(task->ar,(void*)(ctx->rsp-PAGESIZE),
-                        (void*)(ctx->rsp0-PAGESIZE),MMAP_READ|MMAP_WRITE);
+    // map(task->ar,(void*)(ctx->rsp-PAGESIZE),
+    //                     (void*)(ctx->rsp0-PAGESIZE),MMAP_READ|MMAP_WRITE);
     // ctx->rsp -= 40;
     // ctx->rsp0 -= 40;
     // mappages(task->ar, (void*)ctx->rsp, PAGESIZE,
