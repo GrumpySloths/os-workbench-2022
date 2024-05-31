@@ -154,7 +154,7 @@ static Context* irq_pagefault(Event ev,Context*ctx){
                               ev.ref,ev.cause,ctx->rip);
   printf("err msg:%s\n",ev.msg);
   void*pa=pmm->alloc(PAGESIZE);
-  void*va=(void*)ROUNDDOWN(ctx->rip,PAGESIZE);
+  void*va=(void*)ROUNDDOWN(ev.ref,PAGESIZE);
 
   current_task->va[current_task->page_cnt]=va;
   current_task->pa[current_task->page_cnt] = pa;
