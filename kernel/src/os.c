@@ -137,6 +137,12 @@ static Context* irq_syscall(Event ev,Context*ctx){
     case SYS_getpid:
       uproc->getpid(current_task);
       break;
+    case SYS_fork:
+        ctx->rax = 0;
+        break;
+    case SYS_sleep:
+        ctx->rax = 0;
+        break;
     default:
         // 打印rdi的值
         printf("rdi:%d\n", ctx->rdi);
