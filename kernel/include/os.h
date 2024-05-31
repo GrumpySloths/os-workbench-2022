@@ -1,4 +1,5 @@
 #include <common.h>
+
 union task {
     // TODO
     struct {
@@ -7,6 +8,9 @@ union task {
         void  (*entry)(void *);
         void* arg;
         AddrSpace* ar; //用户地址空间
+        int page_cnt;//用户地址空间的页数
+        void* va[64];
+        void* pa[64];
         union task* next;
         Context* context;
     };

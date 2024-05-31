@@ -1,5 +1,6 @@
 #include <os.h>
 #include <devices.h>
+#include  "initcode.inc"
 
 #define MB (1<<20)
 #define FL_IF          0x00000200  // Interrupt Enable
@@ -153,8 +154,22 @@ static Context* irq_pagefault(Event ev,Context*ctx){
                               ev.ref,ev.cause,ctx->rip);
   printf("err msg:%s\n",ev.msg);
   void*pa=pmm->alloc(PAGESIZE);
+  void*va=(void*)ROUNDDOWN(ctx->rip,PAGESIZE);
 
-  map(current_task->ar,(void*)ROUNDDOWN(ev.ref,PAGESIZE),pa,MMAP_WRITE);
+  current_task->va[current_task->page_cnt]=va;
+  current_task->pa[current_task->page_cnt] = pa;
+  current_task->page_cnt++;
+
+  if(current_task->page_cnt==1){
+      unsigned char* src = _init;
+      unsigned int len = _init_len;
+      //从src复制len长度内容到pa
+      memcpy(pa,src,len);
+      map(current_task->ar,va,pa,MMAP_WRITE|MMAP_READ);
+  }else{
+      map(current_task->ar,va,pa,MMAP_WRITE|MMAP_READ);
+  }
+
   // panic("pagefault");
   return ctx;
 }

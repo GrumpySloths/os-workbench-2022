@@ -1,7 +1,7 @@
 #include <os.h>
 #include <syscall.h>
 // #include <x86_64-qemu.h>
-#include "initcode.inc"
+// #include "initcode.inc"
 
 
 typedef unsigned char  uchar;
@@ -50,22 +50,39 @@ static void pgfree(void* ptr){
 
 // }
 
+void ucreate() { 
+
+    extern int tasks_id;
+    extern task_t* tasks[100];
+
+    task_t* task = pmm->alloc(sizeof(task_t)); 
+    tasks[tasks_id++] = task;
+
+    task->ar=pmm->alloc(sizeof(AddrSpace));
+
+    protect(task->ar);
+
+    void* entry = task->ar->area.start;
+    //构建堆栈
+    Area kstack=(Area){&task->context+1,task+1};
+    task->context = ucontext(task->ar, kstack, entry);
+}
 
 void uproc_init() {
     printf("uproc_init\n");
     vme_init(pgalloc, pgfree);
 
+    ucreate();
+    // task_t*task=pmm->alloc(sizeof(task_t));
+    // //为task->ar分配空间
+    // task->ar=pmm->alloc(sizeof(AddrSpace));
+    // protect(task->ar);
 
-    task_t*task=pmm->alloc(sizeof(task_t));
-    //为task->ar分配空间
-    task->ar=pmm->alloc(sizeof(AddrSpace));
-    protect(task->ar);
-
-    void (*entry)(void *arg) = (void*)task->ar->area.start;
-    //打印entry地址
-    printf("entry:%p\n",entry);
+    // void (*entry)(void *arg) = (void*)task->ar->area.start;
+    // //打印entry地址
+    // printf("entry:%p\n",entry);
     
-    kmt->create(task, "initcode", entry, NULL);
+    // kmt->create(task, "initcode", entry, NULL);
 
     //为task创建相应地址空间映射
     // uvmfirst(task->ar,_init,_init_len);
