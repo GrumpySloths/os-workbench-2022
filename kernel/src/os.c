@@ -172,8 +172,10 @@ static Context* irq_pagefault(Event ev,Context*ctx){
       //从src复制len长度内容到pa
       memcpy(pa,src,len);
       map(current_task->ar,va,pa,MMAP_WRITE|MMAP_READ);
-  }else{
+      printf("mapping:%p->%p\n", va, pa);
+  } else {
       map(current_task->ar,va,pa,MMAP_WRITE|MMAP_READ);
+      printf("mapping:%p->%p\n", va, pa);
   }
 
   // panic("pagefault");
