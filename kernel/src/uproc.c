@@ -1,9 +1,10 @@
 #include <os.h>
 #include <syscall.h>
-// #include <x86_64-qemu.h>
-// #include "initcode.inc"
 
-
+#ifdef VME_V2
+    #include <arch/x86_64-qemu.h>
+    #include "initcode.inc"
+#endif
 typedef unsigned char  uchar;
 typedef unsigned int   uint;
 
@@ -35,21 +36,22 @@ static void pgfree(void* ptr){
 
 //     return 0;
 // }
+#ifdef VME_V2
 //创建第一个用户进程
-// static void uvmfirst(AddrSpace*ar,uchar*src,uint sz){
-//     //将sz向上取整为pagesize的整数倍
-//     uint sz_aligned=ROUNDUP(sz,4096);
-//     //分配一个物理页
-//     char*mem=pgalloc(sz_aligned);
-//     //将mem的所有值赋0
-//     memset(mem,0,sz_aligned);
-//     //构建虚拟地址和物理地址的映射
-//     mappages(ar,ar->area.start,sz_aligned,mem,MMAP_READ|MMAP_WRITE);
-//     //将src的内容复制到mem中
-//     memmove(mem,src,sz);
+static void uvmfirst(AddrSpace*ar,uchar*src,uint sz){
+    //将sz向上取整为pagesize的整数倍
+    uint sz_aligned=ROUNDUP(sz,4096);
+    //分配一个物理页
+    char*mem=pgalloc(sz_aligned);
+    //将mem的所有值赋0
+    memset(mem,0,sz_aligned);
+    //构建虚拟地址和物理地址的映射
+    map(ar,ar->area.start,mem,MMAP_WRITE|MMAP_READ);
+    //将src的内容复制到mem中
+    memmove(mem,src,sz);
 
-// }
-
+}
+#else
 void ucreate() { 
 
     extern int tasks_id;
@@ -61,40 +63,44 @@ void ucreate() {
     task->ar=pmm->alloc(sizeof(AddrSpace));
 
     protect(task->ar);
-
+    
     void* entry = task->ar->area.start;
     //构建堆栈
     Area kstack=(Area){&task->context+1,task+1};
     task->context = ucontext(task->ar, kstack, entry);
 }
+#endif
 
 void uproc_init() {
     printf("uproc_init\n");
     vme_init(pgalloc, pgfree);
 
+#ifndef VME_V2
     ucreate();
-    // task_t*task=pmm->alloc(sizeof(task_t));
-    // //为task->ar分配空间
-    // task->ar=pmm->alloc(sizeof(AddrSpace));
-    // protect(task->ar);
+#else
+    task_t*task=pmm->alloc(sizeof(task_t));
+    //为task->ar分配空间
+    task->ar=pmm->alloc(sizeof(AddrSpace));
+    protect(task->ar);
 
-    // void (*entry)(void *arg) = (void*)task->ar->area.start;
-    // //打印entry地址
-    // printf("entry:%p\n",entry);
+    void (*entry)(void *arg) = (void*)task->ar->area.start;
+    //打印entry地址
+    printf("entry:%p\n",entry);
     
-    // kmt->create(task, "initcode", entry, NULL);
+    kmt->create(task, "initcode", entry, NULL);
 
-    //为task创建相应地址空间映射
-    // uvmfirst(task->ar,_init,_init_len);
-    // //为进程创建用户栈
-    // Context* ctx = task->context;
+    // 为task创建相应地址空间映射
+    uvmfirst(task->ar,_init,_init_len);
+    //为进程创建用户栈
+    Context* ctx = task->context;
 
-    // map(task->ar,(void*)(ctx->rsp-PAGESIZE),
-    //                     (void*)(ctx->rsp0-PAGESIZE),MMAP_READ|MMAP_WRITE);
+    map(task->ar,(void*)(ctx->rsp-PAGESIZE),
+                        (void*)(ctx->rsp0-PAGESIZE),MMAP_READ|MMAP_WRITE);
     // ctx->rsp -= 40;
     // ctx->rsp0 -= 40;
     // mappages(task->ar, (void*)ctx->rsp, PAGESIZE,
     //                         (void*)ctx->rsp0, MMAP_WRITE);
+#endif 
 }
 
 int uproc_kputc(task_t* task, char ch) { 

@@ -1,6 +1,8 @@
 #include <os.h>
 #include <devices.h>
+#ifndef VME_V2
 #include  "initcode.inc"
+#endif
 
 #define MB (1<<20)
 #define FL_IF          0x00000200  // Interrupt Enable
@@ -166,6 +168,7 @@ static Context* irq_pagefault(Event ev,Context*ctx){
   current_task->pa[current_task->page_cnt] = pa;
   current_task->page_cnt++;
 
+#ifndef VME_V2
   if(current_task->page_cnt==1){
       unsigned char* src = _init;
       unsigned int len = _init_len;
@@ -177,7 +180,7 @@ static Context* irq_pagefault(Event ev,Context*ctx){
       map(current_task->ar,va,pa,MMAP_WRITE|MMAP_READ);
       printf("mapping:%p->%p\n", va, pa);
   }
-
+#endif
   // panic("pagefault");
   return ctx;
 }
