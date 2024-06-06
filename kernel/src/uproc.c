@@ -95,7 +95,7 @@ void uproc_init() {
     Context* ctx = task->context;
 
     map(task->ar,(void*)(ctx->rsp-PAGESIZE),
-                        (void*)(ctx->rsp0),MMAP_READ|MMAP_WRITE);
+                        (void*)(ctx->rsp0-PAGESIZE),MMAP_READ|MMAP_WRITE);
     // ctx->rsp -= 40;
     // ctx->rsp0 -= 40;
     // mappages(task->ar, (void*)ctx->rsp, PAGESIZE,
