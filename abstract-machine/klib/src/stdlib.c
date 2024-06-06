@@ -45,6 +45,7 @@ int atoi(const char* nptr) {
   return x;
 }
 
+#ifdef MALLOC_DEBUG
 static void print_list() {
     Log("--------MEMORYLIST---------");
     for (header_t *pt = head; pt != NULL; pt = pt->next) {
@@ -52,6 +53,8 @@ static void print_list() {
     }
     Log("--------------------------");
 }
+#endif
+
 static int power_count(size_t size) { 
   int count = 0;
   unsigned int power = 1;
@@ -106,8 +109,11 @@ void *malloc(size_t size) {
 
   size_t real_size = size_align + sizeof(header_t);
   // Log("real_size:%d mb\n", real_size >> 20);
+
+#ifdef MALLOC_DEBUG
   printf("real_size:%d\n", real_size);
   print_list();
+#endif
   // 对list遍历，存在符合大小的块就直接分配
   for (p =prevp= head; p != NULL;prevp=p,p=p->next){
     if(p->size>=real_size){
@@ -124,8 +130,10 @@ void *malloc(size_t size) {
       // p->size -= real_size;
       // p->size = (p_end - real_size - (uintptr_t)p);
       p->size = ((uintptr_t)node-sizeof(header_t)- (uintptr_t)p);
+    #ifdef MALLOC_DEBUG 
       printf("malloc,%p,%p,%p\n", (void*)(node+1),
              (void*)((uintptr_t)node + real_size), (void*)size_align);
+    #endif
       return (void *)(node + 1);
     }
   }

@@ -66,5 +66,5 @@ static inline int64_t uptime() {
 
 //ulib.c
 int printf(const char *fmt, ...);
-
+size_t strlen(const char *s);
 #endif

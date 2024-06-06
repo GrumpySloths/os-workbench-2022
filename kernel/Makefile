@@ -26,10 +26,16 @@ image: git
 #vme_deubg
 CFLAGS+= -DVME_DEBUG
 
+#malloc_debug
+# CFLAGS+= -DMALLOC_DEBUG
+
+#log_debug
+# CFLAGS+= -DLOG_DEBUG
+
 #print_debug
-CFLAGS+= -DPRINT_DEBUG
+# CFLAGS+= -DPRINT_DEBUG
 #perror debug
-CFLAGS+=-DPERROR_DEBUG
+# CFLAGS+=-DPERROR_DEBUG
 
 test: git
 	@gcc $(shell find src/ -name "*.c")  \

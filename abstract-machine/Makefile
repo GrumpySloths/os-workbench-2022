@@ -87,9 +87,10 @@ CFLAGS   += -ggdb -O2 -MMD -Wall -Werror $(INCFLAGS) \
             -Wno-main -U_FORTIFY_SOURCE
 CXXFLAGS +=  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
 ASFLAGS  += -MMD -g $(INCFLAGS)
-# ifdef DEBUG
-# CFLAGS += -DDEBUG
-# endif
+
+# malloc debug
+# CFLAGS += -DMALLOC_DEBUG
+
 ## 4. Arch-Specific Configurations
 
 ### Paste in arch-specific configurations (e.g., from `scripts/x86_64-qemu.mk`)
