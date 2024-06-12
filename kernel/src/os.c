@@ -202,13 +202,20 @@ static bool sane_context(Context* ctx) {
 
 //打印context的通用寄存器
 static void print_context(Context*ctx){
+  int reg_value;
+  
+  // 使用内联汇编读取eax寄存器的值
+  asm("movl %%eax, %0" : "=r" (reg_value));
+  
+  // 打印寄存器的值
+  perror("Value in register eax: %d\n", reg_value);
 
-  perror("rsp:%p\n",ctx->rsp);
-  perror("rsp0:%p\n",ctx->rsp0);
-  perror("rip:%p\n",ctx->rip);
-  perror("rflags:%p\n",ctx->rflags);
-  perror("rdi:%p\n",ctx->rdi);
-  perror("cr3:%p\n",ctx->cr3);
+  perror("ctx.rsp:%p\n",ctx->rsp);
+  perror("ctx.rsp0:%p\n",ctx->rsp0);
+  perror("ctx.rip:%p\n",ctx->rip);
+  perror("ctx.rflags:%p\n",ctx->rflags);
+  perror("ctx.rdi:%p\n",ctx->rdi);
+  perror("ctx.cr3:%p\n",ctx->cr3);
 
 }
 
