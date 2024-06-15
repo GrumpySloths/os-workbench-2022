@@ -130,6 +130,10 @@ int uproc_fork(task_t* task) {
         child->pa[i]=pa;
         child->page_cnt++;
     }
+    //更新轮询链表
+    for (int i = 0; i < tasks_id;i++){
+      tasks[i]->next=tasks[(i+1)%tasks_id];
+    } 
 
     return child_pid;
 }
