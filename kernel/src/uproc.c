@@ -52,7 +52,7 @@ static void uvmfirst(AddrSpace*ar,uchar*src,uint sz){
 
 }
 #else
-void ucreate() { 
+int ucreate() { 
 
     extern int tasks_id;
     extern task_t* tasks[100];
@@ -68,6 +68,8 @@ void ucreate() {
     //构建堆栈
     Area kstack=(Area){&task->context+1,task+1};
     task->context = ucontext(task->ar, kstack, entry);
+
+    return tasks_id - 1;
 }
 #endif
 
@@ -113,8 +115,28 @@ int uproc_getpid(task_t*task){
 
 }
 
+int uproc_fork(task_t* task) {
+    int child_pid = ucreate(); 
+    //修改 tasks[child_pid],使其上下文和内存与父进程一致
+    task_t* child = tasks[child_pid];
+    memcpy(child->context,task->context,sizeof(Context));
+    child->context->rax = 0;
+    //复制父进程的地址空间
+    for (int i = 0; i < task->page_cnt;i++){
+        void*pa=pmm->alloc(PAGESIZE);
+        memcpy(pa,task->pa[i],PAGESIZE);
+        map(child->ar,task->va[i],pa,MMAP_WRITE|MMAP_READ);
+        child->va[i]=task->va[i];
+        child->pa[i]=pa;
+        child->page_cnt++;
+    }
+
+    return child_pid;
+}
+
 MODULE_DEF(uproc) = {
     .init=uproc_init,
     .kputc=uproc_kputc,
     .getpid=uproc_getpid,
+    .fork=uproc_fork,
 };

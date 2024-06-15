@@ -140,7 +140,7 @@ static Context* irq_syscall(Event ev,Context*ctx){
       uproc->getpid(current_task);
       break;
     case SYS_fork:
-        ctx->rax = 0;
+        ctx->rax = uproc->fork(current_task);
         break;
     case SYS_sleep:
         ctx->rax = 0;
