@@ -202,9 +202,9 @@ static bool sane_context(Context* ctx) {
 
 //打印context的通用寄存器
 static void print_context(Context*ctx){
-  unsigned long rsp_value;
-  asm("movq %%rsp, %0" : "=r" (rsp_value));
-  perror("RSP register value: 0x%lx\n", rsp_value);
+  // unsigned long rsp_value;
+  // asm("movq %%rsp, %0" : "=r" (rsp_value));
+  // perror("RSP register value: 0x%lx\n", rsp_value);
 
   perror("ctx.rsp:%p\n",ctx->rsp);
   perror("ctx.rsp0:%p\n",ctx->rsp0);
@@ -212,6 +212,13 @@ static void print_context(Context*ctx){
   perror("ctx.rflags:%p\n",ctx->rflags);
   perror("ctx.rdi:%p\n",ctx->rdi);
   perror("ctx.cr3:%p\n",ctx->cr3);
+  //打印当前cpu所执行task的context的上述寄存器的值
+  perror("current_task->context.rsp:%p\n",current_task->context->rsp);
+  perror("current_task->context.rsp0:%p\n",current_task->context->rsp0);
+  perror("current_task->context.rip:%p\n",current_task->context->rip);
+  perror("current_task->context.rflags:%p\n",current_task->context->rflags);  
+  perror("current_task->context.rdi:%p\n",current_task->context->rdi);
+  perror("current_task->context.cr3:%p\n",current_task->context->cr3);
 
 }
 
