@@ -190,7 +190,8 @@ static bool sane_context(Context* ctx) {
 
   if ((ctx->rflags & FL_IF) == 0){
     perror("interrupt is closed");
-    return true;
+    ctx->rflags|=FL_IF;
+    // return true;
   }
   if(ctx->cr3==(void*)KERNEL_PAGETABLE){
     perror("cr3 is not set");
