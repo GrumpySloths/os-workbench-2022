@@ -188,11 +188,12 @@ static Context* irq_pagefault(Event ev,Context*ctx){
 //检测返回的context是否合法
 static bool sane_context(Context* ctx) { 
 
-  // if ((ctx->rflags & FL_IF) == 0){
-  //   perror("interrupt is closed");
-  //   // ctx->rflags|=FL_IF;
-  //   return true;
-  // }
+  if ((ctx->rflags & FL_IF) == 0){
+    perror("interrupt is closed");
+    iset(true);
+    // ctx->rflags|=FL_IF;
+    // return true;
+  }
   if(ctx->cr3==(void*)KERNEL_PAGETABLE){
     perror("cr3 is not set");
     return true;
