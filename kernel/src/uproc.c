@@ -119,8 +119,10 @@ int uproc_fork(task_t* task) {
     int child_pid = ucreate(); 
     //修改 tasks[child_pid],使其上下文和内存与父进程一致
     task_t* child = tasks[child_pid];
-    memcpy(child->context,task->context,sizeof(Context));
+    void* cr3 = child->ar->ptr;
+    memcpy(child->context, task->context, sizeof(Context));
     child->context->rax = 0;
+    child->context->cr3=cr3;
     //复制父进程的地址空间
     for (int i = 0; i < task->page_cnt;i++){
         void*pa=pmm->alloc(PAGESIZE);
