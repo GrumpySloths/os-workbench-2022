@@ -143,7 +143,7 @@ static Context* irq_syscall(Event ev,Context*ctx){
         ctx->rax = uproc->fork(current_task);
         break;
     case SYS_sleep:
-        ctx->rax = 0;
+        ctx->rax =uproc->sleep(current_task,ctx->rdi); 
         break;
     default:
         // 打印rdi的值

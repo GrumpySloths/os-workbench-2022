@@ -142,6 +142,14 @@ int uproc_fork(task_t* task) {
     return child_pid;
 }
 
+int uproc_sleep(task_t* task, int seconds) {
+    uint64_t cur_time=io_read(AM_TIMER_UPTIME).us/1000;
+
+    while(io_read(AM_TIMER_UPTIME).us/1000-cur_time<seconds*1000);
+    
+    return 0;
+}
+
 MODULE_DEF(uproc) = {
     .init=uproc_init,
     .kputc=uproc_kputc,
