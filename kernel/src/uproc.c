@@ -143,12 +143,12 @@ int uproc_fork(task_t* task) {
 }
 
 int uproc_sleep(task_t* task, int seconds) {
-    // printf("sleep is called\n");
+    printf("sleep is called\n");
     uint64_t cur_time = io_read(AM_TIMER_UPTIME).us / 1000;
 
     while(io_read(AM_TIMER_UPTIME).us/1000-cur_time<seconds*1000);
 
-    // printf("sleep is over\n");
+    printf("sleep is over\n");
 
     return 0;
 }
