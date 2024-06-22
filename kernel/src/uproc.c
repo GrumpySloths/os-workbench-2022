@@ -146,7 +146,7 @@ int uproc_sleep(task_t* task, int seconds) {
     // printf("sleep is called\n");
     uint64_t cur_time = io_read(AM_TIMER_UPTIME).us / 1000;
 
-    while(io_read(AM_TIMER_UPTIME).us/1000-cur_time<seconds*500);
+    while(io_read(AM_TIMER_UPTIME).us/1000-cur_time<seconds*200);
 
     printf("sleep is over\n");
 
