@@ -156,4 +156,5 @@ MODULE_DEF(uproc) = {
     .kputc=uproc_kputc,
     .getpid=uproc_getpid,
     .fork=uproc_fork,
+    .sleep=uproc_sleep,
 };
