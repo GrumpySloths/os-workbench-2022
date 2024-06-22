@@ -143,7 +143,8 @@ static Context* irq_syscall(Event ev,Context*ctx){
         ctx->rax = uproc->fork(current_task);
         break;
     case SYS_sleep:
-        ctx->rax =uproc->sleep(current_task,ctx->rdi);
+        printf("sleep ic called in syscall\n");
+        ctx->rax = uproc->sleep(current_task, ctx->rdi);
         // ctx->rax = 0;
         break;
     default:
