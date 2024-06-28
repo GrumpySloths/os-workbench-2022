@@ -7,6 +7,7 @@
 #define MB (1<<20)
 #define FL_IF          0x00000200  // Interrupt Enable
 #define KERNEL_PAGETABLE 0x1000
+#define KERNEL_BOUND 0x008000000000
 
 #ifndef TEST
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
@@ -197,6 +198,11 @@ static bool sane_context(Context* ctx) {
   }
   if(ctx->cr3==(void*)KERNEL_PAGETABLE){
     perror("cr3 is not set");
+    return true;
+  }
+  //检查rip 是否在用户空间
+  if(ctx->rip<KERNEL_BOUND){
+    perror("rip is not in user space");
     return true;
   }
 
