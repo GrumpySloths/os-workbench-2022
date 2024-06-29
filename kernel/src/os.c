@@ -322,8 +322,8 @@ static Context* os_trap(Event ev, Context* ctx) {
   //检查中断是否开启
   panic_on(sane_context(next), "returning to invalid context");
 
-  // printf("next context:\n");
-  // print_context(next);
+  printf("next context:\n");
+  print_context(next);
   
   return next;
 }
