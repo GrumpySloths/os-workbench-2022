@@ -279,10 +279,13 @@ static void os_run() {
 
 // static int msg_counter = 0;
 static Context* os_trap(Event ev, Context* ctx) {
-
+    
     //打印寄存器现场
     print_context(ctx);
-
+    //检查current_task是否合法
+    if(current_task){
+      panic_on(sane_context(current_task->context), "current task is invalid");
+    }
     Context* next = NULL;
     // 遍历handlers,当ev与handlers[i]->event相等时，调用handlers[i]->handler
     for (int i = 0; i < handlers_id; i++) {
@@ -319,8 +322,8 @@ static Context* os_trap(Event ev, Context* ctx) {
   //检查中断是否开启
   panic_on(sane_context(next), "returning to invalid context");
 
-  printf("next context:\n");
-  print_context(next);
+  // printf("next context:\n");
+  // print_context(next);
   
   return next;
 }
