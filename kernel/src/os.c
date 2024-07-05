@@ -325,7 +325,7 @@ static Context* os_trap(Event ev, Context* ctx) {
   panic_on(sane_context(next), "returning to invalid context");
 
   printf("next context:\n");
-  print_context(next);
+  // print_context(next);
   
   return next;
 }
