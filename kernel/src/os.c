@@ -280,6 +280,7 @@ static void os_run() {
 // static int msg_counter = 0;
 static Context* os_trap(Event ev, Context* ctx) {
     
+    // 打印当前的event msg
     printk("event %d: %s\n", ev.event, ev.msg);
     //打印寄存器现场
     print_context(ctx);
