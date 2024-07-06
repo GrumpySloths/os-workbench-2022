@@ -128,9 +128,10 @@ static Context* irq_iodev(Event ev,Context*ctx){
 
 //注册syscall中断函数
 static Context* irq_syscall(Event ev,Context*ctx){
-
-  //根据ctx.GPR1 来执行相应的系统调用
-  switch(ctx->rax){
+    //尝试在syscall中断函数中关闭中断
+    iset(false);
+    // 根据ctx.GPR1 来执行相应的系统调用
+    switch (ctx->rax) {
     case SYS_exit:
       printf("syscall exit\n");
       break;
@@ -154,6 +155,8 @@ static Context* irq_syscall(Event ev,Context*ctx){
         panic("undefined syscall");
         break;
   }
+
+  iset(true);
   return ctx;
 }
 
