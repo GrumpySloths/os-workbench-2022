@@ -128,9 +128,10 @@ static Context* irq_iodev(Event ev,Context*ctx){
 
 //注册syscall中断函数
 static Context* irq_syscall(Event ev,Context*ctx){
-    //尝试在syscall中断函数中关闭中断
-    iset(false);
-    // 根据ctx.GPR1 来执行相应的系统调用
+    panic_on(ienabled(), "interrupt is open");
+    // 尝试在syscall中断函数中关闭中断
+    //  iset(false);
+    //  根据ctx.GPR1 来执行相应的系统调用
     switch (ctx->rax) {
     case SYS_exit:
       printf("syscall exit\n");
@@ -156,7 +157,7 @@ static Context* irq_syscall(Event ev,Context*ctx){
         break;
   }
 
-  iset(true);
+  // iset(true);
   return ctx;
 }
 
