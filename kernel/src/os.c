@@ -89,6 +89,7 @@ static void tty_reader(void *arg) {
 
 //注册 timer 中断函数
 static Context* irq_timer(Event ev,Context*ctx){
+  panic_on(ienabled(), "interrupt is open");
   extern task_t*tasks[100];
   if (!current_task)
       current_task = tasks[0];
