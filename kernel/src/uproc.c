@@ -139,8 +139,8 @@ int uproc_fork(task_t* task,Context*ctx) {
       tasks[i]->next=tasks[(i+1)%tasks_id];
     } 
     //检查child的context是否被正确的设置
+    sane_context(child->context);
 
-    
     return child_pid;
 }
 

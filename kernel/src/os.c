@@ -193,7 +193,7 @@ static Context* irq_pagefault(Event ev,Context*ctx){
 }
 
 //检测返回的context是否合法
-static bool sane_context(Context* ctx) { 
+bool sane_context(Context* ctx) { 
 
   if ((ctx->rflags & FL_IF) == 0){
     perror("interrupt is closed");

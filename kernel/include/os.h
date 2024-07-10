@@ -1,8 +1,11 @@
 #include <common.h>
 
+
 #define FL_IF          0x00000200  // Interrupt Enable
 #define KERNEL_PAGETABLE 0x1000
 #define KERNEL_BOUND 0x008000000000
+
+bool sane_context(Context* ctx);
 union task {
     // TODO
     struct {
