@@ -115,13 +115,13 @@ int uproc_getpid(task_t*task){
 
 }
 
-int uproc_fork(task_t* task) {
+int uproc_fork(task_t* task,Context*ctx) {
     int child_pid = ucreate(); 
     //修改 tasks[child_pid],使其上下文和内存与父进程一致
     task_t* child = tasks[child_pid];
     void* cr3 = child->ar->ptr;
     uint64_t rsp0 = child->context->rsp0;
-    memcpy(child->context, task->context, sizeof(Context));
+    memcpy(child->context, ctx, sizeof(Context));
     child->context->rax = 0;
     child->context->cr3=cr3;
     child->context->rsp0 = rsp0;

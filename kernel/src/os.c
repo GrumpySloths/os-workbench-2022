@@ -145,7 +145,7 @@ static Context* irq_syscall(Event ev,Context*ctx){
       break;
     case SYS_fork:
         panic_on(ienabled(), "interrupt is open");
-        ctx->rax = uproc->fork(current_task);
+        ctx->rax = uproc->fork(current_task , ctx);
         break;
     case SYS_sleep:
         panic_on(ienabled(), "interrupt is open");

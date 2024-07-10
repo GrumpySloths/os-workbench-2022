@@ -53,7 +53,7 @@ MODULE(dev) {
 MODULE(uproc) {
   void (*init)();
   int (*kputc)(task_t *task, char ch);
-  int (*fork)(task_t *task);
+  int (*fork)(task_t *task,Context*ctx);
   int (*wait)(task_t *task, int *status);
   int (*exit)(task_t *task, int status);
   int (*kill)(task_t *task, int pid);
