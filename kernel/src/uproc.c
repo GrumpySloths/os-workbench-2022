@@ -138,8 +138,9 @@ int uproc_fork(task_t* task,Context*ctx) {
     for (int i = 0; i < tasks_id;i++){
       tasks[i]->next=tasks[(i+1)%tasks_id];
     } 
-    //检查child的context是否被正确的设置
+    //检查child的context和页表是否被正确的设置
     sane_context(child->context);
+    assert(child->page_cnt > 0);
 
     return child_pid;
 }
