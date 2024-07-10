@@ -5,9 +5,7 @@
 #endif
 
 #define MB (1<<20)
-#define FL_IF          0x00000200  // Interrupt Enable
-#define KERNEL_PAGETABLE 0x1000
-#define KERNEL_BOUND 0x008000000000
+
 
 #ifndef TEST
 uint64_t uptime() { return io_read(AM_TIMER_UPTIME).us/1000; }
