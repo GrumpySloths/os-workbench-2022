@@ -201,8 +201,8 @@ bool sane_context(Context* ctx) {
   asm("movq %%rax, %0" : "=r" (rax_value));
   
   // 打印 RAX 寄存器的值
-  printf("The value of RAX register is: %lu\n", rax_value);
-  
+  printf("The value of RAX register is: %p\n", rax_value);
+
   if ((ctx->rflags & FL_IF) == 0){
     perror("interrupt is closed");
     printf("interrupt is closed\n");
