@@ -5,6 +5,15 @@ void dfs_test();
 
 int main() {
   printf("Hello from user\n");
+  sleep(2);
+  printf("it is a test\n");
+  printf("▇▇▇");
+  printf("▇▇▇");
+  for (int i = 0; i < 1000;i++){
+    printf("debug: %d\n", i);
+    // sleep(1);
+  }
+  // sleep(2);
   // hello_test();
   // dfs_test();
   while (1);
@@ -23,7 +32,7 @@ void hello_test() {
 
   while (1) {
     printf(fmt, ++x);
-    sleep(2);
+    sleep(1);
   }
 }
 

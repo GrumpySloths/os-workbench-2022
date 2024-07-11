@@ -1,0 +1,587 @@
+当前的问题:在最开始运行阶段current_task->context的值即使在已经load了最初设定的
+context后也会突然被神秘的覆写，但在最开始运行的阶段并没有造成程序崩溃，在current_task->context
+的值突然恢复正常后在程序即将崩溃的时刻其值又被神秘的覆写了(是否因为被神秘覆写而导致最终
+程序崩溃存疑，因为之前确实是在正常work即使出现这种情况，反而是在fork后进行sleep会偶然出现
+这种状况)
+
+
+(base) ➜  kernel git:(b1) ✗ make run
+# Building kernel-run [x86_64-qemu]
++ CC src/os.c
+# Building am-archive [x86_64-qemu]
+# Building klib-archive [x86_64-qemu]
++ LD -> build/kernel-x86_64-qemu.elf
+# Creating image [x86_64-qemu]
++ CREATE -> build/kernel-x86_64-qemu
+pmsize:131072000
+first initialization
+uproc_init
+os_run start
+event 5: timer interrupt (lapic)
+nDebug1: ctx.rsp:0x20f110
+Debug1: ctx.rsp0:0x0
+Debug1: ctx.rip:0x100fb2
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x1
+Debug1: ctx.cr3:0x1000
+Debug1: current_task->context.rsp:0xf000ff53f000ff53
+Debug1: current_task->context.rsp0:0xf000ff53f000ff53
+Debug1: current_task->context.rip:0xf000ff53f000ff53
+Debug1: current_task->context.rflags:0xf000ff53f000ff53
+Debug1: current_task->context.rdi:0xf000d442f000ef57
+Debug1: current_task->context.cr3:0xf000ff53f000ff53
+next context:
+event 3: PF #14, page fault, @cause: PROT_XXX
+nDebug1: ctx.rsp:0x108000000000
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x100000000000
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x0
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x202
+Debug1: current_task->context.rsp0:0x23
+Debug1: current_task->context.rip:0x4
+Debug1: current_task->context.rflags:0x1b
+Debug1: current_task->context.rdi:0x0
+Debug1: current_task->context.cr3:0x0
+fault_addr:0x100000000000,cause:0x1,cur_rip:0x100000000000
+err msg:PF #14, page fault, @cause: PROT_XXX
+mapping:0x100000000000->0x7ff8000
+nnext context:
+event 3: PF #14, page fault, @cause: PROT_XXX
+nDebug1: ctx.rsp:0x108000000000
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x100000000000
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x0
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x202
+Debug1: current_task->context.rsp0:0x23
+Debug1: current_task->context.rip:0x6
+Debug1: current_task->context.rflags:0x1b
+Debug1: current_task->context.rdi:0x0
+Debug1: current_task->context.cr3:0x0
+fault_addr:0x107ffffffff8,cause:0x2,cur_rip:0x100000000000
+err msg:PF #14, page fault, @cause: PROT_XXX
+mapping:0x107ffffff000->0x7ff0000
+nnext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x48
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x206
+Debug1: current_task->context.rsp0:0x23
+Debug1: current_task->context.rip:0x0
+Debug1: current_task->context.rflags:0x1b
+Debug1: current_task->context.rdi:0x0
+Debug1: current_task->context.cr3:0x48
+Hnext context:
+event 5: timer interrupt (lapic)
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x48
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x206
+Debug1: current_task->context.rsp0:0x23
+Debug1: current_task->context.rip:0x0
+Debug1: current_task->context.rflags:0x1b
+Debug1: current_task->context.rdi:0x0
+Debug1: current_task->context.cr3:0x48
+next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x65
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x65
+Debug1: current_task->context.cr3:0x7ffa005
+enext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x6c
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x6c
+Debug1: current_task->context.cr3:0x7ffa005
+lnext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x6c
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x6c
+Debug1: current_task->context.cr3:0x7ffa005
+lnext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x6f
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x6f
+Debug1: current_task->context.cr3:0x7ffa005
+onext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x20
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x20
+Debug1: current_task->context.cr3:0x7ffa005
+ next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x66
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x66
+Debug1: current_task->context.cr3:0x7ffa005
+fnext context:
+event 5: timer interrupt (lapic)
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x66
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x66
+Debug1: current_task->context.cr3:0x7ffa005
+next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x72
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x72
+Debug1: current_task->context.cr3:0x7ffa005
+rnext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x6f
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x6f
+Debug1: current_task->context.cr3:0x7ffa005
+onext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x212
+Debug1: ctx.rdi:0x6d
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x212
+Debug1: current_task->context.rdi:0x6d
+Debug1: current_task->context.cr3:0x7ffa005
+mnext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x20
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x20
+Debug1: current_task->context.cr3:0x7ffa005
+ next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x75
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x75
+Debug1: current_task->context.cr3:0x7ffa005
+unext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x73
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x73
+Debug1: current_task->context.cr3:0x7ffa005
+snext context:
+event 5: timer interrupt (lapic)
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x73
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x73
+Debug1: current_task->context.cr3:0x7ffa005
+next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x65
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x65
+Debug1: current_task->context.cr3:0x7ffa005
+enext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x72
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x72
+Debug1: current_task->context.cr3:0x7ffa005
+rnext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0xa
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0xa
+Debug1: current_task->context.cr3:0x7ffa005
+
+next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x69
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x69
+Debug1: current_task->context.cr3:0x7ffa005
+inext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x74
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x74
+Debug1: current_task->context.cr3:0x7ffa005
+tnext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x20
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x20
+Debug1: current_task->context.cr3:0x7ffa005
+ next context:
+event 5: timer interrupt (lapic)
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x20
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x20
+Debug1: current_task->context.cr3:0x7ffa005
+next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x69
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x69
+Debug1: current_task->context.cr3:0x7ffa005
+inext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x73
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x73
+Debug1: current_task->context.cr3:0x7ffa005
+snext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x20
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x20
+Debug1: current_task->context.cr3:0x7ffa005
+ next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x61
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x61
+Debug1: current_task->context.cr3:0x7ffa005
+anext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x20
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x20
+Debug1: current_task->context.cr3:0x7ffa005
+ next context:
+event 5: timer interrupt (lapic)
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x20
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x20
+Debug1: current_task->context.cr3:0x7ffa005
+next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x216
+Debug1: ctx.rdi:0x74
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x216
+Debug1: current_task->context.rdi:0x74
+Debug1: current_task->context.cr3:0x7ffa005
+tnext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x65
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x65
+Debug1: current_task->context.cr3:0x7ffa005
+enext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x73
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x73
+Debug1: current_task->context.cr3:0x7ffa005
+snext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x206
+Debug1: ctx.rdi:0x74
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x206
+Debug1: current_task->context.rdi:0x74
+Debug1: current_task->context.cr3:0x7ffa005
+tnext context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffff70
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x1000000005c9
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0xa
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffff70
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x1000000005c9
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0xa
+Debug1: current_task->context.cr3:0x7ffa005
+
+next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffffd0
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x100000000036
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x0
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffffd0
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x100000000036
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x0
+Debug1: current_task->context.cr3:0x7ffa005
+next context:
+event 5: timer interrupt (lapic)
+nDebug1: ctx.rsp:0x107fffffffd0
+Debug1: ctx.rsp0:0x7ffe000
+Debug1: ctx.rip:0x100000000036
+Debug1: ctx.rflags:0x202
+Debug1: ctx.rdi:0x0
+Debug1: ctx.cr3:0x7ffa005
+Debug1: current_task->context.rsp:0x107fffffffd0
+Debug1: current_task->context.rsp0:0x7ffe000
+Debug1: current_task->context.rip:0x100000000036
+Debug1: current_task->context.rflags:0x202
+Debug1: current_task->context.rdi:0x0
+Debug1: current_task->context.cr3:0x7ffa005
+next context:
+event 2: int $0x80 system call
+nDebug1: ctx.rsp:0x107fffffffd0
+Debug1: ctx.rsp0:0x7fea000
+Debug1: ctx.rip:0x10000000004d
+Debug1: ctx.rflags:0x246
+Debug1: ctx.rdi:0x1
+Debug1: ctx.cr3:0x7fe6005
+Debug1: current_task->context.rsp:0x246
+Debug1: current_task->context.rsp0:0x23
+Debug1: current_task->context.rip:0x0
+Debug1: current_task->context.rflags:0x1b
+Debug1: current_task->context.rdi:0x0
+Debug1: current_task->context.cr3:0x1
+sleep is called

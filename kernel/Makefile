@@ -26,6 +26,9 @@ image: git
 #vme_deubg
 CFLAGS+= -DVME_DEBUG
 
+#vme_v2
+# CFLAGS+= -DVME_V2
+
 #malloc_debug
 # CFLAGS+= -DMALLOC_DEBUG
 
@@ -33,7 +36,7 @@ CFLAGS+= -DVME_DEBUG
 # CFLAGS+= -DLOG_DEBUG
 
 #print_debug
-# CFLAGS+= -DPRINT_DEBUG
+CFLAGS+= -DPRINT_DEBUG
 #perror debug
 # CFLAGS+=-DPERROR_DEBUG
 

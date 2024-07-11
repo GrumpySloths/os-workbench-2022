@@ -1,0 +1,82 @@
+问题：即使函数没有经历fork调用在运行比较短的时间内同样出现问题
+
+
+
+sleep is over
+event 5: timer interrupt (lapic)
+fevent 2: int $0x80 system call
+fdevent 2: int $0x80 system call
+feevent 2: int $0x80 system call
+fbevent 2: int $0x80 system call
+fuevent 2: int $0x80 system call
+fgevent 2: int $0x80 system call
+f:event 2: int $0x80 system call
+f event 2: int $0x80 system call
+f2event 2: int $0x80 system call
+f0event 2: int $0x80 system call
+f
+event 2: int $0x80 system call
+fevent 2: int $0x80 system call
+fsleep is called
+sleep is over
+event 5: timer interrupt (lapic)
+fevent 2: int $0x80 system call
+fdevent 2: int $0x80 system call
+feevent 2: int $0x80 system call
+fbevent 2: int $0x80 system call
+fuevent 2: int $0x80 system call
+fgevent 2: int $0x80 system call
+f:event 2: int $0x80 system call
+f event 2: int $0x80 system call
+f2event 2: int $0x80 system call
+f1event 2: int $0x80 system call
+f
+event 2: int $0x80 system call
+fevent 5: timer interrupt (lapic)
+fevent 2: int $0x80 system call
+fsleep is called
+sleep is over
+event 5: timer interrupt (lapic)
+fevent 2: int $0x80 system call
+fdevent 2: int $0x80 system call
+feevent 2: int $0x80 system call
+fbevent 2: int $0x80 system call
+fuevent 2: int $0x80 system call
+fgevent 2: int $0x80 system call
+f:event 2: int $0x80 system call
+f event 2: int $0x80 system call
+f2event 2: int $0x80 system call
+f2event 2: int $0x80 system call
+f
+event 2: int $0x80 system call
+fevent 2: int $0x80 system call
+fsleep is called
+sleep is over
+event 5: timer interrupt (lapic)
+fevent 2: int $0x80 system call
+fdevent 2: int $0x80 system call
+feevent 2: int $0x80 system call
+fbevent 2: int $0x80 system call
+fuevent 2: int $0x80 system call
+fgevent 2: int $0x80 system call
+f:event 2: int $0x80 system call
+f event 2: int $0x80 system call
+f2event 2: int $0x80 system call
+f3event 2: int $0x80 system call
+f
+event 2: int $0x80 system call
+fevent 2: int $0x80 system call
+fsleep is called
+sleep is over
+event 5: timer interrupt (lapic)
+fevent 2: int $0x80 system call
+fdevent 2: int $0x80 system call
+feevent 2: int $0x80 system call
+fbevent 2: int $0x80 system call
+fuevent 2: int $0x80 system call
+fgevent 2: int $0x80 system call
+f:event 2: int $0x80 system call
+f event 2: int $0x80 system call
+f2event 5: timer interrupt (lapic)
+fAM Panic: returning to invalid context @ /home/niujh/csapp/OS_jyy/os-workbench-2022/kernel/src/os.c:330  
+CPU #0 Halt (01).
