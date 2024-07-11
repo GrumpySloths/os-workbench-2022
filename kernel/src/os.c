@@ -197,17 +197,20 @@ bool sane_context(Context* ctx) {
 
   if ((ctx->rflags & FL_IF) == 0){
     perror("interrupt is closed");
+    printf("interrupt is closed\n");
     // iset(true);
     // ctx->rflags|=FL_IF;
     return true;
   }
   if(ctx->cr3==(void*)KERNEL_PAGETABLE){
     perror("cr3 is not set");
+    printf("cr3 is not set\n");
     return true;
   }
   //检查rip 是否在用户空间
   if(ctx->rip<KERNEL_BOUND){
     perror("rip is not in user space");
+    printf("rip is not in user space\n");
     return true;
   }
 
