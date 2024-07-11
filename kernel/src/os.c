@@ -195,13 +195,13 @@ static Context* irq_pagefault(Event ev,Context*ctx){
 //检测返回的context是否合法
 bool sane_context(Context* ctx) { 
 
-  unsigned long rax_value;
-  
-  // 使用内联汇编将 RAX 寄存器的值存储到 rax_value 变量中
-  asm("movq %%rax, %0" : "=r" (rax_value));
-  
-  // 打印 RAX 寄存器的值
-  printf("The value of RAX register is: %p\n", rax_value);
+    unsigned long rip;
+    
+    // 内联汇编来获取RIP寄存器的值
+    asm("movq $., %0" : "=r" (rip));
+    
+    // 打印RIP寄存器的值
+    printf("RIP 寄存器的值: 0x%d\n", rip);
 
   if ((ctx->rflags & FL_IF) == 0){
     perror("interrupt is closed");
