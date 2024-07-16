@@ -59,14 +59,15 @@ int ucreate() {
 
     task_t* task = pmm->alloc(sizeof(task_t)); 
     tasks[tasks_id++] = task;
-
+    
     task->ar=pmm->alloc(sizeof(AddrSpace));
 
     protect(task->ar);
     
     void* entry = task->ar->area.start;
     //构建堆栈
-    Area kstack=(Area){&task->context+1,task+1};
+    // Area kstack=(Area){&task->context+1,task+1};
+    Area kstack = (Area){&task->stack, &(task->stack[STACK_SIZE - 1])};
     task->context = ucontext(task->ar, kstack, entry);
 
     return tasks_id - 1;
