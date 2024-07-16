@@ -217,6 +217,14 @@ bool sane_context(Context* ctx) {
   return false;
 }
 
+//检查堆栈是否溢出
+void canary_check(struct stack* s) { 
+    u32* ptr = (u32*)s;
+    for (int i = 0; i < CANARY_SZ;i++){
+        panic_on(ptr[BOTTOM - i] != MAGIC, "stack underflow");
+        panic_on(ptr[i]!=MAGIC,"stack overflow");
+    }
+}
 //打印context的通用寄存器
 static void print_context(Context*ctx){
   // unsigned long rsp_value;
@@ -331,7 +339,8 @@ static Context* os_trap(Event ev, Context* ctx) {
   panic_on(!next, "returning NULL context");
   //检查中断是否开启
   panic_on(sane_context(next), "returning to invalid context");
-
+  //检查堆栈是否溢出
+  canary_check((struct stack*)&(current_task->stack));
   // printf("next context:\n");
   // print_context(next);
   

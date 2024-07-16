@@ -5,7 +5,14 @@
 #define KERNEL_PAGETABLE 0x1000
 #define KERNEL_BOUND 0x008000000000
 
+struct stack {
+    char data[STACK_SIZE];
+};
+
 bool sane_context(Context* ctx);
+void canary_init(struct stack* s);
+void canary_check(struct stack* s);
+
 struct task {
     // TODO
     struct {

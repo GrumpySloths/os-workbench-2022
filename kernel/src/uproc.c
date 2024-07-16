@@ -20,6 +20,13 @@ static void pgfree(void* ptr){
     pmm->free(ptr);
 }
 
+void canary_init(struct stack* s) { 
+    u32* ptr = (u32*)s;
+    for (int i = 0; i < CANARY_SZ;i++){
+        ptr[BOTTOM - i] = ptr[i] = MAGIC;
+    }
+}
+
 //根据给定size的大小创建多页映射
 // static int mappages(AddrSpace*ar,void*va,uint size,void*pa,int prot){
     
@@ -67,9 +74,11 @@ int ucreate() {
     void* entry = task->ar->area.start;
     //构建堆栈
     // Area kstack=(Area){&task->context+1,task+1};
-    Area kstack = (Area){&task->stack, &(task->stack[STACK_SIZE - 1])};
+    Area kstack = (Area){&task->stack, &(task->stack[STACK_SIZE -CANARY_SZ- 1])};
     task->context = ucontext(task->ar, kstack, entry);
-
+    //为task的堆栈添加canary保护
+    canary_init((struct stack*)&task->stack);
+    
     return tasks_id - 1;
 }
 #endif
