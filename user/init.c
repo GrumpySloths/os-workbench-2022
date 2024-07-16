@@ -2,6 +2,15 @@
 
 void hello_test();
 void dfs_test();
+// 构建一个会不断递归导致栈溢出的函数
+void recursive_function() {
+    int array[100]; // 每次递归调用都在栈上分配一个较大的数组，消耗栈空间
+    for (int i = 0; i < 100;i++){
+        array[i] = 10;
+    }
+    printf("array[0]: %d\n", array[0]);
+    recursive_function();
+}
 
 int main() {
   printf("Hello from user\n");
@@ -9,9 +18,10 @@ int main() {
   printf("it is a test\n");
   printf("▇▇▇");
   printf("▇▇▇");
-  for (int i = 0; i < 1000;i++){
-    printf("debug: %d\n", i);
-    // sleep(1);
+  // recursive_function();
+  for (int i = 0; i < 1000000; i++) {
+      printf("debug: %d\n", i);
+      // sleep(1);
   }
   // sleep(2);
   // hello_test();

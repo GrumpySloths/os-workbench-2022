@@ -11,11 +11,16 @@
   #define MB (1<<20)
 #endif
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
+
+#define MAGIC 0x12345678
+
+typedef uint32_t u32;
 static unsigned long int next = 1;
 // 分配区域信息
-typedef struct __header_t{
+typedef struct __header_t {
     uint32_t size;
-    int magic; //用于sanity check,检查内存非法访问或重复释放分配等出乎意料问题
+    int magic;  // 用于sanity
+                // check,检查内存非法访问或重复释放分配等出乎意料问题
     struct __header_t *next;
 } header_t;
 // free list node
@@ -134,6 +139,13 @@ void *malloc(size_t size) {
       printf("malloc,%p,%p,%p\n", (void*)(node+1),
              (void*)((uintptr_t)node + real_size), (void*)size_align);
     #endif
+    // double allocation check
+      // u32*ptr=(u32*)(node+1);
+      // for (int i = 0; (i + 1) * sizeof(u32) < node->size;i++){
+      //   panic_on(ptr[i]==MAGIC,"double allocation");
+      //   ptr[i] = MAGIC;
+      // }
+
       return (void *)(node + 1);
     }
   }

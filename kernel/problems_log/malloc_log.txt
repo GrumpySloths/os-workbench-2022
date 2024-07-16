@@ -1,0 +1,13 @@
+pmsize:131072000
+first initialization
+uproc_init
+os_run start
+fault_addr:0x100000000000,cause:0x1,cur_rip:0x100000000000
+err msg:PF #14, page fault, @cause: PROT_XXX
+mapping:0x100000000000->0x7ff4000
+ifault_addr:0x100000001000,cause:0x1,cur_rip:0x100000000ffa
+err msg:PF #14, page fault, @cause: PROT_XXX
+mapping:0x100000001000->0x7fec000
+ifault_addr:0x12,cause:0x1,cur_rip:0x100000000ffc
+err msg:PF #14, page fault, @cause: PROT_XXX
+AM Panic: mapping an invalid address @ /home/niujh/csapp/OS_jyy/os-workbench-2022/abstract-machine/am/src/x86/qemu/vme.c:144  
