@@ -25,9 +25,13 @@ void kmt_spin_lock(spinlock_t *lk) {
     lk->i = i;
     iset(false);
 
-    while (atomic_xchg(&lk->locked, 1))
-        ;
-    
+    int spin_cnt = 0;
+    while (atomic_xchg(&lk->locked, 1)){
+        if(spin_cnt++>SPIN_LIMIT){
+            printf("Too many spin @%s :%d \n",__FILE__,__LINE__);
+        }
+    };
+
     assert(lk->locked == 1);
 
 #ifndef TEST

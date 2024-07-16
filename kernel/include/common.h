@@ -14,6 +14,7 @@ typedef uint32_t u32;
 #define CANARY_SZ 16
 #define MAGIC 0x55555555
 #define BOTTOM (STACK_SIZE/sizeof(u32)-1) 
+#define SPIN_LIMIT (1e9)
 
 //tasks scheduler
 // typedef struct __tasks_scheduler_t{
