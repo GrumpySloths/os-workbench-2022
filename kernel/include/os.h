@@ -6,7 +6,7 @@
 #define KERNEL_BOUND 0x008000000000
 
 bool sane_context(Context* ctx);
-union task {
+struct task {
     // TODO
     struct {
         const char* name;
@@ -17,7 +17,7 @@ union task {
         int page_cnt;//用户地址空间的页数
         void* va[64];
         void* pa[64];
-        union task* next;
+        struct task* next;
         Context* context;
     };
     uint8_t stack[STACK_SIZE];

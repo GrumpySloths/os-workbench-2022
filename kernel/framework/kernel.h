@@ -13,7 +13,7 @@
   mod_##mod##_t __##mod##_obj
 
 typedef Context *(*handler_t)(Event, Context *);
-typedef union task task_t;
+typedef struct task task_t;
 typedef struct spinlock spinlock_t;
 typedef struct semaphore sem_t;
 
@@ -29,6 +29,7 @@ MODULE(pmm) {
   void *(*alloc)(size_t size);
   void  (*free)(void *ptr);
 };
+
 #endif
 
 
