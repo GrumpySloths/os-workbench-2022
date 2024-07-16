@@ -11,7 +11,7 @@ typedef uint32_t u32;
 #define PAGESIZE 4096
 #define MAX_CPU 8
 #define STACK_SIZE 8192
-#define CANARY_SZ 64
+#define CANARY_SZ 16
 #define MAGIC 0x55555555
 #define BOTTOM (STACK_SIZE/sizeof(u32)-1) 
 
