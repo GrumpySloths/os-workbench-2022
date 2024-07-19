@@ -87,32 +87,8 @@ void uproc_init() {
     printf("uproc_init\n");
     vme_init(pgalloc, pgfree);
 
-#ifndef VME_V2
     ucreate();
-#else
-    task_t*task=pmm->alloc(sizeof(task_t));
-    //为task->ar分配空间
-    task->ar=pmm->alloc(sizeof(AddrSpace));
-    protect(task->ar);
 
-    void (*entry)(void *arg) = (void*)task->ar->area.start;
-    //打印entry地址
-    printf("entry:%p\n",entry);
-    
-    kmt->create(task, "initcode", entry, NULL);
-
-    // 为task创建相应地址空间映射
-    uvmfirst(task->ar,_init,_init_len);
-    //为进程创建用户栈
-    Context* ctx = task->context;
-
-    map(task->ar,(void*)(ctx->rsp-PAGESIZE),
-                        (void*)(ctx->rsp0),MMAP_READ|MMAP_WRITE);
-    // ctx->rsp -= 40;
-    // ctx->rsp0 -= 40;
-    // mappages(task->ar, (void*)ctx->rsp, PAGESIZE,
-    //                         (void*)ctx->rsp0, MMAP_WRITE);
-#endif 
 }
 
 int uproc_kputc(task_t* task, char ch) { 
