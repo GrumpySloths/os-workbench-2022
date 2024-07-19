@@ -2,6 +2,10 @@
 
 - [x] 尝试重新看一下蒋老师的速通，在中断和并发完全关闭的情况下看能不能解决当前的bug。
 - [ ] 实现slab形式的 malloc和free
+- [ ] 当前程序在没有fork存在的情况下只是简单的不断循环打印会突然出现疑似context损坏的情况，
+但注释掉sane_context(context)检测代码后程序可以正常运行，且这种疑似损坏的状况总是出现在多次syscall后的
+timer中断下返回的context，怀疑它可能是之前一直没有注意到的罕见的slow path导致程序误报
+- [ ] 想要添加简单的对malloc的double-allocation assert检验，但每次更改magic的值都会导致page_fault插入的新添加的页都有很奇怪的变化，初步怀疑是页表系统被意外覆写和修改了
 - [x] 当前的task->stack无法赋值
 
 

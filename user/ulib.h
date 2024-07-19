@@ -65,6 +65,30 @@ static inline int64_t uptime() {
 
 
 //ulib.c
+#define STRINGIFY(s)        #s
+#define TOSTRING(s)         STRINGIFY(s)
+
+typedef unsigned int   uint;
+typedef unsigned short ushort;
+typedef unsigned char  uchar;
+
+typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned int  uint32;
+typedef unsigned long uint64;
+
+
 int printf(const char *fmt, ...);
+int sprintf(char *out, const char *fmt, ...);
 size_t strlen(const char *s);
+char *strcpy(char *s, const char *t);
+int strcmp(const char *p, const char *q);
+void *memset(void *dst, int c, uint n);
+char *strchr(const char *s, char c);
+char *gets(char *buf, int max);
+int atoi(const char *s);
+void *memmove(void *vdst, const void *vsrc, int n);
+int memcmp(const void *s1, const void *s2, uint n);
+void *memcpy(void *dst, const void *src, uint n);
+char *itoa(int num, char *str, int base);
 #endif

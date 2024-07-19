@@ -11,6 +11,20 @@ void recursive_function() {
     printf("array[0]: %d\n", array[0]);
     recursive_function();
 }
+//为sprintf函数设计测试用例
+void sprintf_test() {
+    char buffer[100];
+    char buffer2[100];
+    char buffer3[16];
+    int a = 10;
+    sprintf(buffer, "a = %d", a);
+    sprintf(buffer2,"buffer addr:%p", buffer);
+    sprintf(buffer3,"hex of 64:%x", 64);
+    printf("%s\n", buffer);
+    printf("%s\n", buffer2);
+    printf("%s\n", buffer3);
+    printf("buffer addr:%p\n", buffer);
+}
 
 int main() {
   printf("Hello from user\n");
@@ -18,13 +32,15 @@ int main() {
   printf("it is a test\n");
   printf("▇▇▇");
   printf("▇▇▇");
+  sprintf_test();
+  // sleep(10);
   // recursive_function();
-  for (int i = 0; i < 1000000; i++) {
-      printf("debug: %d\n", i);
-      // sleep(1);
-  }
+  // for (int i = 0; i < 1000000; i++) {
+  //     printf("debug: %d\n", i);
+  //     // sleep(1);
+  // }
   // sleep(2);
-  // hello_test();
+  hello_test();
   // dfs_test();
   while (1);
 }

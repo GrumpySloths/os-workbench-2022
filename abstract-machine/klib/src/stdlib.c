@@ -12,7 +12,7 @@
 #endif
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-#define MAGIC 0x12345678
+#define MAGIC 0x55555555
 
 typedef uint32_t u32;
 static unsigned long int next = 1;
@@ -143,7 +143,7 @@ void *malloc(size_t size) {
       // u32*ptr=(u32*)(node+1);
       // for (int i = 0; (i + 1) * sizeof(u32) < node->size;i++){
       //   panic_on(ptr[i]==MAGIC,"double allocation");
-      //   ptr[i] = MAGIC;
+      //   ptr[i] = 0;
       // }
 
       return (void *)(node + 1);

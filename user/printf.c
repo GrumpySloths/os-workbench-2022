@@ -2,11 +2,6 @@
 #include<stddef.h>
 #include "ulib.h"
 
-#define STRINGIFY(s)        #s
-#define TOSTRING(s)         STRINGIFY(s)
-
-
-
 #define panic_on(cond, s) \
   ({ if (cond) { \
       putstr("AM Panic: "); putstr(s); \
@@ -16,162 +11,165 @@
 #define panic(s) panic_on(1, s)
 
 
+
 size_t strlen(const char *s) {
    size_t count= 0; 
    while(*s++)
        count++;
    return count;
 }
+static char digits[] = "0123456789abcdef";
 
-// 打印正数
-void putnum_positive(int d){
-    if (d) {
-        putnum_positive(d / 10);
-        kputc(d % 10+'0');
+static void
+printint(int xx, int base, int sign)
+{
+  char buf[16];
+  int i;
+  uint x;
+
+  if(sign && (sign = xx < 0))
+    x = -xx;
+  else
+    x = xx;
+
+  i = 0;
+  do {
+    buf[i++] = digits[x % base];
+  } while((x /= base) != 0);
+
+  if(sign)
+    buf[i++] = '-';
+
+  while(--i >= 0)
+    kputc(buf[i]);
+}
+
+static void
+printptr(uint64 x)
+{
+  int i;
+  kputc('0');
+  kputc('x');
+  for (i = 0; i < (sizeof(uint64) * 2); i++, x <<= 4)
+    kputc(digits[x >> (sizeof(uint64) * 8 - 4)]);
+}
+
+static char* ptrtoa(char*buf,uint64 x)
+{
+  // static char buf[16];
+  int i=0;
+  buf[i++] = '0';
+  buf[i++] = 'x';
+  for (; i < (sizeof(uint64) * 2)+2; i++, x <<= 4)
+    buf[i] = digits[x >> (sizeof(uint64) * 8 - 4)];
+
+  return buf;
+}
+
+// Print to the console. only understands %d, %x, %p, %s.
+int printf(const char *fmt, ...)
+{
+  va_list ap;
+  int i, c;
+  char *s;
+
+  if (fmt == 0)
+    panic("null fmt");
+
+  va_start(ap, fmt);
+  for(i = 0; (c = fmt[i] & 0xff) != 0; i++){
+    if(c != '%'){
+      kputc(c);
+      continue;
     }
-
-    assert(d >= 0);
-
-}
-//打印全体数字
-void putnum(int d){
-    if(d<0){
-        kputc('-');
-        putnum_positive(-1 * d);
-    }else if(d==0){
-        kputc('0');
-    }else{
-        putnum_positive(d);
+    c = fmt[++i] & 0xff;
+    if(c == 0)
+      break;
+    switch(c){
+    case 'd':
+      printint(va_arg(ap, int), 10, 1);
+      break;
+    case 'x':
+      printint(va_arg(ap, int), 16, 1);
+      break;
+    case 'p':
+      printptr(va_arg(ap, uint64));
+      break;
+    case 's':
+      if((s = va_arg(ap, char*)) == 0)
+        s = "(null)";
+      for(; *s; s++)
+        kputc(*s);
+      break;
+    case '%':
+      kputc('%');
+      break;
+    default:
+      // Print unknown % sequence to draw attention.
+      kputc('%');
+      kputc(c);
+      break;
     }
-}
-//打印16进制
-void printhex(uintptr_t d){
-    assert(d >= 0);
-    if (d / 16)
-        printhex(d/16);
-    if(d%16>=10)
-        kputc(d % 16 - 10 + 'a');
-    else
-        kputc(d % 16 + '0');
-}
-int printf(const char *fmt, ...) {
-    va_list ap;
-    char c, *s;
-    int d;
-    uintptr_t pt;
-    char pre;  // 代表前一个字符
-    va_start(ap, fmt);
-    size_t count = strlen(fmt);
-    size_t len = count;
-    // spin_lock(&lk);
-    while (count-- > 0) {
-        if((pre=*fmt++)=='%'){
-            switch(*fmt++){
-                case 's': /* string */
-                    s = va_arg(ap, char *);
-                    putstr(s);
-                    break;
-                case 'd':              /* int */
-                    d = va_arg(ap, int32_t);
-                    putnum(d);
-                    break;
-                case 'c':              /* char */
-                    /* need a cast here since va_arg only
-                        takes fully promoted types */
-                    c = (char) va_arg(ap, int);
-                    kputc(c);
-                    break;
-                case 'p':
-                    pt = va_arg(ap, uintptr_t);
-                    putstr("0x");
-                    printhex(pt);
-                    break;
-                default:
-                    panic("current behavior is not defined,program exited\n");
-                }
-        }else{
-            kputc(pre);
-            // printf("%c", pre);
-        }
-    }
-    // spin_unlock(&lk);
-    va_end(ap);
+  }
+  va_end(ap);
 
-    return len;
+  return 0;
 }
+
+
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-//   panic("Not implemented");
-    char c, *s;
-    int d;
-    uintptr_t pt;
-    char pre;  // 代表前一个字符
-    size_t count = strlen(fmt);
-    size_t len = count;
-    size_t i = 0;
-    while (count-- > 0) {
-        if((pre=*fmt++)=='%'){
-            switch(*fmt++){
-                case 's': /* string */
-                    s = va_arg(ap, char *);
-                    while(*s){
-                        out[i++]=*s++;
-                    }
-                    break;
-                case 'd':              /* int */
-                    d = va_arg(ap, int32_t);
-                    char buf[100];
-                    int j = 0;
-                    if(d<0){
-                        out[i++]='-';
-                        d=-d;
-                    }
-                    if(d==0){
-                        buf[j++]='0';
-                    }
-                    while(d){
-                        buf[j++]=d%10+'0';
-                        d/=10;
-                    }
-                    while(j--){
-                        out[i++]=buf[j];
-                    }
-                    break;
-                case 'c':              /* char */
-                    /* need a cast here since va_arg only
-                        takes fully promoted types */
-                    c = (char) va_arg(ap, int);
-                    out[i++]=c;
-                    break;
-                case 'p':
-                    pt = va_arg(ap, uintptr_t);
-                    char buf2[100];
-                    int k = 0;
-                    out[i++]='0';
-                    out[i++]='x';
-                    if(pt==0){
-                        out[i++]='0';
-                    }
-                    while(pt){
-                        if(pt%16>=10)
-                            buf2[k++]=pt%16-10+'a';
-                        else
-                            buf2[k++]=pt%16+'0';
-                        pt/=16;
-                    }
-                    while(k--){
-                        out[i++]=buf2[k];
-                    }
-                    break;
-                default:
-                    panic("current behavior is not defined,program exited\n");
-                }
-        }else{
-            out[i++]=pre;
+    int i, c;
+    char *s;
+    char *buf = out;
+    char tmp[32];
+
+    if (fmt == 0)
+        panic("null fmt");
+    
+    for(i = 0; (c = fmt[i] & 0xff) != 0; i++){
+        if(c != '%'){
+            *buf++ = c;
+            continue;
+        }
+        c = fmt[++i] & 0xff;
+        if(c == 0)
+            break;
+        switch(c){
+        case 'd':
+            itoa(va_arg(ap, int), tmp,10);
+            memcpy(buf, tmp, strlen(tmp));
+            buf += strlen(tmp);
+            break;
+        case 'x':
+            itoa(va_arg(ap, int), tmp,16);
+            memcpy(buf, tmp, strlen(tmp));
+            buf += strlen(tmp);
+            break;
+        case 'p':
+            ptrtoa(tmp,va_arg(ap, uint64));
+            memcpy(buf, tmp, strlen(tmp));
+            buf += strlen(tmp);
+            break;
+        case 's':
+            if((s = va_arg(ap, char*)) == 0)
+                s = "(null)";
+            while(*s)
+                *buf++ = *s++;
+            break;
+        case '%':
+            *buf++ = '%';
+            break;
+        default:
+            // Print unknown % sequence to draw attention.
+            *buf++ = '%';
+            *buf++ = c;
+            break;
         }
     }
-    out[i]='\0';
-    return len;
+    
+    *buf = '\0';
+    return buf - out;
 }
 
 int sprintf(char *out, const char *fmt, ...) {
