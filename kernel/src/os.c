@@ -159,6 +159,7 @@ static Context* irq_syscall(Event ev,Context*ctx){
   }
 
   // iset(true);
+  panic_on(ienabled(), "interrupt is open");
   return ctx;
 }
 
@@ -341,6 +342,8 @@ static Context* os_trap(Event ev, Context* ctx) {
   panic_on(sane_context(next), "returning to invalid context");
   //检查堆栈是否溢出
   canary_check((struct stack*)&(current_task->stack));
+  //检查当前中断是否开启
+  panic_on(ienabled(), "interrupt is open");
   // printf("next context:\n");
   // print_context(next);
   
