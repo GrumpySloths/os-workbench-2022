@@ -79,6 +79,9 @@ int ucreate() {
     //为task的堆栈添加canary保护
     canary_init((struct stack*)&task->stack);
 
+    //检测tasks_id是否超过任务最大数量
+    panic_on(tasks_id >= MAX_TASKS, "tasks_id is out of range");
+
     return tasks_id - 1;
 }
 #endif

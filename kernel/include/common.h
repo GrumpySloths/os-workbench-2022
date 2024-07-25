@@ -15,6 +15,7 @@ typedef uint32_t u32;
 #define MAGIC 0x55555555
 #define BOTTOM (STACK_SIZE/sizeof(u32)-1) 
 #define SPIN_LIMIT (1e9)
+#define MAX_TASKS 100
 
 //tasks scheduler
 // typedef struct __tasks_scheduler_t{
@@ -28,7 +29,7 @@ typedef uint32_t u32;
 spinlock_t* printf_lock;
 
 int tasks_id ;
-task_t *tasks[100];
+task_t *tasks[MAX_TASKS];
 
 task_t *currents[MAX_CPU];
 #define current_task currents[cpu_current()]
