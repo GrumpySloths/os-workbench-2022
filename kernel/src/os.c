@@ -139,8 +139,8 @@ static Context* irq_syscall(Event ev,Context*ctx){
       ctx->rax=uproc->kputc(current_task,ctx->rdi);
       break;
     case SYS_getpid:
-      uproc->getpid(current_task);
-      break;
+        ctx->rax=uproc->getpid(current_task);
+        break;
     case SYS_fork:
         panic_on(ienabled(), "interrupt is open");
         ctx->rax = uproc->fork(current_task , ctx);
