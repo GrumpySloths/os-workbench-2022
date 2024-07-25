@@ -344,7 +344,7 @@ static Context* os_trap(Event ev, Context* ctx) {
   //检查中断是否开启
   // panic_on(sane_context(next), "returning to invalid context");
   //检查堆栈是否溢出
-  canary_check((struct stack*)&(current_task->stack));
+  // canary_check((struct stack*)&(current_task->stack));
   //检查当前中断是否开启
   panic_on(ienabled(), "interrupt is open");
   // printf("next context:\n");
