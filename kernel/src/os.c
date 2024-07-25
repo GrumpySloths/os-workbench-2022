@@ -150,6 +150,9 @@ static Context* irq_syscall(Event ev,Context*ctx){
         ctx->rax = uproc->sleep(current_task, ctx->rdi);
         // ctx->rax = 0;
         break;
+    case SYS_uptime:
+        ctx->rax=uproc->uptime(current_task);
+        break;
     default:
         // 打印rdi的值
         printf("rdi:%d\n", ctx->rdi);

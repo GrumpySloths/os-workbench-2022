@@ -190,10 +190,16 @@ int uproc_sleep(task_t* task, int seconds) {
     return 0;
 }
 
+static int64_t uproc_uptime(task_t*task){
+
+    return io_read(AM_TIMER_UPTIME).us/1000;
+}
+
 MODULE_DEF(uproc) = {
     .init=uproc_init,
     .kputc=uproc_kputc,
     .getpid=uproc_getpid,
     .fork=uproc_fork,
     .sleep=uproc_sleep,
+    .uptime=uproc_uptime,
 };
