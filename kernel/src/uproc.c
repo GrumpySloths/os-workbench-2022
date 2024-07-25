@@ -27,45 +27,50 @@ void canary_init(struct stack* s) {
     }
 }
 
-// static int uproc_create(task_t*task,const char *name, void (*entry)(void *arg), void *arg){
-//     extern int tasks_id;
-//     extern task_t* tasks[100];
+#ifdef  UPROC_TEST 
+static int uproc_create(const char *name, void (*entry)(void *arg), void *arg){
+    extern int tasks_id;
+    extern task_t* tasks[100];
 
-//     // 将task加入到tasks数组中
-//     tasks[tasks_id] = task;
-//     // 为task传递参数并分配相应的栈空间
-//     task->name = name;
-//     task->entry = entry;
-//     task->pid = tasks_id;
-//     tasks_id++;
-//     panic_on(tasks_id>=100,"too many tasks");
-//     task->arg = arg;
-//     //初始化task的用户地址空间
-//     // protect(task->ar);
+    task_t* task = pmm->alloc(sizeof(task_t)); 
+    task->pid = tasks_id;
+    tasks[tasks_id++] = task;
+    
+    // 为task传递参数并分配相应的栈空间
+    task->name = name;
+    task->entry = entry;
+    task->pid = tasks_id;
+    tasks_id++;
+    panic_on(tasks_id>=100,"too many tasks");
+    task->arg = arg;
+    //初始化task的用户地址空间
+    // protect(task->ar);
 
-//     kmt_spin_lock(printf_lock);
-//     //打印heap地址
-//     printf("heap.start=%p,heap.end=%p\n",heap.start,heap.end);
-//     kmt_spin_unlock(printf_lock);
+    kmt_spin_lock(printf_lock);
+    //打印heap地址
+    printf("heap.start=%p,heap.end=%p\n",heap.start,heap.end);
+    kmt_spin_unlock(printf_lock);
 
-//     // panic_on(!IN_RANGE((void*)task->stack, heap), "stack out of heap range");
-//     // panic_on(task->stack == NULL, "alloc stack failed");
-//     Area stack=(Area){&task->context+1,task+1};
-// #ifndef VME_DEBUG
-//     task->context=kcontext(stack,task->entry,task->arg);
-// #else
-//     //创建用户态上下文
-//     task->context = ucontext(task->ar, stack, task->entry);
-//     panic_on(task->context == NULL, "kcontext failed");
-// #endif
-//     //为用户态进程堆栈分配空间
-//     // Context* ctx = task->context;
-//     // ctx->rsp = ctx->rsp - PAGESIZE * tasks_id * 2;
-//     // map(task->ar, (void *)(ctx->rsp - PAGESIZE), (void *)(ctx->rsp0 - PAGESIZE),
-//     //     MMAP_WRITE);
+    // panic_on(!IN_RANGE((void*)task->stack, heap), "stack out of heap range");
+    // panic_on(task->stack == NULL, "alloc stack failed");
+    Area stack=(Area){&task->context+1,task+1};
+#ifndef VME_DEBUG
+    task->context=kcontext(stack,task->entry,task->arg);
+#else
+    //创建用户态上下文
+    task->context = ucontext(task->ar, stack, task->entry);
+    panic_on(task->context == NULL, "kcontext failed");
+#endif
+    //为用户态进程堆栈分配空间
+    // Context* ctx = task->context;
+    // ctx->rsp = ctx->rsp - PAGESIZE * tasks_id * 2;
+    // map(task->ar, (void *)(ctx->rsp - PAGESIZE), (void *)(ctx->rsp0 - PAGESIZE),
+    //     MMAP_WRITE);
 
-//     return 1;
-// }
+    return 1;
+}
+#endif 
+
 //根据给定size的大小创建多页映射
 // static int mappages(AddrSpace*ar,void*va,uint size,void*pa,int prot){
     
