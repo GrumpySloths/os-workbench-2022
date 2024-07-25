@@ -145,6 +145,7 @@ int uproc_kputc(task_t* task, char ch) {
 }
 
 int uproc_getpid(task_t*task){
+    printf("getpid is called, cur_pid:%d\n",task->pid);
     return task->pid;
 
 }
