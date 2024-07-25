@@ -280,10 +280,10 @@ static void os_init() {
 #else
   uproc->init();
 #endif
-
-    //构建轮询链表
-    for (int i = 0; i < tasks_id;i++){
-      tasks[i]->next=tasks[(i+1)%tasks_id];
+    uproc->init();
+    // 构建轮询链表
+    for (int i = 0; i < tasks_id; i++) {
+      tasks[i]->next = tasks[(i + 1) % tasks_id];
     } 
 
 
