@@ -176,7 +176,7 @@ static Context* irq_pagefault(Event ev,Context*ctx){
   current_task->pa[current_task->page_cnt] = pa;
   current_task->page_cnt++;
 
-  if(current_task->page_cnt==1&& current_task->pid==1){
+  if(current_task->page_cnt==1&& current_task->pid==0){
       //针对第一个进程的特殊处理
       unsigned char* src = _init;
       unsigned int len = _init_len;
