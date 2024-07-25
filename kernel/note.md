@@ -6,6 +6,7 @@
 但注释掉sane_context(context)检测代码后程序可以正常运行，且这种疑似损坏的状况总是出现在多次syscall后的
 timer中断下返回的context，怀疑它可能是之前一直没有注意到的罕见的slow path导致程序误报
 - [ ] 想要添加简单的对malloc的double-allocation assert检验，但每次更改magic的值都会导致page_fault插入的新添加的页都有很奇怪的变化，初步怀疑是页表系统被意外覆写和修改了
+- [ ] 想办法实现fork和execve，使得之前在kmt上运行的多个线程变为可以同时运行的进程
 - [x] 当前的task->stack无法赋值
 
 

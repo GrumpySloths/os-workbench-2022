@@ -50,14 +50,14 @@ void hello_test() {
 
   const char *fmt;
   if (pid) {
-    fmt = "Parent #%d\n";
+    fmt = "Parent #%d proc_pid:%d curtime:%d ms\n";
   } else {
     sleep(1);
-    fmt = "Child #%d\n";
+    fmt = "Child #%d proc_pid:%d curtime:%d ms\n";
   }
 
   while (1) {
-    printf(fmt, ++x);
+    printf(fmt, ++x, getpid(), uptime());
     sleep(1);
   }
 }
