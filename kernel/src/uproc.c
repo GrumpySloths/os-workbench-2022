@@ -66,6 +66,7 @@ int ucreate() {
 
     task_t* task = pmm->alloc(sizeof(task_t)); 
     tasks[tasks_id++] = task;
+    task->pid = tasks_id;
     
     task->ar=pmm->alloc(sizeof(AddrSpace));
 
@@ -100,7 +101,7 @@ int uproc_kputc(task_t* task, char ch) {
 }
 
 int uproc_getpid(task_t*task){
-    return task->id;
+    return task->pid;
 
 }
 

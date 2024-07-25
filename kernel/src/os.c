@@ -95,7 +95,7 @@ static Context* irq_timer(Event ev,Context*ctx){
   do {
     current_task = current_task->next;
     panic_on(!current_task, "no task");
-  } while (current_task->id % cpu_count() != cpu_current());
+  } while (current_task->pid % cpu_count() != cpu_current());
   return current_task->context;
 }
 
@@ -108,7 +108,7 @@ static Context* irq_yield(Event ev,Context*ctx){
   do {
     current_task = current_task->next;
     panic_on(!current_task, "no task");
-  } while (current_task->id % cpu_count() != cpu_current());
+  } while (current_task->pid % cpu_count() != cpu_current());
   return current_task->context;
 }
 
@@ -121,7 +121,7 @@ static Context* irq_iodev(Event ev,Context*ctx){
   do {
     current_task = current_task->next;
     panic_on(!current_task, "no task");
-  } while (current_task->id % cpu_count() != cpu_current());
+  } while (current_task->pid % cpu_count() != cpu_current());
   return current_task->context;
 }
 
@@ -176,7 +176,8 @@ static Context* irq_pagefault(Event ev,Context*ctx){
   current_task->pa[current_task->page_cnt] = pa;
   current_task->page_cnt++;
 
-  if(current_task->page_cnt==1){
+  if(current_task->page_cnt==1&& current_task->pid==1){
+      //针对第一个进程的特殊处理
       unsigned char* src = _init;
       unsigned int len = _init_len;
       //从src复制len长度内容到pa

@@ -17,7 +17,7 @@ struct task {
     // TODO
     struct {
         const char* name;
-        int id;
+        u32 pid;
         void  (*entry)(void *);
         void* arg;
         AddrSpace* ar; //用户地址空间
